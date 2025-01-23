@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
     <title>Document</title>
 </head>
 <body>
     <header></header>
     <main>
     <div class="container">
-        <div class="left">
-            <h1>Iniciar Sesión</h1>
-            <p>DOCENTES</p>
-            <form>
-                <input type="text" placeholder="Usuario">
-                <input type="password" placeholder="Contraseña">
-                <button type="submit">INICIAR</button>
-                <a href="#">¿Olvidaste tu contraseña?</a>
+        <div class="Login-container">
+            <h1 id="Titulo-Login">Iniciar Sesión</h1>
+            <p id="Subtitulo-login">ADMINISTRADORES</p>
+            <form class="Login">
+                <p>Usuario</p>
+                <input id="campo-usuario" type="text" placeholder="Value">
+                <p>Contraseña</p>
+                <input id="campo-contraseña" type="password" placeholder="Value">
+                <button id="button-login" type="submit">INICIAR</button>
+                <a id="ad-contraseña" href="#">¿Olvidaste tu contraseña?</a>
             </form>
         </div>
-        <div class="right">
-            <h2>¿ADMINISTRATIVO?</h2>
-            <p>Inicia sesión en nuestro apartado de administrativos para poder ingresar a nuestra página web en modo administrativo.</p>
+        <div class="Docente-container">
+            <h2>¿DOCENTE?</h2>
+            <p>Inicia sesión en nuestro apartado de Docentes para poder ingresar a nuestra página web en modo Docentes.</p>
             <button>Iniciar Sesión</button>
         </div>
     </div>
