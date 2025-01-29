@@ -131,5 +131,21 @@ body{
     text-align: center;
 }
 #button-docente{
-    
+    z-index: 2;
+    position: absolute;
+    right: 220px;
+    top: 430px;
+    width: 250px;
+    height: 40px;
+    font-size: 15px;
+    color: white;
+    background-color: #E7BB41;
+    border-color: white;
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;
+    transition: .5s;
 }
+#button-docente:hover{
+    color: #E7BB41;
+    background-color: rgb(255, 255, 255);
