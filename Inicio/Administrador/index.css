@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+*{
+    font-family: "Rubik", serif;
+}
+
+body{
+    background-color: white;
+    display: flex;
+    min-height: 100vh;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+
+}
+.Login-container{
+    width: auto;
+    height: auto;
+    position: relative;
+    right: -750px;
+    top: 50px;
+    
+}
+#p-usuario{
+    width: 200px;
+}
+#p-contraseña{
+    width: 200px;
+}
+#Titulo-Login{
+    font-size: 55px;
+    color: #393E41;
+    width: 380px;
+}
+#Subtitulo-login{
+    font-size: 20px;
+    width: 200px;
+    color: #E7BB41;
+    position: relative;
+    right: -80px;
+    top: -40px;
+    font-weight: bold;
+}
+.Login{
+    text-align: left;
+    position: relative;
+    right: -60px;
+    width: 200px;
+}
+#campo-usuario{
+    width: 200px;
+    height: 15px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #000000;
+    border-radius: 5px;
+    padding: 12px;
+
+}
+#campo-contraseña{
+    width: 200px;
+    height: 15px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #000000;
+    border-radius: 5px;
+    padding: 12px;
+    
+}
+#button-login{
+    width: 225px;
+    height: 35px;
+    position: relative;
+    right: 0px;
+    top: 25px;
+    border-radius: 10px;
+    border-color: #000000;
+    border-width: 1px;
+    border-style: solid;
+    background-color: #000000;
+    color: white;
+    cursor: pointer;
+    transition: .5s;
+}
+#button-login:hover{
+    color: #E7BB41;
+    background-color: rgb(255, 255, 255);
+}
+#ad-contraseña{
+    width: 150px;
+    height: auto;
+    position: relative;
+    font-size: 12px;
+    color: #393E41;
+    text-decoration: none;
+    right: -35px;
+    top: 30px;
+}
+.Docente-container{
+    position: absolute;
+    top: -100px;
+    right: 650px;
+    background-color: #E7BB41;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    z-index: 0;
+}
+#titulo-docente{
+    z-index: 2;
+    position: absolute;
+    font-size: 50px;
+    right: 200px;
+    width: auto;
+    height: auto;
+    top: 250px;
+    color: white;
+    font-weight: 600;
+    
+}
+#p-docente{
+    z-index: 2;
+    position: absolute;
+    font-size: 15px;
+    right: 130px;
+    width: 430px;
+    height: auto;
+    top: 350px;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+}
+#button-docente{
+    z-index: 2;
+    position: absolute;
+    right: 220px;
+    top: 430px;
+    width: 250px;
+    height: 40px;
+    font-size: 15px;
+    color: white;
+    background-color: #E7BB41;
+    border-color: white;
+    border-width: 1px;
+    border-style: solid;
+    cursor: pointer;
+    transition: .5s;
+}
+#button-docente:hover{
+    color: #E7BB41;
+    background-color: rgb(255, 255, 255);
