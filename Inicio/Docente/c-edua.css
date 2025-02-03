@@ -130,6 +130,12 @@ button {
     border: 2px solid white;
     padding: 12px 30px;
     width: auto;
+    transition: .5s;
+}
+
+.admin-button:hover{
+    color: #40C3A5;
+    background-color: rgb(255, 255, 255);
 }
 
 @media (max-width: 768px) {
