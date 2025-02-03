@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Rubik", serif;
+    }
+
+body {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    background-color: #40BF9C;
+    width: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar-icon {
+    margin-top: 40px;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+    margin-bottom: 80px;
+}
+.cerrar_sesion{
+    margin-top: 25px;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
+}
+.sidebar .logo {
+    font-weight: bold;
+    font-size: 1em;
+    margin: 30px 0;
+    
+}
+.sidebar a {
+    color: #E7E5DF;
+    text-decoration: none;
+    padding: 20px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.main-content{
+    background-color: #FBF4F4;
+    max-width: 1400px;
+    width: 1400px;
+}
+.card-profile{
+    background-color: #fff;
+    margin: auto;
+    max-width: 800px;
+    text-align: center;
+    border-radius: 25px;
+}
+.user-avatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin-left: 10px;
+}
