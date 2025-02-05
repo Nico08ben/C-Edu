@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Perfil de Usuario</title>
     <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="index.js" defer></script>
 </head>
 <body>
+    <!-- Barra lateral -->
     <div class="sidebar">
         <div class="logo"><a href="../Home/index.html">C-EDU</a></div>
         <div class="sidebar-icon"><i class="fa-regular fa-comment"></i></div>
@@ -16,35 +17,61 @@
         <div class="sidebar-icon"><i class="fa-regular fa-calendar"></i></div>
         <div class="cerrar_sesion"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
     </div>
+
+    <!-- Contenido principal -->
     <div class="main-content">
+        <!-- Tarjeta de perfil -->
         <div class="card-profile">
-            <label>Editar perfil</label>
-            <label>Ayuda</label>
-            <div class="user-avatar"></div>
-            <p>Editar</p>
-            
-            <div class="columna">
-                <p>Nombre</p>
-                <input type="text" placeholder="Antonio Jose Rengifo Abonia" disabled>
-                <p>Email</p>
-                <input type="text" placeholder="antoniojrequejo@comfandi.edu.co" disabled>
-                <p>Fecha de Nacimiento</p>
-                <input type="text" placeholder="16 de Enero de 2001" disabled>
-                <p>Asignatura</p>
-                <input type="text" placeholder="Matematicas" disabled>
-                <p>Colegio</p>
-                <input type="text" placeholder="Colegio Comfandi Calipso" disabled>
+            <!-- Encabezado con opciones -->
+            <div class="profile-header">
+                <span class="profile-option" id="edit-profile">Editar Perfil</span>
+                <span class="profile-option" id="help">Ayuda</span>
             </div>
 
-            <div class="columna">
-                <p>Nombre de Usuario</p>
-                <input type="text" placeholder="antonio.reginfo.2" disabled>
-                <p>Contraseña</p>
-                <input type="text" placeholder="************" disabled>
-                <p>Telefono</p>
-                <input type="text" placeholder="+57 315 6162888" disabled>
-                <p>Grupo a Cargo</p>
-                <input type="text" placeholder="11-B" disabled>
+            <div class="profile-container">
+                <!-- Columna izquierda (Foto y Botón) -->
+                <div class="profile-left">
+                    <div class="user-avatar">
+                        <img src="avatar.png">
+                    </div>
+                    <button class="edit-btn">EDITAR</button>
+                </div>
+
+                <!-- Columna derecha (Información) -->
+                <div class="profile-right">
+                    <div class="container">
+                        <div class="columna">
+                            <label>Nombre</label>
+                            <input type="text" placeholder="Antonio Jose Rengifo Abonia" disabled>
+                            
+                            <label>Email</label>
+                            <input type="text" placeholder="antoniojrequejo@comfandi.edu.co" disabled>
+                            
+                            <label>Fecha de Nacimiento</label>
+                            <input type="text" placeholder="16 de Enero de 2001" disabled>
+                            
+                            <label>Materia</label>
+                            <input type="text" placeholder="Matemáticas" disabled>
+                            
+                            <label>Colegio</label>
+                            <input type="text" placeholder="Colegio Comfandi Calipso" disabled>
+                        </div>
+
+                        <div class="columna">
+                            <label>Nombre de Usuario</label>
+                            <input type="text" placeholder="antonio.reginfo.2" disabled>
+                            
+                            <label>Contraseña</label>
+                            <input type="password" placeholder="************" disabled>
+                            
+                            <label>Teléfono</label>
+                            <input type="text" placeholder="+57 315 6162888" disabled>
+                            
+                            <label>Grupo a Cargo</label>
+                            <input type="text" placeholder="11-B" disabled>
+                        </div>
+                    </div>
+                </div>  
             </div>
         </div>
     </div>

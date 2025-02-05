@@ -10,6 +10,7 @@
 body {
     display: flex;
     min-height: 100vh;
+    background-color: #FBF4F4;
 }
 
 .sidebar {
@@ -45,62 +46,121 @@ body {
     text-align: center;
     margin-bottom: 10px;
 }
-.main-content{
-    background-color: #FBF4F4;
-    max-width: 1400px;
-    width: 1400px;
+/* === Contenido principal === */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
 }
 
-.user-avatar{
-    width: 40px;
-    height: 40px;
+/* === Tarjeta de perfil === */
+.card-profile {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 65%;
+    text-align: center;
+    margin-top: 10px;
+    position: relative;
+}
+
+/* === Encabezado de perfil (Editar Perfil / Ayuda) === */
+.profile-header {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #40BF9C;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+#help{
+    font-weight: normal;
+}
+.profile-option:hover {
+    text-decoration: underline;
+}
+
+/* === Contenedor de perfil === */
+.profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* === Columna izquierda (Foto y Botón) === */
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+}
+
+.user-avatar {
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     background-color: #ccc;
-    margin-left: 10px;
+    overflow: hidden;
 }
 
-.card-profile {
-    width: 80%;
-    margin-left: 120px;
-    padding: 20px;
-    display: flex;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.card-profile label {
-    font-size: 1.2rem;
+.edit-btn {
+    margin-top: 10px;
+    padding: 8px 20px;
+    border: none;
+    background-color: #40BF9C;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
     font-weight: bold;
-    margin-bottom: 10px;
-    margin-left: 10px;
-    color: #333;
+}
+
+/* === Columna derecha (Información) === */
+.profile-right {
+    width: 65%;
+}
+
+/* === Formularios === */
+.container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 
 .columna {
     display: flex;
     flex-direction: column;
-    width: 100%;
-    margin-bottom: 15px;
+    width: 48%;
 }
 
-.columna p {
-    margin: 5px 0;
-    color: #555;
+label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+    text-align: left;
 }
 
-input[type="text"] {
+input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 100%;
-    box-sizing: border-box;
     background-color: #f9f9f9;
     color: #333;
 }
 
-input[type="text"]:disabled {
+input:disabled {
     background-color: #e9ecef;
     color: #6c757d;
 }
