@@ -164,3 +164,20 @@ input:disabled {
     background-color: #e9ecef;
     color: #6c757d;
 }
+
+.ayuda{
+    text-align: left;
+    padding: 15px 0;
+    margin: auto;
+}
+.ayuda h3{
+    font-size: 30px;
+    font-weight: normal;
+    margin-bottom: 10px;
+}
+
+.ayuda p{
+    margin-bottom: 20px;
+}
+
+
