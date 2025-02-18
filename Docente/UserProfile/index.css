@@ -12,40 +12,20 @@ body {
     min-height: 100vh;
     background-color: #FBF4F4;
 }
-
-.sidebar {
-    background-color: #40BF9C;
-    width: 110px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.home{
+    position: relative;
+    height: 100vh;
+    left: 250px;
+    width: calc(100% - 250px);
+    background-color: var(--body-color);
+    transition: var(--trans-05);
 }
 
-.sidebar-icon {
-    margin-top: 40px;
-    color: rgb(255, 255, 255);
-    font-size: 20px;
-    margin-bottom: 80px;
+.sidebar.close ~ .home{
+    left: 88px;
+    width: calc(100% - 88px);
 }
-.cerrar_sesion{
-    margin-top: 25px;
-    color: rgb(255, 255, 255);
-    font-size: 20px;
-}
-.sidebar .logo {
-    font-weight: bold;
-    font-size: 1em;
-    margin: 30px 0;
-    
-}
-.sidebar a {
-    color: #E7E5DF;
-    text-decoration: none;
-    padding: 20px;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 10px;
-}
+
 /* === Contenido principal === */
 .main-content {
     flex: 1;
