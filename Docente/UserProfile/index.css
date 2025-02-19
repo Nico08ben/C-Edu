@@ -51,6 +51,7 @@ body.dark {
     --toggle-color: #FFF;
     --text-color: #CCC;
 }
+
 /* Estilos de la barra lateral */
 .home {
     /* Posicionar la barra lateral */
@@ -67,7 +68,7 @@ body.dark {
 }
 
 /* Estilos de la barra lateral cuando está cerrada */
-.sidebar.close ~ .home {
+.sidebar.close~.home {
     /* Establecer posición y ancho cuando está cerrada */
     left: 88px;
     width: calc(100% - 88px);
@@ -108,9 +109,11 @@ body.dark {
     cursor: pointer;
     margin-bottom: 10px;
 }
-#help{
+
+#help {
     font-weight: normal;
 }
+
 .profile-option:hover {
     text-decoration: underline;
 }
@@ -196,18 +199,81 @@ input:disabled {
     color: #6c757d;
 }
 
-.ayuda{
+.ayuda {
     text-align: left;
     padding: 15px 0;
     margin: auto;
     color: var(--text-color);
 }
-.ayuda h3{
+.ayuda div{
+    margin-top: 5px;
+}
+.ayuda h3 {
     font-size: 30px;
-    font-weight: normal;
+    font-weight: bold;
     margin-bottom: 10px;
 }
 
-.ayuda p{
+.ayuda p {
     margin-bottom: 20px;
 }
+
+/* Estilos para vista celular */
+@media (max-width: 768px) {
+    .card-profile {
+        width: 90%;
+        margin: 20px auto;
+    }
+
+    .profile-container {
+        flex-direction: column;
+    }
+
+    .profile-left {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .profile-right {
+        width: 100%;
+    }
+
+    .container {
+        flex-direction: column;
+    }
+
+    .columna {
+        flex-basis: 100%;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .ayuda {
+        padding: 10px 0;
+        display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    }
+
+    .ayuda h3 {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .ayuda p {
+        font-size: 16px;
+    }
+
+    .ayuda div{
+        margin-top: 5px;
+    }
+    .ayuda span{
+        font-size: 13.6px;
+        display: inline;
+    }
+    .card-profile {
+        overflow-y: auto;
+    }
+}
+
+
