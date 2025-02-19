@@ -5,97 +5,157 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio</title>
+    <link rel="stylesheet" href="styleSidebar.css".css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="inciodocentess.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <nav class="sidebar">
-        <div class="logo">C-EDU</div>
-        <a href="#" title="Chat"><i class="fa-regular fa-comment"></i></a>
-        <a href="../Tareas asignadas/tareas.html" title="Tareas"><i class="fa-regular fa-file"></i></a>
-        <a href="#" title="Calendario"><i class="fa-regular fa-calendar-days"></i></a>
-        <a href="" class="cerrar_sesion"><i class="fa-solid fa-arrow-right-from-bracket"></i></a>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text" >
+                <span class="image">
+                    <img src="cedu.png" alt="logo">
+                </span>
+                <div class="text header-text">
+                    <span class="name">C-EDU</span>
+                    <span class="profession">Web Developer</span>
+                </div>
+            </div>
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+        <div class="menu-bar">
+            <div class="menu">
+                <li class="search-box">
+                    <i class='bx bx-search-alt icon'></i>
+                        <input type="text" placeholder="Search...">
+                </li>
+                <ul class="menu-links">
+                    <li class="nav-links">
+                        <a href="#">
+                            <i class='bx bx-conversation icon' ></i>
+                            <span class="text nav-text">Mensajes</span>
+                        </a>
+                    </li>
+                    <li class="nav-links">
+                        <a href="../Tareas asignadas/index.html">
+                            <i class='bx bx-book-open icon' ></i>
+                            <span class="text nav-text">Tareas</span>
+                        </a>
+                    </li>
+                    <li class="nav-links">
+                        <a href="#">
+                            <i class='bx bx-notepad icon' ></i>
+                            <span class="text nav-text">Calendario</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="bottom-content">
+                <li class="">
+                    <a href="/index.html">
+                        <i class='bx bx-log-out icon' ></i>
+                        <span class="text nav-text">Cerrar Sesion</span>
+                    </a>
+                </li>
+                <li class="mode">
+                    <div class="moon-sun">
+                        <i class='bx bx-moon icon moon' ></i>
+                        <i class='bx bx-sun icon sun' ></i>
+                    </div>
+                    <span class="mode-text text">Dark Mode</span>
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+            </div>
+        </div>
     </nav>
 
-    <main class="main-content">
-        <div class="header">
-            <h1>Bienvenido a C-EDU</h1>
-            <div class="profile">
-                <i class="fa-regular fa-bell"></i>
-                <div class="profile-info">
-                    <div>Antonio</div>
-                    <div style="color: #666;">Docente de Matemáticas</div>
-                </div>
-                <i class="fa-solid fa-user"></i>
-            </div>
-        </div>
-
-        <div class="cards-container">
-            <div class="card">
-                <div class="card-header">
-                    <i class="fa-regular fa-file"></i> Tareas Asignadas
-                </div>
-                <div class="task-item">
-                    <div>Clase 8B - Asistir</div>
-                    <div class="task-details">
-                        Asignado por: Coordinador
-                        <br>
-                        Fecha Límite: 04/01/2024
+    <section class="home">
+        <main class="main-content">
+            <div class="header">
+                <h1 id="titulo1-header">Bienvenido a C-EDU</h1>
+                <div class="profile">
+                    <i class="fa-regular fa-bell"></i>
+                    <div class="profile-info">
+                        <div><h3>Antonio</h3></div>
+                        <div><p>Docente de Matemáticas</p></div>
                     </div>
-                    <span class="red-dot"></span>
-                </div>
-                <button class="btn-ingresar">INGRESAR</button>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fa-regular fa-calendar"></i></i> Eventos Pendientes
-                </div>
-                <div class="event-item">
-                    <div>Reunión Padres de Familia</div>
-                    <span><i class="fa-solid fa-arrow-right"></i></span>
-                </div>
-                <div class="event-item">
-                    <div>Reunión de docentes</div>
-                    <span><i class="fa-solid fa-arrow-right"></i></span>
-                </div>
-                <button class="btn-ingresar">INGRESAR</button>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <i class="fa-regular fa-comment"></i> Comunicación
-                </div>
-                <div class="chat-item">
                     <i class="fa-solid fa-user"></i>
-                    <div class="chat-content">
-                        <div class="chat-name">Mario</div>
-                        <div class="chat-role">Docente Lenguaje</div>
-                        <div class="chat-message">ESCRIBIENDO...</div>
-                    </div>
-                    <div class="status-dot green"></div>
                 </div>
-                <div class="chat-item">
-                    <i class="fa-solid fa-user"></i>
-                    <div class="chat-content">
-                        <div class="chat-name">Diana</div>
-                        <div class="chat-role">Docente sociales</div>
-                        <div class="chat-message">¿Ya entregaste el formulario?</div>
-                    </div>
-                    <div class="status-dot orange"></div>
-                </div>
-                <div class="chat-item">
-                    <i class="fa-solid fa-user"></i>
-                    <div class="chat-content">
-                        <div class="chat-name">Miguel</div>
-                        <div class="chat-role">Docente Física</div>
-                        <div class="chat-message">Hola ¿cómo estás?</div>
-                    </div>
-                    <div class="status-dot.gray"></div>
-                </div>
-                <button class="btn-ingresar">INGRESAR</button>
             </div>
-        </div>
-    </main>
+    
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa-regular fa-file"></i> Tareas Asignadas
+                    </div>
+                    <div class="task-item">
+                        <div>Clase 8B - Asistir</div>
+                        <div class="task-details">
+                            Asignado por: Coordinador
+                            <br>
+                            Fecha Límite: 04/01/2024
+                        </div>
+                        <span class="red-dot"></span>
+                    </div>
+                    <button class="btn-ingresar">INGRESAR</button>
+                </div>
+    
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa-regular fa-calendar"></i></i> Eventos Pendientes
+                    </div>
+                    <div class="event-item">
+                        <div>Reunión Padres de Familia</div>
+                        <span><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                    <div class="event-item">
+                        <div>Reunión de docentes</div>
+                        <span><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                    <button class="btn-ingresar">INGRESAR</button>
+                </div>
+    
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa-regular fa-comment"></i> Comunicación
+                    </div>
+                    <div class="chat-item">
+                        <i class="fa-solid fa-user"></i>
+                        <div class="chat-content">
+                            <div class="chat-name">Mario</div>
+                            <div class="chat-role">Docente Lenguaje</div>
+                            <div class="chat-message">ESCRIBIENDO...</div>
+                        </div>
+                        <div class="status-dot green"></div>
+                    </div>
+                    <div class="chat-item">
+                        <i class="fa-solid fa-user"></i>
+                        <div class="chat-content">
+                            <div class="chat-name">Diana</div>
+                            <div class="chat-role">Docente sociales</div>
+                            <div class="chat-message">¿Ya entregaste el formulario?</div>
+                        </div>
+                        <div class="status-dot orange"></div>
+                    </div>
+                    <div class="chat-item">
+                        <i class="fa-solid fa-user"></i>
+                        <div class="chat-content">
+                            <div class="chat-name">Miguel</div>
+                            <div class="chat-role">Docente Física</div>
+                            <div class="chat-message">Hola ¿cómo estás?</div>
+                        </div>
+                        <div class="status-dot.gray"></div>
+                    </div>
+                    <button class="btn-ingresar">INGRESAR</button>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <script src="javaSidebar.js"></script>
+    
 </body>
 </html>
