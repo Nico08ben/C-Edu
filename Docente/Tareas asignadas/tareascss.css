@@ -1,104 +1,225 @@
+/* Importar fuente de Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+/* Estilos generales para todos los elementos */
 * {
+    /* Eliminar margenes y rellenos por defecto */
     margin: 0;
     padding: 0;
+    /* Utilizar caja de modelo de caja */
     box-sizing: border-box;
+    /* Establecer fuente por defecto */
     font-family: "Rubik", serif;
-    }
-
-body {
-    display: flex;
-    min-height: 100vh;
 }
-.home{
-    position: relative;
-    height: 100vh;
-    left: 250px;
-    width: calc(100% - 250px);
+
+/* Variables de CSS para colores y transiciones */
+:root {
+    /* Colores */
+    --body-color: #E4E9F7;
+    --sidebar-color: #FFF;
+    --primary-color: #40C3A5;
+    --primary-color-ligth: #cdfff2;
+    --toggle-color: #DDD;
+    --text-color: #707070;
+
+    /* Transiciones */
+    --trans-02: all 0.2s ease;
+    --trans-03: all 0.3s ease;
+    --trans-04: all 0.4s ease;
+    --trans-05: all 0.5s ease;
+}
+
+/* Estilos del cuerpo de la página */
+body {
+    /* Establecer color de fondo */
     background-color: var(--body-color);
+    /* Utilizar flexbox para layout */
+    display: flex;
+    /* Establecer altura mínima */
+    min-height: 100vh;
+    /* Transición para cambios de estilo */
     transition: var(--trans-05);
 }
 
-.sidebar.close ~ .home{
+/* Estilos del cuerpo en modo oscuro */
+body.dark {
+    /* Colores en modo oscuro */
+    --body-color: #18191A;
+    --sidebar-color: #242526;
+    --primary-color: #3A3B3C;
+    --primary-color-ligth: #3A3B3C;
+    --toggle-color: #FFF;
+    --text-color: #CCC;
+}
+/* Estilos de la barra lateral */
+.home {
+    /* Posicionar la barra lateral */
+    position: relative;
+    /* Establecer altura */
+    height: 100vh;
+    /* Establecer posición y ancho */
+    left: 250px;
+    width: calc(100% - 250px);
+    /* Establecer color de fondo */
+    background-color: var(--body-color);
+    /* Transición para cambios de estilo */
+    transition: var(--trans-05);
+}
+
+/* Estilos de la barra lateral cuando está cerrada */
+.sidebar.close ~ .home {
+    /* Establecer posición y ancho cuando está cerrada */
     left: 88px;
     width: calc(100% - 88px);
 }
+/* Estilos del contenido principal */
+/* Esta sección establece estilos para el contenido principal */
+
 .main-content {
+    /* Permitir que el contenido principal crezca para ocupar el espacio disponible */
     flex-grow: 1;
+    /* Establecer relleno alrededor del contenido principal */
     padding: 30px;
 }
 
+/* Estilos de la información del usuario */
+/* Esta sección establece estilos para la sección de información del usuario */
+
 .user-info {
+    /* Utilizar flexbox para alinear los elementos */
     display: flex;
+    /* Alinear los elementos al final del contenedor */
     justify-content: flex-end;
+    /* Alinear verticalmente los elementos en el centro */
     align-items: center;
+    /* Establecer margen inferior */
     margin-bottom: 30px;
 }
 
+/* Estilos del avatar del usuario */
+/* Esta sección establece estilos para el avatar del usuario */
+
 .user-avatar {
+    /* Establecer ancho y alto del avatar */
     width: 40px;
     height: 40px;
+    /* Hacer que el avatar tenga bordes redondeados */
     border-radius: 50%;
+    /* Establecer color de fondo del avatar */
     background-color: #ccc;
+    /* Establecer margen a la izquierda del avatar */
     margin-left: 10px;
 }
 
+/* Estilos de las tarjetas de tarea */
+/* Esta sección establece estilos para las tarjetas que contienen tareas */
+
 .task-card {
+    /* Establecer un borde delgado */
     border: 0.5px solid;
+    /* Establecer color de fondo de la tarjeta */
     background-color: #f5f5f5;
+    /* Establecer relleno dentro de la tarjeta */
     padding: 20px;
+    /* Hacer que las esquinas de la tarjeta sean redondeadas */
     border-radius: 8px;
+    /* Establecer margen inferior */
     margin-bottom: 20px;
 }
 
-h3{
+/* Estilos del título de la tarea */
+/* Esta sección establece estilos para el título de la tarea */
+
+h3 {
+    /* Posicionar el título de la tarea */
     position: relative;
+    /* Ajustar la posición vertical del título */
     top: -50px;
+    /* Establecer tamaño de fuente */
     font-size: 25px;
+    /* Establecer color del texto */
     color: #333;
 }
 
+/* Estilos del título de la tarea */
+/* Esta sección establece estilos para el título de la tarea */
+
 .task-title {
+    /* Establecer tamaño de fuente */
     font-size: 18px;
+    /* Hacer que el título sea negrita */
     font-weight: bold;
+    /* Establecer color del texto */
     color: #333;
+    /* Establecer margen inferior */
     margin-bottom: 10px;
 }
 
+/* Estilos de la descripción de la tarea */
+/* Esta sección establece estilos para la descripción de la tarea */
+
 .task-description {
+    /* Establecer color del texto */
     color: #666;
+    /* Establecer tamaño de fuente */
     font-size: 14px;
+    /* Establecer margen inferior */
     margin-bottom: 15px;
 }
 
+/* Estilos de la información de la tarea */
+/* Esta sección establece estilos para la información de la tarea */
+
 .task-info {
+    /* Utilizar flexbox para alinear los elementos */
     display: flex;
+    /* Justificar el espacio entre los elementos */
     justify-content: space-between;
+    /* Alinear verticalmente los elementos en el centro */
     align-items: center;
+    /* Establecer tamaño de fuente */
     font-size: 14px;
+    /* Establecer color del texto */
     color: #666;
 }
 
+/* Estilos responsivos */
+/* Esta sección establece estilos que se aplican en pantallas más pequeñas */
+
 @media (max-width: 768px) {
+    /* Estilos para el cuerpo en pantallas pequeñas */
     body {
+        /* Cambiar la dirección del flex a columna */
         flex-direction: column;
     }
+    /* Estilos para la barra lateral en pantallas pequeñas */
     .sidebar {
+        /* Establecer ancho completo */
         width: 100%;
+        /* Cambiar la dirección del flex a fila */
         flex-direction: row;
+        /* Justificar el contenido al centro */
         justify-content: center;
+        /* Establecer relleno */
         padding: 15px;
     }
+    /* Estilos para los iconos de la barra lateral */
     .sidebar-icon {
+        /* Establecer margen inferior a 0 */
         margin-bottom: 0;
+        /* Establecer margen a la derecha */
         margin-right: 20px;
     }
+    /* Estilos para el contenido principal en pantallas pequeñas */
     .main-content {
+        /* Establecer relleno */
         padding: 20px;
     }
+    /* Estilos para la información del usuario en pantallas pequeñas */
     .user-info {
+        /* Justificar el contenido al inicio */
         justify-content: flex-start;
+        /* Establecer margen inferior */
         margin-bottom: 20px;
     }
 }

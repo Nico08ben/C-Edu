@@ -1,36 +1,90 @@
+/* Importar fuente de Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+/* Estilos generales para todos los elementos */
 * {
+    /* Eliminar margenes y rellenos por defecto */
     margin: 0;
     padding: 0;
+    /* Utilizar caja de modelo de caja */
     box-sizing: border-box;
+    /* Establecer fuente por defecto */
     font-family: "Rubik", serif;
 }
 
-body {
-    background-color: #f5f5f5;
-    display: flex;
-    min-height: 100vh;
+/* Variables de CSS para colores y transiciones */
+:root {
+    /* Colores */
+    --body-color: #E4E9F7;
+    --sidebar-color: #FFF;
+    --primary-color: #40C3A5;
+    --primary-color-ligth: #cdfff2;
+    --toggle-color: #DDD;
+    --text-color: #707070;
+
+    /* Transiciones */
+    --trans-02: all 0.2s ease;
+    --trans-03: all 0.3s ease;
+    --trans-04: all 0.4s ease;
+    --trans-05: all 0.5s ease;
 }
-.home{
-    position: relative;
-    height: 100vh;
-    left: 250px;
-    width: calc(100% - 250px);
+
+/* Estilos del cuerpo de la página */
+body {
+    /* Establecer color de fondo */
     background-color: var(--body-color);
+    /* Utilizar flexbox para layout */
+    display: flex;
+    /* Establecer altura mínima */
+    min-height: 100vh;
+    /* Transición para cambios de estilo */
     transition: var(--trans-05);
 }
 
-.sidebar.close ~ .home{
+/* Estilos del cuerpo en modo oscuro */
+body.dark {
+    /* Colores en modo oscuro */
+    --body-color: #18191A;
+    --sidebar-color: #242526;
+    --primary-color: #3A3B3C;
+    --primary-color-ligth: #3A3B3C;
+    --toggle-color: #FFF;
+    --text-color: #CCC;
+}
+
+/* Estilos de la barra lateral */
+.home {
+    /* Posicionar la barra lateral */
+    position: relative;
+    /* Establecer altura */
+    height: 100vh;
+    /* Establecer posición y ancho */
+    left: 250px;
+    width: calc(100% - 250px);
+    /* Establecer color de fondo */
+    background-color: var(--body-color);
+    /* Transición para cambios de estilo */
+    transition: var(--trans-05);
+}
+
+/* Estilos de la barra lateral cuando está cerrada */
+.sidebar.close ~ .home {
+    /* Establecer posición y ancho cuando está cerrada */
     left: 88px;
     width: calc(100% - 88px);
 }
+
+/* Estilos del contenido principal */
 .main-content {
+    /* Establecer margen izquierdo */
     margin-left: 80px;
+    /* Establecer relleno */
     padding: 30px;
+    /* Establecer ancho */
     width: calc(100% - 80px);
 }
 
+/* Estilos del encabezado */
 .header {
     background-color: var(--sidebar-color);
     display: flex;
@@ -41,6 +95,7 @@ body {
     height: 80px;
     justify-content: space-between;
     align-items: center;
+    /* Establecer margen inferior */
     margin-bottom: 30px;
     padding-right: 30px;
     padding-left: 30px;
@@ -51,6 +106,7 @@ body {
     font-weight: normal;
 }
 
+/* Estilos del perfil */
 .profile {
     position: relative;
     left: -20px;
@@ -71,9 +127,12 @@ body {
     color: var(--text-color);
 }
 
+/* Estilos de la imagen del perfil */
 .profile img {
+    /* Establecer ancho y alto */
     width: 40px;
     height: 40px;
+    /* Establecer forma circular */
     border-radius: 50%;
 }
 .profile .fa-regular.fa-bell{
@@ -97,141 +156,230 @@ body {
     background-color: white;
 }
 
+/* Estilos del contenedor de tarjetas */
 .cards-container {
+    /* Utilizar grid para layout */
     display: grid;
+    /* Establecer plantilla de columnas */
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Establecer espacio entre elementos */
     gap: 20px;
 }
 
+/* Estilos de las tarjetas */
 .card {
+    /* Establecer color de fondo */
     background: white;
+    /* Establecer borde */
     border: 2px solid rgb(220, 220, 220);
+    /* Establecer forma circular */
     border-radius: 15px;
+    /* Establecer relleno */
     padding: 20px;
+    /* Establecer sombra */
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
+/* Estilos del encabezado de la tarjeta */
 .card-header {
+    /* Utilizar flexbox para layout */
     display: flex;
+    /* Alinear elementos */
     align-items: center;
+    /* Establecer espacio entre elementos */
     gap: 10px;
+    /* Establecer margen inferior */
     margin-bottom: 20px;
+    /* Establecer tamaño de fuente */
     font-size: 1.2rem;
+    /* Establecer peso de fuente */
     font-weight: bold;
 }
 
+/* Estilos del elemento de tarea */
 .task-item {
+    /* Establecer color de fondo */
     background: #f8f8f8;
+    /* Establecer forma circular */
     border-radius: 10px;
+    /* Establecer relleno */
     padding: 15px;
+    /* Establecer margen inferior */
     margin-bottom: 10px;
+    /* Establecer posición relativa */
     position: relative;
 }
 
+/* Estilos del punto rojo en el elemento de tarea */
 .task-item .red-dot {
+    /* Establecer posición absoluta */
     position: absolute;
+    /* Establecer posición derecha */
     right: 15px;
+    /* Est ablecer posición vertical */
     top: 50%;
+    /* Centrar verticalmente */
     transform: translateY(-50%);
+    /* Establecer tamaño */
     width: 8px;
     height: 8px;
+    /* Establecer forma circular */
     background: red;
     border-radius: 50%;
 }
 
+/* Estilos de los detalles de la tarea */
 .task-details {
+    /* Establecer color del texto */
     color: #666;
+    /* Establecer tamaño de fuente */
     font-size: 0.9em;
 }
 
+/* Estilos del elemento de evento */
 .event-item {
+    /* Utilizar flexbox para layout */
     display: flex;
+    /* Alinear elementos */
     align-items: center;
     justify-content: space-between;
+    /* Establecer relleno */
     padding: 15px;
+    /* Establecer margen */
     margin: 5px;
+    /* Establecer forma circular */
     border-radius: 10px;
+    /* Establecer borde inferior */
     border-bottom: 1px solid #eee;
+    /* Establecer color de fondo */
     background-color: #F5F5F5;
 }
-
+/* Estilos del elemento de chat */
 .chat-item {
+    /* Utilizar flexbox para layout */
     display: flex;
+    /* Alinear elementos */
     align-items: center;
+    /* Establecer espacio entre elementos */
     gap: 15px;
+    /* Establecer relleno */
     padding: 15px;
+    /* Establecer borde inferior */
     border-bottom: 1px solid #eee;
 }
 
+/* Estilos de la imagen del chat */
 .chat-item img {
+    /* Establecer ancho y alto */
     width: 50px;
     height: 50px;
+    /* Establecer forma circular */
     border-radius: 50%;
 }
 
+/* Estilos del contenido del chat */
 .chat-content {
+    /* Permitir que el contenido ocupe el espacio restante */
     flex: 1;
 }
 
+/* Estilos del nombre en el chat */
 .chat-name {
+    /* Establecer peso de fuente */
     font-weight: bold;
+    /* Establecer margen inferior */
     margin-bottom: 5px;
 }
 
+/* Estilos del rol en el chat */
 .chat-role {
+    /* Establecer color del texto */
     color: #666;
+    /* Establecer tamaño de fuente */
     font-size: 0.9em;
+    /* Establecer margen inferior */
     margin-bottom: 3px;
 }
 
+/* Estilos del mensaje en el chat */
 .chat-message {
+    /* Establecer color del texto */
     color: #666;
 }
-
+/* Estilos del punto de estado */
 .status-dot {
+    /* Establecer tamaño */
     width: 8px;
     height: 8px;
+    /* Establecer forma circular */
     border-radius: 50%;
+    /* Establecer margen derecho */
     margin-right: 5px;
 }
 
+/* Estilos del punto de estado verde */
 .status-dot.green {
+    /* Establecer color de fondo */
     background: #1eb110;
 }
 
+/* Estilos del punto de estado naranja */
 .status-dot.orange {
+    /* Establecer color de fondo */
     background: #6e0101;
 }
 
+/* Estilos del punto de estado gris */
 .status-dot.gray {
- background: #666;
+    /* Establecer color de fondo */
+    background: #666;
 }
 
+/* Estilos del botón de ingreso */
 .btn-ingresar {
+    /* Establecer visualización como bloque */
     display: block;
+    /* Establecer ancho completo */
     width: 100%;
+    /* Establecer relleno */
     padding: 10px;
+    /* Establecer color de fondo */
     background: white;
+    /* Eliminar borde */
     border: none;
+    /* Establecer forma circular */
     border-radius: 8px;
+    /* Establecer margen superior */
     margin-top: 20px;
+    /* Cambiar cursor al pasar el mouse */
     cursor: pointer;
+    /* Establecer peso de fuente */
     font-weight: 500;
+    /* Establecer sombra */
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+/* Estilos para pantallas pequeñas */
 @media (max-width: 768px) {
+    /* Estilos de la barra lateral */
     .sidebar {
+        /* Establecer ancho */
         width: 60px;
     }
     
+    /* Estilos del contenido principal */
     .main-content {
-        margin-left: 60px;
+        /* Establecer margen izquierdo */
+        margin-left:  60px;
+        /* Establecer ancho */
         width: calc(100% - 60px);
+        /* Establecer relleno */
         padding: 20px;
     }
 
+    /* Estilos del contenedor de tarjetas */
     .cards-container {
+        /* Establecer una sola columna */
         grid-template-columns: 1fr;
     }
 }
