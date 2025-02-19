@@ -1,27 +1,74 @@
+/* Importar fuente de Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
+/* Estilos generales para todos los elementos */
 * {
+    /* Eliminar margenes y rellenos por defecto */
     margin: 0;
     padding: 0;
+    /* Utilizar caja de modelo de caja */
     box-sizing: border-box;
+    /* Establecer fuente por defecto */
     font-family: "Rubik", serif;
-    }
-
-body {
-    display: flex;
-    min-height: 100vh;
-    background-color: #FBF4F4;
 }
-.home{
-    position: relative;
-    height: 100vh;
-    left: 250px;
-    width: calc(100% - 250px);
+
+/* Variables de CSS para colores y transiciones */
+:root {
+    /* Colores */
+    --body-color: #fafbff;
+    --sidebar-color: #FFF;
+    --primary-color: #40C3A5;
+    --primary-color-ligth: #cdfff2;
+    --toggle-color: #DDD;
+    --text-color: #707070;
+
+    /* Transiciones */
+    --trans-02: all 0.2s ease;
+    --trans-03: all 0.3s ease;
+    --trans-04: all 0.4s ease;
+    --trans-05: all 0.5s ease;
+}
+
+/* Estilos del cuerpo de la página */
+body {
+    /* Establecer color de fondo */
     background-color: var(--body-color);
+    /* Utilizar flexbox para layout */
+    display: flex;
+    /* Establecer altura mínima */
+    min-height: 100vh;
+    /* Transición para cambios de estilo */
     transition: var(--trans-05);
 }
 
-.sidebar.close ~ .home{
+/* Estilos del cuerpo en modo oscuro */
+body.dark {
+    /* Colores en modo oscuro */
+    --body-color: #18191A;
+    --sidebar-color: #242526;
+    --primary-color: #3A3B3C;
+    --primary-color-ligth: #3A3B3C;
+    --toggle-color: #FFF;
+    --text-color: #CCC;
+}
+/* Estilos de la barra lateral */
+.home {
+    /* Posicionar la barra lateral */
+    position: relative;
+    /* Establecer altura */
+    height: 100vh;
+    /* Establecer posición y ancho */
+    left: 250px;
+    width: calc(100% - 250px);
+    /* Establecer color de fondo */
+    background-color: var(--body-color);
+    /* Transición para cambios de estilo */
+    transition: var(--trans-05);
+}
+
+/* Estilos de la barra lateral cuando está cerrada */
+.sidebar.close ~ .home {
+    /* Establecer posición y ancho cuando está cerrada */
     left: 88px;
     width: calc(100% - 88px);
 }
@@ -33,11 +80,13 @@ body {
     flex-direction: column;
     align-items: center;
     margin: auto;
+    justify-content: center;
+    height: 100%;
 }
 
 /* === Tarjeta de perfil === */
 .card-profile {
-    background: white;
+    background: var(--sidebar-color);
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -45,6 +94,7 @@ body {
     text-align: center;
     margin-top: 10px;
     position: relative;
+    transition: var(--trans-05);
 }
 
 /* === Encabezado de perfil (Editar Perfil / Ayuda) === */
@@ -127,8 +177,9 @@ label {
     font-size: 0.9rem;
     font-weight: bold;
     margin-top: 10px;
-    color: #333;
+    color: var(--text-color);
     text-align: left;
+    transition: var(--trans-04);
 }
 
 input {
@@ -149,6 +200,7 @@ input:disabled {
     text-align: left;
     padding: 15px 0;
     margin: auto;
+    color: var(--text-color);
 }
 .ayuda h3{
     font-size: 30px;
@@ -159,5 +211,3 @@ input:disabled {
 .ayuda p{
     margin-bottom: 20px;
 }
-
-
