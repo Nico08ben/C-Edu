@@ -74,13 +74,6 @@ body.dark {
     width: calc(100% - 88px);
 }
 
-
-.main-content {
-    margin-left: 80px;
-    padding: 30px;
-    width: calc(100% - 80px);
-}
-
 /* Estilos del contenido principal */
 .main-content {
     /* Establecer margen izquierdo */
