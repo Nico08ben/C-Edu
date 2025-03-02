@@ -91,7 +91,7 @@ body.dark {
     position: relative;
     top: -35px;
     left: -110px;
-    width: 1200px;
+    width: 1175px;
     height: 80px;
     justify-content: space-between;
     align-items: center;
@@ -109,7 +109,7 @@ body.dark {
 /* Estilos del perfil */
 .profile {
     position: relative;
-    left: -20px;
+    left: 30px;
     width: 350px;
     height: 50px;
     display: flex;
@@ -164,7 +164,21 @@ body.dark {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     /* Establecer espacio entre elementos */
     gap: 20px;
+    position: relative;
+    top: -20px;
+    right: 30px;
 }
+.div-card{
+    background-color: #f9f5f5;
+    width: auto;
+    height: 300px;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+
+}
+
 
 /* Estilos de las tarjetas */
 .card {
@@ -187,27 +201,28 @@ body.dark {
     /* Alinear elementos */
     align-items: center;
     /* Establecer espacio entre elementos */
-    gap: 10px;
+    gap: 15px;
     /* Establecer margen inferior */
     margin-bottom: 20px;
     /* Establecer tamaño de fuente */
     font-size: 1.2rem;
     /* Establecer peso de fuente */
-    font-weight: bold;
+    font-weight: 400;
 }
 
 /* Estilos del elemento de tarea */
 .task-item {
     /* Establecer color de fondo */
-    background: #f8f8f8;
+    background: #ffffff;
     /* Establecer forma circular */
     border-radius: 10px;
     /* Establecer relleno */
-    padding: 15px;
+    padding: 10px;
     /* Establecer margen inferior */
     margin-bottom: 10px;
     /* Establecer posición relativa */
     position: relative;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 /* Estilos del punto rojo en el elemento de tarea */
@@ -238,6 +253,7 @@ body.dark {
 
 /* Estilos del elemento de evento */
 .event-item {
+    
     /* Utilizar flexbox para layout */
     display: flex;
     /* Alinear elementos */
@@ -252,7 +268,9 @@ body.dark {
     /* Establecer borde inferior */
     border-bottom: 1px solid #eee;
     /* Establecer color de fondo */
-    background-color: #F5F5F5;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
 }
 /* Estilos del elemento de chat */
 .chat-item {
@@ -337,10 +355,13 @@ body.dark {
 
 /* Estilos del botón de ingreso */
 .btn-ingresar {
+    font-family: "Rubik", serif;
+    font-weight: 400;
+    
     /* Establecer visualización como bloque */
     display: block;
     /* Establecer ancho completo */
-    width: 100%;
+    width: 150px;
     /* Establecer relleno */
     padding: 10px;
     /* Establecer color de fondo */
@@ -354,9 +375,12 @@ body.dark {
     /* Cambiar cursor al pasar el mouse */
     cursor: pointer;
     /* Establecer peso de fuente */
-    font-weight: 500;
     /* Establecer sombra */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    align-items: center;
+    text-align: center;
+    position: relative;
+    left: 70px;
 }
 
 /* Estilos para pantallas pequeñas */
