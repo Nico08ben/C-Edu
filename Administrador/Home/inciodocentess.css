@@ -11,7 +11,6 @@
     /* Establecer fuente por defecto */
     font-family: "Rubik", serif;
 }
-
 /* Estilos de la barra lateral */
 .home {
     /* Posicionar la barra lateral */
@@ -241,7 +240,7 @@
     /* Establecer espacio entre elementos */
     gap: 15px;
     /* Establecer relleno */
-    padding: 5px;
+    padding: 15px;
     /* Establecer borde inferior */
     border-bottom: 1px solid #eee;
 }
@@ -266,8 +265,7 @@
     /* Establecer peso de fuente */
     font-weight: bold;
     /* Establecer margen inferior */
-    margin-bottom: -1px;
-    padding: 2px;
+    margin-bottom: 5px;
 }
 
 /* Estilos del rol en el chat */
@@ -277,7 +275,7 @@
     /* Establecer tamaño de fuente */
     font-size: 0.9em;
     /* Establecer margen inferior */
-    margin-bottom: 1px;
+    margin-bottom: 3px;
 }
 
 /* Estilos del mensaje en el chat */

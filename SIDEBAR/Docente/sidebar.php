@@ -59,4 +59,4 @@
         </div>
     </nav>
 
-    <script src="/C-Edu/SIDEBAR/java.js"></script>
+    <script src="/C-Edu/SIDEBAR/Docente/java.js"></script>
