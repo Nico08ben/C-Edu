@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<?php include "../../SIDEBAR/Docente/head.php" ?>
+<?php include "../../SIDEBAR/Admin/head.php" ?>
     <link rel="stylesheet" href="profile.css">
     <title>Perfil de Usuario</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -9,7 +9,7 @@
 </head>
 <body>
     <!-- Barra lateral -->
-    <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
+    <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
 
     <section class="home">
         <!-- Contenido principal -->
