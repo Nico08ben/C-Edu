@@ -281,7 +281,7 @@ body.dark {
     /* Establecer espacio entre elementos */
     gap: 15px;
     /* Establecer relleno */
-    padding: 15px;
+    padding: 5px;
     /* Establecer borde inferior */
     border-bottom: 1px solid #eee;
 }
@@ -306,7 +306,8 @@ body.dark {
     /* Establecer peso de fuente */
     font-weight: bold;
     /* Establecer margen inferior */
-    margin-bottom: 5px;
+    margin-bottom: -1px;
+    padding: 2px;
 }
 
 /* Estilos del rol en el chat */
@@ -316,7 +317,7 @@ body.dark {
     /* Establecer tamaño de fuente */
     font-size: 0.9em;
     /* Establecer margen inferior */
-    margin-bottom: 3px;
+    margin-bottom: 1px;
 }
 
 /* Estilos del mensaje en el chat */
