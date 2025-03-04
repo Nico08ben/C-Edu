@@ -1,82 +1,19 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAREAS ASIGNADAS</title>
-    <link rel="stylesheet" href="styleSidebar.css".css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <?php include "../../SIDEBAR/head.php" ?>
     <link rel="stylesheet" href="tareascss.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>TAREAS ASIGNADAS</title>
 </head>
 <body>
-    <nav class="sidebar close">
-        <header>
-            <div class="image-text">
-                <span class="image">
-                    <a href="../Home/index.html"><img src="cedu.png" alt="logo"></a>
-                </span>
-                <div class="text header-text">
-                    <span class="name">C-EDU</span>
-                    <span class="profession">Web Developer</span>
-                </div>
-            </div>
-            <i class='bx bx-chevron-right toggle'></i>
-        </header>
-        <div class="menu-bar">
-            <div class="menu">
-                <li class="search-box">
-                    <i class='bx bx-search-alt icon'></i>
-                        <input type="text" placeholder="Search...">
-                </li>
-                <ul class="menu-links">
-                    <li class="nav-links">
-                        <a href="#">
-                            <i class='bx bx-conversation icon' ></i>
-                            <span class="text nav-text">Mensajes</span>
-                        </a>
-                    </li>
-                    <li class="nav-links">
-                        <a href="#">
-                            <i class='bx bx-book-open icon' ></i>
-                            <span class="text nav-text">Tareas</span>
-                        </a>
-                    </li>
-                    <li class="nav-links">
-                        <a href="#">
-                            <i class='bx bx-notepad icon' ></i>
-                            <span class="text nav-text">Calendario</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="bottom-content">
-                <li class="">
-                    <a href="../../index.html">
-                        <i class='bx bx-log-out icon' ></i>
-                        <span class="text nav-text">Cerrar Sesion</span>
-                    </a>
-                </li>
-                <li class="mode">
-                    <div class="moon-sun">
-                        <i class='bx bx-moon icon moon' ></i>
-                        <i class='bx bx-sun icon sun' ></i>
-                    </div>
-                    <span class="mode-text text">Dark Mode</span>
-                    <div class="toggle-switch">
-                        <span class="switch"></span>
-                    </div>
-                </li>
-            </div>
-        </div>
-    </nav>
+    <?php include "../../SIDEBAR/sidebar.php" ?>
 
     <section class="home">
         <div class="main-content">
             <div class="user-info">
                 <span>Antonio <br>Docente de Matematicas</span>
-                <div class="user-avatar"></div>
+                <a href="../UserProfile/index.php"><div class="user-avatar"></div></a>
             </div>
             <h3 class="tareas">Tareas Asignadas</h3>
             <div class="task-card">
@@ -120,8 +57,6 @@
             </div>
         </div>
     </section>
-
-    <script src="javaSidebar.js"></script>
         
 </body>
 </html>

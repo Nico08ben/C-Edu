@@ -1,19 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="styleSidebar.css".css">
-    <link rel="stylesheet" href="index.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-</head>
-<body>
     <nav class="sidebar close">
         <header>
             <div class="image-text">
                 <span class="image">
-                    <img src="cedu.png" alt="logo">
+                    <a href="../Home/index.php"><img src="cedu.png" alt="logo"></a>
                 </span>
                 <div class="text header-text">
                     <span class="name">C-EDU</span>
@@ -36,7 +25,7 @@
                         </a>
                     </li>
                     <li class="nav-links">
-                        <a href="#">
+                        <a href="/C-Edu/Docente/Tareas asignadas/index.php">
                             <i class='bx bx-book-open icon' ></i>
                             <span class="text nav-text">Tareas</span>
                         </a>
@@ -51,7 +40,7 @@
             </div>
             <div class="bottom-content">
                 <li class="">
-                    <a href="#">
+                    <a href="/C-Edu/index.html">
                         <i class='bx bx-log-out icon' ></i>
                         <span class="text nav-text">Cerrar Sesion</span>
                     </a>
@@ -61,7 +50,7 @@
                         <i class='bx bx-moon icon moon' ></i>
                         <i class='bx bx-sun icon sun' ></i>
                     </div>
-                    <span class="mode-text text">Dark Mode</span>
+                    <span class="mode-text text">Modo Oscuro</span>
                     <div class="toggle-switch">
                         <span class="switch"></span>
                     </div>
@@ -70,10 +59,4 @@
         </div>
     </nav>
 
-    <section class="home">
-        <div class="text">Dashboard</div>
-    </section>
-
-    <script src="javaSidebar.js"></script>
-</body>
-</html>
+    <script src="/C-Edu/SIDEBAR/java.js"></script>

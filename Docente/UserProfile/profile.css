@@ -176,7 +176,7 @@ body.dark {
     width: 48%;
 }
 
-label {
+.profile-right label {
     font-size: 0.9rem;
     font-weight: bold;
     margin-top: 10px;
@@ -185,7 +185,7 @@ label {
     transition: var(--trans-04);
 }
 
-input {
+.profile-right input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -194,7 +194,7 @@ input {
     color: #333;
 }
 
-input:disabled {
+.profile-right input:disabled {
     background-color: #e9ecef;
     color: #6c757d;
 }
