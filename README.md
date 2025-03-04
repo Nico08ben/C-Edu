@@ -10,4 +10,4 @@ Para abrir y editar este proyecto en Visual Studio desde la terminal, sigue esto
 2. Abre la terminal.
 3. Navega a la carpeta `htdocs` de XAMPP donde se encuentra tu proyecto. Por ejemplo:
    ```sh
-   cd \path\to\xampp\htdocs\C-Edu
+   cd C:\xampp\htdocs
