@@ -11,3 +11,4 @@ Para abrir y editar este proyecto en Visual Studio desde la terminal, sigue esto
 3. Navega a la carpeta `htdocs` de XAMPP donde se encuentra tu proyecto. Por ejemplo:
    ```sh
    cd C:\xampp\htdocs
+   git clone https://github.com/Nico08ben/C-Edu.git
