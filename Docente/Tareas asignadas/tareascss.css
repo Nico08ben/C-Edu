@@ -98,7 +98,7 @@ h3 {
     /* Establecer tamaño de fuente */
     font-size: 25px;
     /* Establecer color del texto */
-    color: #333;
+    color: var(--title-color);
 }
 
 /* Estilos del título de la tarea */
@@ -110,7 +110,7 @@ h3 {
     /* Hacer que el título sea negrita */
     font-weight: bold;
     /* Establecer color del texto */
-    color: #333;
+    color: var(--title-color);
     /* Establecer margen inferior */
     margin-bottom: 10px;
 }
@@ -120,7 +120,7 @@ h3 {
 
 .task-description {
     /* Establecer color del texto */
-    color: #666;
+    color: var(--text-color);
     /* Establecer tamaño de fuente */
     font-size: 14px;
     /* Establecer margen inferior */
@@ -140,7 +140,7 @@ h3 {
     /* Establecer tamaño de fuente */
     font-size: 14px;
     /* Establecer color del texto */
-    color: #666;
+    color: var(--text-color);
 }
 
 /* Estilos responsivos */
@@ -177,8 +177,6 @@ h3 {
     }
     /* Estilos para la información del usuario en pantallas pequeñas */
     .user-info {
-        /* Justificar el contenido al inicio */
-        justify-content: flex-start;
         /* Establecer margen inferior */
         margin-bottom: 20px;
     }
