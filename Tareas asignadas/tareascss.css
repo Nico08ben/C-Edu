@@ -135,16 +135,7 @@
 /* Estilos del título de la tarea */
 /* Esta sección establece estilos para el título de la tarea */
 
-h3 {
-    /* Posicionar el título de la tarea */
-    position: relative;
-    /* Ajustar la posición vertical del título */
-    top: -50px;
-    /* Establecer tamaño de fuente */
-    font-size: 25px;
-    /* Establecer color del texto */
-    color: var(--title-color);
-}
+
 
 /* Estilos del título de la tarea */
 /* Esta sección establece estilos para el título de la tarea */
@@ -155,7 +146,7 @@ h3 {
     /* Hacer que el título sea negrita */
     font-weight: bold;
     /* Establecer color del texto */
-    color: var(--title-color);
+    color: #333;
     /* Establecer margen inferior */
     margin-bottom: 10px;
 }
@@ -165,7 +156,7 @@ h3 {
 
 .task-description {
     /* Establecer color del texto */
-    color: var(--text-color);
+    color: #666;
     /* Establecer tamaño de fuente */
     font-size: 14px;
     /* Establecer margen inferior */
@@ -185,7 +176,7 @@ h3 {
     /* Establecer tamaño de fuente */
     font-size: 14px;
     /* Establecer color del texto */
-    color: var(--text-color);
+    color: #666;
 }
 
 /* Estilos responsivos */
@@ -222,7 +213,36 @@ h3 {
     }
     /* Estilos para la información del usuario en pantallas pequeñas */
     .user-info {
+        /* Justificar el contenido al inicio */
+        justify-content: flex-start;
         /* Establecer margen inferior */
         margin-bottom: 20px;
     }
 }
+.tabla-contenedor {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Estilos para la tabla */
+table {
+    width: 100%;
+    background-color: white;
+    border-collapse: collapse;
+    
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+th{
+    color: var(--primary-color);
+    font-family: "Rubik", serif;
+    font-weight: normal;
+}
+
