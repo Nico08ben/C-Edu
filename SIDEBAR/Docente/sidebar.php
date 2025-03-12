@@ -2,7 +2,7 @@
         <header>
             <div class="image-text">
                 <span class="image">
-                    <a href="../Home/index.php"><img src="cedu.png" alt="logo"></a>
+                    <a href="../Home/index.php"><img src="../../SIDEBAR/Docente/cedu.png" alt="logo"></a>
                 </span>
                 <div class="text header-text">
                     <span class="name">C-EDU</span>
