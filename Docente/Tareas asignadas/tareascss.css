@@ -135,7 +135,20 @@
 /* Estilos del título de la tarea */
 /* Esta sección establece estilos para el título de la tarea */
 
+<<<<<<< HEAD
 
+=======
+h3 {
+    /* Posicionar el título de la tarea */
+    position: relative;
+    /* Ajustar la posición vertical del título */
+    top: -50px;
+    /* Establecer tamaño de fuente */
+    font-size: 25px;
+    /* Establecer color del texto */
+    color: var(--title-color);
+}
+>>>>>>> 045ffb172ea5a49281b05d745155a4504ed7990d
 
 /* Estilos del título de la tarea */
 /* Esta sección establece estilos para el título de la tarea */
@@ -146,7 +159,7 @@
     /* Hacer que el título sea negrita */
     font-weight: bold;
     /* Establecer color del texto */
-    color: #333;
+    color: var(--title-color);
     /* Establecer margen inferior */
     margin-bottom: 10px;
 }
@@ -156,7 +169,7 @@
 
 .task-description {
     /* Establecer color del texto */
-    color: #666;
+    color: var(--text-color);
     /* Establecer tamaño de fuente */
     font-size: 14px;
     /* Establecer margen inferior */
@@ -176,7 +189,7 @@
     /* Establecer tamaño de fuente */
     font-size: 14px;
     /* Establecer color del texto */
-    color: #666;
+    color: var(--text-color);
 }
 
 /* Estilos responsivos */
@@ -213,8 +226,6 @@
     }
     /* Estilos para la información del usuario en pantallas pequeñas */
     .user-info {
-        /* Justificar el contenido al inicio */
-        justify-content: flex-start;
         /* Establecer margen inferior */
         margin-bottom: 20px;
     }

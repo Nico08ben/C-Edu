@@ -12,7 +12,8 @@
     --primary-color-ligth:#cdfff2;
     --toggle-color:#DDD ;
     --text-color: #707070 ;
-    
+    --title-color: #333;
+
     --trans-02: all 0.2s ease; 
     --trans-03: all 0.3s ease; 
     --trans-04: all 0.4s ease; 
@@ -32,6 +33,7 @@ body.dark{
     --primary-color-ligth:#3A3B3C ;
     --toggle-color:#FFF ;
     --text-color: #CCC ;
+    --title-color: #ffffff;
 }
 
 .sidebar .text{
