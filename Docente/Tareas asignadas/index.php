@@ -11,11 +11,18 @@
 
     <section class="home">
         <div class="main-content">
-            <div class="user-info">
-                <span>Antonio <br>Docente de Matematicas</span>
-                <a href="../UserProfile/index.php"><div class="user-avatar"></div></a>
+            <div class="header">
+                <h1 id="titulo1-header">TAREAS ASIGNADAS</h1>
+                <div class="profile">
+                <i class="fa-regular fa-bell"></i>
+                    <div class="profile-info">
+                        <div><h3>Antonio</h3></div>
+                        <div><p>Docente de Matemáticas</p></div>
+                    </div>
+                    <a href="../UserProfile/index.php"><i class="fa-solid fa-user"></i></a>
+                </div>
             </div>
-            <h3 class="tareas">Tareas Asignadas</h3>
+            
             <div class="task-card">
                 <div class="task-title">Planificar Calendario</div>
                 <div class="task-description">Elabore el calendario de actividades académicas para el mes de Septiembre, teniendo en cuenta los eventos importantes y los plazos correspondientes.</div>
