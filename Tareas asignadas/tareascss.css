@@ -234,9 +234,11 @@ table {
     background-color: white;
     border-collapse: collapse;
     
+    
 }
 
 th, td {
+    
     padding: 10px;
     text-align: center;
 }
@@ -244,5 +246,13 @@ th{
     color: var(--primary-color);
     font-family: "Rubik", serif;
     font-weight: normal;
+    text-align: left;
+    text-overflow: clip;
+}
+td{
+    border-bottom:1px solid rgb(203, 190, 190);
+    border-right: 1px solid rgb(203, 190, 190);
+    
+    text-align: left;
 }
 

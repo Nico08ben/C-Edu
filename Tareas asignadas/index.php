@@ -29,7 +29,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Tarea</th>
+                                <th <i class="fa-solid fa-hammer"></i><p>Tareas</p></th>
                                 <th>Creado</th>
                                 <th>Informacion</th>
                                 <th>Estado</th>
