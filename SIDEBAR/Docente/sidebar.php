@@ -19,7 +19,7 @@
                 </li>
                 <ul class="menu-links">
                     <li class="nav-links">
-                        <a href="#">
+                        <a href="/C-Edu/Docente/Chat/index.php">
                             <i class='bx bx-conversation icon' ></i>
                             <span class="text nav-text">Mensajes</span>
                         </a>
