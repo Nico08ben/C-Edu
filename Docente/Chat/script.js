@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const chatBody = document.querySelector(".chat-body");
     const messageInput = document.querySelector(".chat-footer input");
     const sendButton = document.querySelector(".chat-footer button");
+    let typingTimeout;
+
     chatBody.innerHTML = `<p>Chat con ${chatHeader.textContent}</p>`;
 
     // Manejar la selección de contactos
@@ -23,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sendButton.addEventListener("click", sendMessage);
     messageInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") sendMessage();
+        else showTypingStatus();
     });
 
     function sendMessage() {
@@ -35,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             chatBody.appendChild(messageElement);
             messageInput.value = "";
             chatBody.scrollTop = chatBody.scrollHeight;
+            chatStatus.textContent = "Conectado";
 
             // Simulación de mensaje recibido tras 1 segundo
             setTimeout(receiveMessage, 1000);
@@ -50,13 +54,21 @@ document.addEventListener("DOMContentLoaded", () => {
         chatBody.scrollTop = chatBody.scrollHeight;
     }
 
+    function showTypingStatus() {
+        chatStatus.textContent = "Escribiendo...";
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+            chatStatus.textContent = "Conectado";
+        }, 1000);
+    }
+
     // ---------- MODAL DEL PERFIL ----------
     const profileModal = document.createElement("div");
     profileModal.id = "profile-modal";
     profileModal.className = "modal";
     profileModal.innerHTML = `
     <div class="modal-content">
-        <span class="close-modal">&times;</span>
+        <span class="close-modal" id="close-modal">&times;</span>
         <img id="profile-pic" src="" alt="Foto de perfil">
         <h2 id="profile-name"></h2>
         <p id="profile-username"></p>
@@ -107,13 +119,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Cerrar el modal
-    document.querySelector('.close-modal').addEventListener('click', () => {
-    document.getElementById('profile-modal').style.display = 'none';
-});
+    document.getElementById('close-modal').addEventListener('click', () => {
+        profileModal.style.display = 'none';
+    });
 
     // Cerrar si se hace clic afuera del contenido
     window.addEventListener("click", (e) => {
         if (e.target === profileModal) profileModal.style.display = "none";
     });
-    
 });

@@ -226,7 +226,13 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
     animation: fadeIn 0.3s ease-out;
 
+    /* Centrando el modal */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
+
 
 .modal-content img {
     width: 100px;
@@ -248,11 +254,39 @@ h1, h2, h3, h4, h5, h6 {
 
 .close-modal {
     position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 25px;
+    top: -40px;
+    right: -40px;
+    font-size: 30px;
     color: #fff;
     cursor: pointer;
+
+    /* Ajustes responsivos */
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Fondo con círculo para mejor visualización */
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+
+    /* Efecto al pasar el ratón */
+    
+}
+.close-modal:hover {
+    transform: scale(1.1);
+}
+/* Mejora para pantallas pequeñas */
+@media (max-width: 600px) {
+    .close-modal {
+        top: -30px;
+        right: -30px;
+        font-size: 25px;
+        width: 30px;
+        height: 30px;
+    }
 }
 
 /* Animación para el modal */

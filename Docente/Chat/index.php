@@ -70,7 +70,7 @@
 
         <div id="profile-modal" class="modal">
             <div class="modal-content">
-                <span class="close-modal">&times;</span>
+                <i class="fa-solid fa-xmark close-modal"></i>
                 <img id="profile-pic" src="" alt="Foto de perfil">
                 <h2 id="profile-name"></h2>
                 <p id="profile-role"></p>
