@@ -37,7 +37,7 @@
                         </a>
                     </li>
                     <li class="nav-links">
-                        <a href="/C-Edu/Administrador/Tareas asignadas/Edit_User.php">
+                        <a href="/C-Edu/Administrador/Edit_User/index.php">
                             <i class='bx bx-user icon'></i>
                             <span class="text nav-text">Modificar Usuarios</span>
                         </a>
