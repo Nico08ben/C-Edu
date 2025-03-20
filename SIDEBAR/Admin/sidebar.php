@@ -2,7 +2,7 @@
         <header>
             <div class="image-text">
                 <span class="image">
-                    <a href="../Home/index.php"><img src="cedu.png" alt="logo"></a>
+                    <a href="../Home/index.php"><img src="/C-Edu/SIDEBAR/Admin/cedu.png" alt="logo"></a>
                 </span>
                 <div class="text header-text">
                     <span class="name">C-EDU</span>
@@ -19,7 +19,7 @@
                 </li>
                 <ul class="menu-links">
                     <li class="nav-links">
-                        <a href="#">
+                        <a href="/C-Edu/Administrador/Chat/index.php">
                             <i class='bx bx-conversation icon' ></i>
                             <span class="text nav-text">Mensajes</span>
                         </a>
@@ -34,6 +34,12 @@
                         <a href="#">
                             <i class='bx bx-notepad icon' ></i>
                             <span class="text nav-text">Calendario</span>
+                        </a>
+                    </li>
+                    <li class="nav-links">
+                        <a href="/C-Edu/Administrador/Tareas asignadas/Edit_User.php">
+                            <i class='bx bx-user icon'></i>
+                            <span class="text nav-text">Modificar Usuarios</span>
                         </a>
                     </li>
                 </ul>
