@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,31 +8,32 @@
     <title>Inicio Sesión Docente</title>
     <link rel="stylesheet" href="Inicio/Docente/c-edua.css">
 </head>
+
 <body>
     <div class="login-container">
         <h1>Iniciar Sesión</h1>
         <div class="subtitle">DOCENTES</div>
-        <form action="Docente/Home/index.php">
+        <form action="validar_login.php" method="POST">
             <div class="form-group">
                 <label class="etiquetas">Usuario</label>
-                <input type="text" placeholder="Usuario">
+                <input type="text" name="usuario" placeholder="Usuario" required>
             </div>
             <div class="form-group">
                 <label class="etiquetas">Contraseña</label>
-                <input type="password" placeholder="Contraseña">
+                <input type="password" name="password" placeholder="Contraseña" required>
             </div>
-            <a href="Docente/Home/index.php" target="_blank">
-                <button type="submit" class="iniciar">INICIAR</button>
-            </a>
-            
+            <button type="submit" class="iniciar">INICIAR</button>
         </form>
+
     </div>
     <div class="admin-container">
         <h2 class="admin-title">¿ADMINISTRATIVO?</h2>
-        <p class="admin-text">Inicia sesión en nuestro apartado de administrativos para poder ingresar a nuestra pagina web en modo administrativo.</p>
-        <a href="Inicio/Administrador/index.html">
+        <p class="admin-text">Inicia sesión en nuestro apartado de administrativos para poder ingresar a nuestra pagina
+            web en modo administrativo.</p>
+        <a href="Inicio/Administrador/index.php ">
             <button class="admin-button">Iniciar Sesión</button>
         </a>
     </div>
 </body>
+
 </html>
