@@ -29,10 +29,10 @@
                     <table>
                         <thead>
                             <tr>
-                                <th <i class="fa-solid fa-hammer"></i><p>Tareas</p></th>
-                                <th>Creado</th>
-                                <th>Informacion</th>
-                                <th>Estado</th>
+                                <th><i class="fa-solid fa-hammer"></i><label>  Tareas</label></th>
+                                <th><i class="fa-solid fa-user-tie"></i><label>  Creador</label></th>
+                                <th><i class="fa-solid fa-circle-info"></i><label>  Información</label></th>
+                                <th><i class="fa-solid fa-sliders"></i><label>  Estado</label></th>
                                 
                             </tr>
                         </thead>

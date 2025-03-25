@@ -255,4 +255,39 @@ td{
     
     text-align: left;
 }
+.btn-datalles{
+    position: relative;
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    font-size: 18px;
+    font-weight: 400;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease;
 
+}
+.btn-datalles:active{
+    transform: scale(0.96);
+}
+.btn-datalles:before,.btn-datalles:after{
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: 150%;
+    border: 2px solid red;
+    background-repeat: no-repeat;
+
+}
+.btn-datalles::before{
+    top: -70%;
+    background-image: radial-gradient(circle, #7D2AE8 20%, transparent 20%);
+    background-size: 10% 10%;
+
+}
+.btn-datalles:after{
+    bottom: -70%;
+}
