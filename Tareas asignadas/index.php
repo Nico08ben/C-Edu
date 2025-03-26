@@ -3,7 +3,9 @@
 <head>
     <?php include "../SIDEBAR/Docente/head.php" ?>
     <link rel="stylesheet" href="tareascss.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesh
+    
+    eet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>TAREAS ASIGNADAS</title>
 </head>
 <body>
@@ -29,10 +31,10 @@
                     <table>
                         <thead>
                             <tr>
-                                <th <i class="fa-solid fa-hammer"></i><p>Tareas</p></th>
-                                <th>Creado</th>
-                                <th>Informacion</th>
-                                <th>Estado</th>
+                                <th><i class="fa-solid fa-hammer"></i><label>  Tareas</label></th>
+                                <th><i class="fa-solid fa-user-tie"></i><label>  Creador</label></th>
+                                <th><i class="fa-solid fa-circle-info"></i><label>  Información</label></th>
+                                <th><i class="fa-solid fa-sliders"></i><label>  Estado</label></th>
                                 
                             </tr>
                         </thead>
