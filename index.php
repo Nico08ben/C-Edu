@@ -1,25 +1,3 @@
-<?php
-session_start();
-include("conexion.php");
-
-if (isset($_SESSION['id_usuario'])) {
-    $id_usuario = $_SESSION['id_usuario'];
-
-    $sql = "SELECT modo_tema FROM usuario WHERE id_usuario = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id_usuario);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    $modo_tema = "claro"; // Valor por defecto
-    if ($row = $result->fetch_assoc()) {
-        $modo_tema = $row['modo_tema'];
-    }
-
-    $stmt->close();
-    $conn->close();
-}
-?>  
 
 <!DOCTYPE html>
 <html lang="es">
@@ -32,7 +10,7 @@ if (isset($_SESSION['id_usuario'])) {
     <link rel="stylesheet" href="Inicio/Docente/c-edua.css">
 </head>
 
-<body class="<?php echo ($modo_tema === 'oscuro') ? 'dark' : ''; ?>">
+<body>
     <div class="login-container">
         <h1>Iniciar Sesión</h1>
         <div class="subtitle">DOCENTES</div>
