@@ -2,10 +2,7 @@ body {
     background-color: var(--body-color);
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    font-family: Arial, sans-serif;
 }
 
 .home {
@@ -13,7 +10,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: 100vh;
 }
 
 .container {
@@ -21,19 +18,20 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    width: 80%;
-    max-width: 900px;
+    width: 90%;
+    max-width: 1000px;
 }
 
 h1 {
     color: var(--title-color);
     text-align: center;
+    margin-bottom: 20px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin-bottom: 20px;
 }
 
 thead tr {
@@ -52,21 +50,25 @@ img {
     border-radius: 50%;
 }
 
-button {
-    cursor: pointer;
-    padding: 5px 10px;
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.edit, .delete {
+    background: none;
     border: none;
+    cursor: pointer;
+    padding: 5px;
     border-radius: 5px;
-    margin: 0 2px;
 }
 
-button.edit {
-    background-color: #ffdd57;
+.edit {
+    background-color: #ffd700;
 }
 
-button.delete {
+.delete {
     background-color: #ff6b6b;
-    color: #fff;
 }
 
 #newUser, #save {
@@ -76,8 +78,86 @@ button.delete {
     border: none;
     border-radius: 5px;
     margin: 5px;
+    cursor: pointer;
 }
 
-#newUser:hover, #save:hover {
-    opacity: 0.9;
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 10px;
+    width: 400px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative;
+    transform: scale(0.7);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
