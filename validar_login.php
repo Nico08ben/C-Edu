@@ -1,13 +1,12 @@
 <?php
-session_start(); // Iniciar sesión
-
-include 'conexion.php'; // Conexión a la base de datos
+session_start();
+include 'conexion.php'; // Incluir la conexión a la base de datos
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario = $_POST['usuario'];
     $password = $_POST['password'];
 
-    // Consulta para verificar si el usuario existe
+    // Verificar si el usuario existe
     $sql = "SELECT * FROM usuario WHERE email_usuario = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $usuario);
@@ -17,18 +16,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($resultado->num_rows > 0) {
         $fila = $resultado->fetch_assoc();
 
-        // Verificar la contraseña usando password_verify()
+        // Verificar la contraseña
         if (password_verify($password, $fila['contraseña_usuario'])) {
-            // Inicio de sesión exitoso
+            // Guardar datos en sesión
             $_SESSION['id_usuario'] = $fila['id_usuario'];
             $_SESSION['nombre_usuario'] = $fila['nombre_usuario'];
-            $_SESSION['rol'] = $fila['id_rol']; // Guardamos el rol para diferenciar acceso
+            $_SESSION['rol'] = $fila['id_rol'];
 
-            // Redirigir al área correspondiente según el rol
+
+            // Redirigir según el rol
             if ($fila['id_rol'] == 1) { 
                 header("Location: Docente/Home/index.php");
             } else {
-                echo "<script>alert('Usuario corresponde a administrador'); window.location.href='index.php';</script>";
+                header("Location: Administrador/Home/index.php");
             }
             exit();
         } else {
