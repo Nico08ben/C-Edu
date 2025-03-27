@@ -11,6 +11,7 @@
 </head>
 
 <body>
+<?php header("Location: Chat/chat.php"); exit; ?>
     <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
     <section class="home">
         <div class="container">
