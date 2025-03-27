@@ -1,5 +1,5 @@
 <?php
-include 'conexion.php'; // Conexión a la base de datos
+include '../../conexion.php'; // Conexión a la base de datos
 
 $sql = "SELECT * FROM usuario";
 $resultado = $conn->query($sql);
@@ -11,7 +11,7 @@ $resultado = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Usuarios</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Asegúrate de tener un CSS adecuado -->
+    <link rel="stylesheet" href="editcss.css"> <!-- Asegúrate de tener un CSS adecuado -->
 </head>
 <body>
     <h2>Lista de Usuarios</h2>
