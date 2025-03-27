@@ -1,26 +1,20 @@
 <?php
 session_start();
-require_once 'db.php';
+include "db.php";
 
-if (!isset($_SESSION['id_usuario'])) {
-    http_response_code(403);
-    exit("No autorizado");
+$user_id = $_SESSION['user_id'];
+$contact_id = $_GET['contact_id'];
+
+$query = "SELECT * FROM mensaje WHERE (id_emisor = ? AND id_receptor = ?) OR (id_emisor = ? AND id_receptor = ?) ORDER BY fecha_mensaje ASC";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("iiii", $user_id, $contact_id, $contact_id, $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$messages = [];
+while ($row = $result->fetch_assoc()) {
+    $messages[] = $row;
 }
 
-$id_usuario = $_SESSION['id_usuario'];
-$id_contacto = $_GET['id_contacto'] ?? null;
-
-if ($id_contacto) {
-    // Seleccionar los mensajes entre el usuario y el contacto
-    $stmt = $pdo->prepare("SELECT * FROM mensaje WHERE 
-      (id_emisor = ? AND id_receptor = ?) OR (id_emisor = ? AND id_receptor = ?)
-      ORDER BY fecha_mensaje ASC");
-    $stmt->execute([$id_usuario, $id_contacto, $id_contacto, $id_usuario]);
-    $mensajes = $stmt->fetchAll();
-    header('Content-Type: application/json');
-    echo json_encode($mensajes);
-} else {
-    http_response_code(400);
-    echo "Falta id_contacto";
-}
+echo json_encode($messages);
 ?>

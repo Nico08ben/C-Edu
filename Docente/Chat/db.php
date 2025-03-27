@@ -1,20 +1,12 @@
 <?php
-// db.php: Conexión a la base de datos cedu
-$host = 'localhost';
-$db   = 'cedu';
-$user = 'tu_usuario';       // Cambia por tu usuario de la BD
-$pass = 'tu_contraseña';     // Cambia por tu contraseña de la BD
-$charset = 'utf8mb4';
+$host = "localhost";
+$user = "root"; // Cambiar si es necesario
+$pass = ""; // Cambiar si es necesario
+$dbname = "cedu"; // Asegúrate de que el nombre coincide
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-  PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-  PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
+$conn = new mysqli($host, $user, $pass, $dbname);
 
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
 }
 ?>

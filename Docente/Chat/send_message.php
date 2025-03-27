@@ -1,27 +1,15 @@
 <?php
 session_start();
-require_once 'db.php';
+include "db.php";
 
-if (!isset($_SESSION['id_usuario'])) {
-    http_response_code(403);
-    exit("No autorizado");
-}
+$user_id = $_SESSION['user_id'];
+$contact_id = $_POST['contact_id'];
+$message = $_POST['message'];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_emisor = $_SESSION['id_usuario'];
-    $id_receptor = $_POST['id_receptor'] ?? null;
-    $mensaje = trim($_POST['mensaje'] ?? '');
-    
-    if ($id_receptor && $mensaje) {
-        $stmt = $pdo->prepare("INSERT INTO mensaje (id_emisor, id_receptor, mensaje) VALUES (?, ?, ?)");
-        $stmt->execute([$id_emisor, $id_receptor, $mensaje]);
-        echo "Mensaje enviado";
-    } else {
-        http_response_code(400);
-        echo "Datos incompletos";
-    }
-} else {
-    http_response_code(405);
-    echo "Método no permitido";
-}
+$query = "INSERT INTO mensaje (id_emisor, id_receptor, mensaje, fecha_mensaje) VALUES (?, ?, ?, NOW())";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("iis", $user_id, $contact_id, $message);
+$stmt->execute();
+
+echo json_encode(["success" => $stmt->affected_rows > 0]);
 ?>

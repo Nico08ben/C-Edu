@@ -1,60 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<?php
-session_start();
-// Verificar que el usuario esté autenticado
-if (!isset($_SESSION['id_usuario'])) {
-    header("Location: login.php");
-    exit();
-}
-
-require_once 'db.php';
-
-// Obtener todos los usuarios registrados, excluyendo al actual
-$stmt = $pdo->prepare("SELECT id_usuario, nombre_usuario, email_usuario FROM usuario WHERE id_usuario != ?");
-$stmt->execute([$_SESSION['id_usuario']]);
-$usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-<!DOCTYPE html>
-<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Chat Institucional</title>
-  <link rel="stylesheet" href="chat.css">
+    <?php include "../../SIDEBAR/Docente/head.php" ?>
+    <link rel="stylesheet" href="chat.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Chat</title>
 </head>
+
 <body>
-  <div class="container">
-    <div class="sidebar-chat">
-      <input type="text" class="search-bar" placeholder="Buscar contactos...">
-      <div class="contact-list">
-        <?php foreach ($usuarios as $usuario): ?>
-          <div class="contact" 
-               data-id="<?= $usuario['id_usuario'] ?>" 
-               data-nombre="<?= htmlspecialchars($usuario['nombre_usuario']) ?>" 
-               data-email="<?= htmlspecialchars($usuario['email_usuario']) ?>">
-            <img src="default.png" alt="Avatar">
-            <h3><?= htmlspecialchars($usuario['nombre_usuario']) ?></h3>
-            <span class="status">Conectado</span>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
-    <div class="chat-window">
-      <div class="chat-header">
-        <img src="default.png" alt="Avatar">
-        <h3>Selecciona un contacto</h3>
-        <span class="status">Desconectado</span>
-      </div>
-      <div class="chat-body">
-        <p>Inicia un chat seleccionando un contacto</p>
-      </div>
-      <div class="chat-footer">
-        <input type="text" placeholder="Escribe un mensaje...">
-        <button>Enviar</button>
-      </div>
-    </div>
-  </div>
-  <script src="script.js"></script>
+    <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
+    <section class="home">
+        <div class="container">
+            <div class="sidebar-chat">
+                <input type="text" placeholder="Buscar" class="search-bar">
+                <div class="announcement">
+                    <h2>COMUNICADOS GENERALES</h2>
+                    <p>Coordinador: Todos los miembros del comité de convivencia deben presentarse en rectoría, informar
+                        a los alumnos.</p>
+                </div>
+                <div class="contact-list">
+                    <div class="contact active">
+                        <img src="user1.png" alt="Mario">
+                        <div>
+                            <h3>Mario</h3>
+                            <p>Docente Lenguaje<br><span class="status">ESCRIBIENDO...</span></p>
+                        </div>
+                    </div>
+                    <div class="contact">
+                        <img src="user2.png" alt="Diana">
+                        <div>
+                            <h3>Diana</h3>
+                            <p>Docente Sociales<br>¿Ya entregaste el formulario?</p>
+                        </div>
+                    </div>
+                    <div class="contact">
+                        <img src="user3.png" alt="Miguel">
+                        <div>
+                            <h3>Miguel</h3>
+                            <p>Docente Física<br>Hola ¿cómo estás?</p>
+                        </div>
+                    </div>
+                    <div class="contact">
+                        <img src="user4.png" alt="Camilo">
+                        <div>
+                            <h3>Camilo</h3>
+                            <p>Docente Lenguaje<br><span class="status">ESCRIBIENDO...</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-window">
+                <div class="chat-header">
+                    <img src="user1.png" alt="Mario">
+                    <h3>Mario</h3>
+                    <span class="status">ESCRIBIENDO...</span>
+                </div>
+                <div class="chat-body">
+                    <!-- Aquí irán los mensajes -->
+                </div>
+                <div class="chat-footer">
+                    <input type="text" placeholder="Mensaje...">
+                    <button type="submit">Enviar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="profile-modal" class="modal">
+            <div class="modal-content">
+                <i class="fa-solid fa-xmark close-modal"></i>
+                <img id="profile-pic" src="" alt="Foto de perfil">
+                <h2 id="profile-name"></h2>
+                <p id="profile-role"></p>
+                <p id="profile-status"></p>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+    </section>
 </body>
+
 </html>
