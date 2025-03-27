@@ -116,7 +116,7 @@ img {
 }
 
 .modal.show .modal-content {
-    transform: scale(1);
+    transform: scale(0.85);
     opacity: 1;
 }
 

@@ -16,7 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($resultado->num_rows > 0) {
         $fila = $resultado->fetch_assoc();
-        if ($password === $fila['contraseña_usuario']) {
+
+        // Verificar la contraseña usando password_verify()
+        if (password_verify($password, $fila['contraseña_usuario'])) {
             // Inicio de sesión exitoso
             $_SESSION['id_usuario'] = $fila['id_usuario'];
             $_SESSION['nombre_usuario'] = $fila['nombre_usuario'];

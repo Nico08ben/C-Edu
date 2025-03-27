@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeButton = document.querySelector('.close-button');
     const newUserForm = document.getElementById('newUserForm');
 
-    // Modal functionality
     function openModal() {
         userModal.style.display = 'flex';
         setTimeout(() => {
@@ -20,58 +19,53 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
     }
 
-    // Event listeners for modal
     newUserButton.addEventListener('click', openModal);
     closeButton.addEventListener('click', closeModal);
-
-    // Close modal if clicked outside of it
     userModal.addEventListener('click', (e) => {
         if (e.target === userModal) {
             closeModal();
         }
     });
 
-    // Prevent modal content from closing when clicked inside
-    document.querySelector('.modal-content').addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
-
-    // Form submission handler
-    newUserForm.addEventListener('submit', (e) => {
+    newUserForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Collect form data
-        const formData = {
-            nombre_usuario: document.getElementById('nombre_usuario').value,
-            email_usuario: document.getElementById('email_usuario').value,
-            contraseña_usuario: document.getElementById('contraseña_usuario').value,
-            telefono_usuario: document.getElementById('telefono_usuario').value,
-            id_institucion: document.getElementById('id_institucion').value,
-            id_rol: document.getElementById('id_rol').value
-        };
+        const formData = new FormData(newUserForm);
 
-        // Add new row to table
-        userTable.innerHTML += `
-            <tr>
-                <td><img src="perfil.png" alt="Perfil"></td>
-                <td>${formData.nombre_usuario}</td>
-                <td>${formData.email_usuario}</td>
-                <td>${formData.telefono_usuario}</td>
-                <td>Institución de prueba</td>
-                <td>Usuario</td>
-                <td class="action-buttons">
-                    <button class="edit">✏️</button>
-                    <button class="delete">🗑️</button>
-                </td>
-            </tr>
-        `;
+        try {
+            const response = await fetch('procesar_usuario.php', {
+                method: 'POST',
+                body: formData
+            });
 
-        // Reset form and close modal
-        newUserForm.reset();
-        closeModal();
+            const result = await response.text();
+            alert(result); // Muestra mensaje de éxito o error
+
+            if (response.ok) {
+                // Agregar a la tabla solo si el usuario fue insertado correctamente
+                userTable.innerHTML += `
+                    <tr>
+                        <td><img src="perfil.png" alt="Perfil"></td>
+                        <td>${formData.get("nombre_usuario")}</td>
+                        <td>${formData.get("email_usuario")}</td>
+                        <td>${formData.get("telefono_usuario")}</td>
+                        <td>${formData.get("id_institucion") || 'N/A'}</td>
+                        <td>${formData.get("id_rol") || 'Usuario'}</td>
+                        <td class="action-buttons">
+                            <button class="edit">✏️</button>
+                            <button class="delete">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+
+                newUserForm.reset();
+                closeModal();
+            }
+        } catch (error) {
+            console.error("Error al enviar los datos:", error);
+        }
     });
 
-    // Existing edit and delete functionality
     userTable.addEventListener('click', (e) => {
         if (e.target.classList.contains('delete')) {
             e.target.closest('tr').remove();
@@ -79,12 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = e.target.closest('tr');
             const cells = row.querySelectorAll('td');
             
-            // Update form fields with current row data
             document.getElementById('nombre_usuario').value = cells[1].innerText;
             document.getElementById('email_usuario').value = cells[2].innerText;
             document.getElementById('telefono_usuario').value = cells[3].innerText;
             
-            // Open modal in edit mode
             openModal();
         }
     });
