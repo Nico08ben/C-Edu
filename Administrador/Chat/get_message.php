@@ -11,14 +11,8 @@ if (!isset($_SESSION['id_usuario'])) {
 // Obtener el ID del usuario actual desde la sesión
 $id_usuario = $_SESSION['id_usuario'];
 
-// Conexión a la base de datos
-$conexion = new mysqli("localhost", "root", "", "cedu");
-
-// Verificar la conexión
-if ($conexion->connect_error) {
-    echo json_encode(['error' => 'Error de conexión: ' . $conexion->connect_error]);
-    exit;
-}
+// Incluir el archivo de conexión (ajusta la ruta según sea necesario)
+require_once("../../conexion.php");
 
 // Verificar que se reciba el ID del contacto
 if (!isset($_GET['id_contacto'])) {
@@ -27,46 +21,52 @@ if (!isset($_GET['id_contacto'])) {
 }
 
 // Obtener y sanitizar el ID del contacto
-$id_contacto = $conexion->real_escape_string($_GET['id_contacto']);
+$id_contacto = mysqli_real_escape_string($conexion, $_GET['id_contacto']);
 
 // Convertir nombre a ID si es necesario (si estás usando nombres en lugar de IDs)
 if (!is_numeric($id_contacto)) {
     // Buscar el ID basado en el nombre del usuario
-    $sql = "SELECT id_usuario FROM usuario WHERE nombre_usuario = ?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("s", $id_contacto);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $sql = "SELECT id_usuario FROM usuario WHERE nombre_usuario = '$id_contacto'";
+    $result = mysqli_query($conexion, $sql);
     
-    if ($row = $result->fetch_assoc()) {
+    if ($row = mysqli_fetch_assoc($result)) {
         $id_contacto = $row['id_usuario'];
     } else {
         echo json_encode(['error' => 'Usuario no encontrado']);
         exit;
     }
-    $stmt->close();
 }
 
 // Consultar los mensajes entre el usuario actual y el contacto
 $sql = "SELECT * FROM mensaje 
-        WHERE (id_emisor = ? AND id_receptor = ?) 
-        OR (id_emisor = ? AND id_receptor = ?) 
+        WHERE (id_emisor = $id_usuario AND id_receptor = $id_contacto) 
+        OR (id_emisor = $id_contacto AND id_receptor = $id_usuario) 
         ORDER BY fecha_mensaje ASC";
 
-$stmt = $conexion->prepare($sql);
-$stmt->bind_param("iiii", $id_usuario, $id_contacto, $id_contacto, $id_usuario);
-$stmt->execute();
-$result = $stmt->get_result();
+$result = mysqli_query($conexion, $sql);
+
+if (!$result) {
+    echo json_encode(['error' => 'Error en la consulta: ' . mysqli_error($conexion)]);
+    exit;
+}
 
 // Crear array para almacenar los mensajes
 $mensajes = [];
-while ($row = $result->fetch_assoc()) {
+while ($row = mysqli_fetch_assoc($result)) {
     $mensajes[] = $row;
 }
+
+// Agregar información de depuración
+$debug = [
+    'sql' => $sql,
+    'id_usuario' => $id_usuario,
+    'id_contacto' => $id_contacto,
+    'count' => count($mensajes)
+];
 
 // Retornar los mensajes en formato JSON
 echo json_encode($mensajes);
 
-$stmt->close();
-$conexion->close();
+// Cerrar la conexión
+mysqli_close($conexion);
 ?>
