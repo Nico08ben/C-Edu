@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
   const contacts = document.querySelectorAll(".contact");
   const chatHeader = document.querySelector(".chat-header h3");
@@ -32,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Enviar mensajes - CORRECCIÓN: Evento separado para click y tecla Enter
+  // Enviar mensajes - Evento separado para click y tecla Enter
   sendButton.addEventListener("click", (e) => {
     e.preventDefault(); // Prevenir comportamiento por defecto
     sendMessage();
@@ -48,8 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function sendMessage() {
-    const mensaje = messageInput.value;  // CORRECCIÓN: Eliminado trim() para permitir espacios
-    if (mensaje !== "" && currentContactId) {  // CORRECCIÓN: Permitir espacios en blanco
+    const mensaje = messageInput.value;  // Permite espacios
+    if (mensaje !== "" && currentContactId) {  // Permitir espacios en blanco
       // Implementación para pruebas locales
       // Para pruebas sin backend, establece debugMode = true
       const debugMode = true;
@@ -89,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(data => {
         console.log("Respuesta del servidor:", data);
         
-        // CORRECCIÓN: Mover esta parte aquí para asegurar que se limpia después de confirmación
+        // Limpiar input después de confirmación
         messageInput.value = "";
         
         // Agregar mensaje a la interfaz
@@ -105,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(err => {
         console.error("Error al enviar mensaje:", err);
         
-        // CORRECCIÓN: Aún con error, mostrar el mensaje en la interfaz y limpiar input
+        // Aún con error, mostrar el mensaje en la interfaz y limpiar input
         const messageElement = document.createElement("p");
         messageElement.classList.add("sent-message");
         messageElement.textContent = mensaje;
@@ -120,8 +119,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function fetchMessages() {
     if (!currentContactId) return;
     
-    // CORRECCIÓN: Para pruebas locales, usar simulación
-    const useSimulation = true; // Cambiar a false cuando el backend esté listo
+    // CORRECCIÓN: Para pruebas locales, deshabilitar simulación que mostraba mensajes predeterminados
+    const useSimulation = false; // Cambiado a false para evitar mensajes predeterminados
     
     if (useSimulation) {
       simulateMessages();
@@ -141,7 +140,13 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
         
-        chatBody.innerHTML = "";
+        // Mantenemos solo el mensaje inicial de chat o mostramos solo los mensajes del servidor
+        if (chatBody.innerHTML.includes("Chat con")) {
+          // Ya tenemos el mensaje inicial, no hacemos nada
+        } else {
+          chatBody.innerHTML = "";
+        }
+        
         data.forEach(msg => {
           const messageElement = document.createElement("p");
           // Si el id_emisor es igual al id del contacto, es un mensaje recibido
@@ -161,28 +166,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   function simulateMessages() {
-    // Función de prueba para simular mensajes
-    // No borrar mensajes anteriores para mantener la conversación
-    if (chatBody.innerHTML === "" || chatBody.innerHTML.includes("Chat con")) {
-      chatBody.innerHTML = "";
-      const simulatedMessages = [
-        { id_emisor: currentContactId, mensaje: "Hola, ¿cómo estás?" },
-        { id_emisor: "yo", mensaje: "Bien, gracias. ¿Y tú?" },
-        { id_emisor: currentContactId, mensaje: "Todo bien. ¿Recibiste el comunicado?" }
-      ];
-      
-      simulatedMessages.forEach(msg => {
-        const messageElement = document.createElement("p");
-        if (msg.id_emisor == currentContactId) {
-          messageElement.classList.add("received-message");
-        } else {
-          messageElement.classList.add("sent-message");
-        }
-        messageElement.textContent = msg.mensaje;
-        chatBody.appendChild(messageElement);
-      });
-    }
-    
+    // CORRECCIÓN: Función modificada para NO mostrar mensajes simulados por defecto
+    // Esta función ahora no hace nada para evitar los mensajes predeterminados
+    // Solo mantiene el scroll al final del chat
     chatBody.scrollTop = chatBody.scrollHeight;
   }
 
