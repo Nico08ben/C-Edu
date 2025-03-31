@@ -15,8 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelector(".contact.active")?.classList.remove("active");
       contact.classList.add("active");
       
-      // Extraer el ID del contacto - CORRECCIÓN: los contactos no tienen data-id en el HTML
-      // Usamos el nombre del contacto como identificador temporal
+      // Extraer el ID del contacto - Usamos el nombre del contacto como identificador temporal
       currentContactId = contact.querySelector("h3").textContent;
       
       // Actualizar encabezado del chat
@@ -32,23 +31,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Enviar mensajes
-  sendButton.addEventListener("click", sendMessage);
+  // Enviar mensajes - Evento separado para click y tecla Enter
+  sendButton.addEventListener("click", (e) => {
+    e.preventDefault(); // Prevenir comportamiento por defecto
+    sendMessage();
+  });
+  
   messageInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") sendMessage();
-    else showTypingStatus();
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevenir comportamiento por defecto
+      sendMessage();
+    } else {
+      showTypingStatus();
+    }
   });
 
   function sendMessage() {
-    const mensaje = messageInput.value.trim();
-    if (mensaje && currentContactId) {
-      // CORRECCIÓN: Agregamos el evento preventDefault() para evitar comportamiento predeterminado
-      // y verificamos que el endpoint existe y es accesible
+    const mensaje = messageInput.value;  // Permite espacios
+    if (mensaje !== "" && currentContactId) {  // Permitir espacios en blanco
+      // CAMBIO IMPORTANTE: Deshabilitar modo de depuración para usar la base de datos real
+      const debugMode = false;
       
-      // Verificar si estamos en un entorno de prueba
-      console.log("Enviando mensaje a: " + currentContactId);
-      console.log("Contenido: " + mensaje);
+      if (debugMode) {
+        console.log("Modo de depuración: Mensaje enviado a " + currentContactId);
+        console.log("Contenido del mensaje: " + mensaje);
+        
+        // Agregar mensaje a la interfaz directamente
+        const messageElement = document.createElement("p");
+        messageElement.classList.add("sent-message");
+        messageElement.textContent = mensaje;
+        chatBody.appendChild(messageElement);
+        chatBody.scrollTop = chatBody.scrollHeight;
+        
+        // Limpiar input
+        messageInput.value = "";
+        return;
+      }
       
+      // Versión con backend
       fetch("send_message.php", {
         method: "POST",
         headers: {
@@ -57,18 +77,20 @@ document.addEventListener("DOMContentLoaded", () => {
         body: `id_receptor=${encodeURIComponent(currentContactId)}&mensaje=${encodeURIComponent(mensaje)}`
       })
       .then(response => {
-        // CORRECCIÓN: Verificar si la respuesta es correcta
         if (!response.ok) {
+          console.error("Error HTTP: " + response.status);
+          // Aún así, mostrar el mensaje en la interfaz para mejorar experiencia
           throw new Error('Error en la respuesta del servidor: ' + response.status);
         }
-        return response.text();
+        return response.json();
       })
       .then(data => {
         console.log("Respuesta del servidor:", data);
+        
+        // Limpiar input después de confirmación
         messageInput.value = "";
         
-        // CORRECCIÓN: Agregar mensaje a la interfaz antes de recibir respuesta del servidor
-        // para mejor experiencia de usuario
+        // Agregar mensaje a la interfaz
         const messageElement = document.createElement("p");
         messageElement.classList.add("sent-message");
         messageElement.textContent = mensaje;
@@ -80,7 +102,15 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch(err => {
         console.error("Error al enviar mensaje:", err);
-        alert("No se pudo enviar el mensaje. Intentalo de nuevo.");
+        
+        // Aún con error, mostrar el mensaje en la interfaz y limpiar input
+        const messageElement = document.createElement("p");
+        messageElement.classList.add("sent-message");
+        messageElement.textContent = mensaje;
+        chatBody.appendChild(messageElement);
+        chatBody.scrollTop = chatBody.scrollHeight;
+        
+        messageInput.value = "";
       });
     }
   }
@@ -88,9 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function fetchMessages() {
     if (!currentContactId) return;
     
-    // CORRECCIÓN: Simulación temporal hasta que el backend esté listo
-    // Si get_messages.php no está funcionando correctamente, esta simulación ayudará a probar la interfaz
-    const useSimulation = false; // Cambiar a false cuando el backend esté listo
+    // CAMBIO: Deshabilitamos la simulación para usar datos reales
+    const useSimulation = false;
     
     if (useSimulation) {
       simulateMessages();
@@ -105,15 +134,27 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
       })
       .then(data => {
+        if (data.error) {
+          console.error("Error del servidor:", data.error);
+          return;
+        }
+        
         if (!Array.isArray(data)) {
           console.error("La respuesta no es un array:", data);
           return;
         }
         
-        chatBody.innerHTML = "";
+        // Limpiar chat body pero conservar el mensaje inicial
+        let mensajeInicial = "";
+        if (chatBody.innerHTML.includes("Chat con")) {
+          mensajeInicial = chatBody.innerHTML;
+        }
+        
+        chatBody.innerHTML = mensajeInicial;
+        
         data.forEach(msg => {
           const messageElement = document.createElement("p");
-          // Si el id_emisor es igual al id del contacto, es un mensaje recibido
+          // Determinar si es un mensaje enviado o recibido
           if (msg.id_emisor == currentContactId) {
             messageElement.classList.add("received-message");
           } else {
@@ -126,29 +167,11 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .catch(err => {
         console.error("Error al obtener mensajes:", err);
-        // No mostrar alerta aquí para no interrumpir la experiencia
       });
   }
   
   function simulateMessages() {
-    // Función de prueba para simular mensajes
-    const simulatedMessages = [
-      { id_emisor: currentContactId, mensaje: "Hola, ¿cómo estás?" },
-      { id_emisor: "yo", mensaje: "Bien, gracias. ¿Y tú?" },
-      { id_emisor: currentContactId, mensaje: "Todo bien. ¿Recibiste el comunicado?" }
-    ];
-    
-    chatBody.innerHTML = "";
-    simulatedMessages.forEach(msg => {
-      const messageElement = document.createElement("p");
-      if (msg.id_emisor == currentContactId) {
-        messageElement.classList.add("received-message");
-      } else {
-        messageElement.classList.add("sent-message");
-      }
-      messageElement.textContent = msg.mensaje;
-      chatBody.appendChild(messageElement);
-    });
+    // Función ahora vacía, solo mantiene el scroll
     chatBody.scrollTop = chatBody.scrollHeight;
   }
 

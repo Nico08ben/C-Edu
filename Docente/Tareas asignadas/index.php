@@ -23,47 +23,70 @@
                 </div>
             </div>
             
-            <div class="task-card">
-                <div class="task-title">Planificar Calendario</div>
-                <div class="task-description">Elabore el calendario de actividades académicas para el mes de Septiembre, teniendo en cuenta los eventos importantes y los plazos correspondientes.</div>
-                <div class="task-info">
-                    <span>Asignado por: Coordinador</span>
-                    <span>Fecha Límite: 08/17/2024</span>
+            <div class="Tareas">
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fa-solid fa-hammer"></i><label>  Tareas</label></th>
+                                <th><i class="fa-solid fa-user-tie"></i><label>  Creador</label></th>
+                                <th><i class="fa-solid fa-circle-info"></i><label>  Información</label></th>
+                                <th><i class="fa-solid fa-sliders"></i><label>  Estado</label></th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Planificar Calendario</td>
+                                <td>Coordinador</td>
+                                <td>Planificar el calendario para este nuevo año lectivo</td>
+                                <td>Pendiente</td>
+                                <td><button class="btn-datalles">Detalles</button></td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                </div>
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fa-solid fa-hammer"></i><label>  Tareas</label></th>
+                                <th><i class="fa-solid fa-user-tie"></i><label>  Creador</label></th>
+                                <th><i class="fa-solid fa-circle-info"></i><label>  Información</label></th>
+                                <th><i class="fa-solid fa-sliders"></i><label>  Estado</label></th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Planificar Calendario</td>
+                                <td>Coordinador</td>
+                                <td>Planificar el calendario para este nuevo año lectivo</td>
+                                <td>Pendiente</td>
+                                <td><button class="btn-datalles">Detalles</button></td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
                 </div>
             </div>
-            <div class="task-card">
-                <div class="task-title">Clase 8B - Asistir</div>
-                <div class="task-description">Le solicito que se encargue de asistir y estar presente en la clases programada para el grupo 8B el día Viernes, a las 13:40 reemplazando a la profesora Rocío en el área de Lenguaje.</div>
-                <div class="task-info">
-                    <span>Asignado por: Coordinador</span>
-                    <span>Fecha Límite: 08/31/2024</span>
-                </div>
-            </div>
-            <div class="task-card">
-                <div class="task-title">Clase 8B - Asistir</div>
-                <div class="task-description">Le solicito que se encargue de asistir y estar presente en la clases programada para el grupo 8B el día Viernes, a las 13:40 reemplazando a la profesora Rocío en el área de Lenguaje.</div>
-                <div class="task-info">
-                    <span>Asignado por: Coordinador</span>
-                    <span>Fecha Límite: 08/31/2024</span>
-                </div>
-            </div>
-            <div class="task-card">
-                <div class="task-title">Clase 8B - Asistir</div>
-                <div class="task-description">Le solicito que se encargue de asistir y estar presente en la clases programada para el grupo 8B el día Viernes, a las 13:40 reemplazando a la profesora Rocío en el área de Lenguaje.</div>
-                <div class="task-info">
-                    <span>Asignado por: Coordinador</span>
-                    <span>Fecha Límite: 08/31/2024</span>
-                </div>
-        </div>
-        <div class="task-card">
-            <div class="task-title">Clase 8B - Asistir</div>
-            <div class="task-description">Le solicito que se encargue de asistir y estar presente en la clases programada para el grupo 8B el día Viernes, a las 13:40 reemplazando a la profesora Rocío en el área de Lenguaje.</div>
-            <div class="task-info">
-                <span>Asignado por: Coordinador</span>
-                <span>Fecha Límite: 08/31/2024</span>
-            </div>
+            
         </div>
     </section>
+    <script>
+            const buttons = document.querySelectorAll(".btn-datalles");
+
+buttons.forEach(button => {
+    button.addEventListener("click", (e) => {
+        e.preventDefault();
+        button.classList.add("animate");
+        setTimeout(() => {
+            button.classList.remove("animate");
+        }, 600);
+    });
+});
+        </script>
         
 </body>
 </html>
