@@ -1,21 +1,24 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const body = document.body;
-    const toggleSwitch = document.querySelector(".toggle-switch");
-    const modeText = document.querySelector(".mode-text");
+const body = document.querySelector("body"),
+    sidebar = body.querySelector(".sidebar"),
+    toggle = body.querySelector(".toggle"),
+    searchBtn = body.querySelector(".search-box"),
+    modeSwitch = body.querySelector(".toggle-switch"),
+    modeText = body.querySelector(".mode-text");
 
-    toggleSwitch.addEventListener("click", function () {
-        let modo = body.classList.contains("dark") ? "claro" : "oscuro";
+toggle.addEventListener("click", () => {
+    sidebar.classList.toggle("close");
+});
 
-        body.classList.toggle("dark");
-        modeText.textContent = modo === "oscuro" ? "Modo Claro" : "Modo Oscuro";
+searchBtn.addEventListener("click", () => {
+    sidebar.classList.remove("close");
+});
 
-        // Enviar la preferencia a la base de datos
-        fetch("guardar_modo.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "modo=" + modo
-        })
-        .then(response => response.text())
-        .then(data => console.log(data));
-    });
+modeSwitch.addEventListener("click", () => {
+    body.classList.toggle("dark");
+
+    if (body.classList.contains("dark")) {
+        modeText.innerText = "Light Mode";
+    } else {
+        modeText.innerText = "Dark Mode";
+    }
 });
