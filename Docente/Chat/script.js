@@ -49,9 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function sendMessage() {
     const mensaje = messageInput.value;  // Permite espacios
     if (mensaje !== "" && currentContactId) {  // Permitir espacios en blanco
-      // Implementación para pruebas locales
-      // Para pruebas sin backend, establece debugMode = true
-      const debugMode = true;
+      // CAMBIO IMPORTANTE: Deshabilitar modo de depuración para usar la base de datos real
+      const debugMode = false;
       
       if (debugMode) {
         console.log("Modo de depuración: Mensaje enviado a " + currentContactId);
@@ -83,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
           // Aún así, mostrar el mensaje en la interfaz para mejorar experiencia
           throw new Error('Error en la respuesta del servidor: ' + response.status);
         }
-        return response.text();
+        return response.json();
       })
       .then(data => {
         console.log("Respuesta del servidor:", data);
@@ -119,8 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function fetchMessages() {
     if (!currentContactId) return;
     
-    // CORRECCIÓN: Para pruebas locales, deshabilitar simulación que mostraba mensajes predeterminados
-    const useSimulation = false; // Cambiado a false para evitar mensajes predeterminados
+    // CAMBIO: Deshabilitamos la simulación para usar datos reales
+    const useSimulation = false;
     
     if (useSimulation) {
       simulateMessages();
@@ -135,21 +134,27 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
       })
       .then(data => {
+        if (data.error) {
+          console.error("Error del servidor:", data.error);
+          return;
+        }
+        
         if (!Array.isArray(data)) {
           console.error("La respuesta no es un array:", data);
           return;
         }
         
-        // Mantenemos solo el mensaje inicial de chat o mostramos solo los mensajes del servidor
+        // Limpiar chat body pero conservar el mensaje inicial
+        let mensajeInicial = "";
         if (chatBody.innerHTML.includes("Chat con")) {
-          // Ya tenemos el mensaje inicial, no hacemos nada
-        } else {
-          chatBody.innerHTML = "";
+          mensajeInicial = chatBody.innerHTML;
         }
+        
+        chatBody.innerHTML = mensajeInicial;
         
         data.forEach(msg => {
           const messageElement = document.createElement("p");
-          // Si el id_emisor es igual al id del contacto, es un mensaje recibido
+          // Determinar si es un mensaje enviado o recibido
           if (msg.id_emisor == currentContactId) {
             messageElement.classList.add("received-message");
           } else {
@@ -166,9 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   function simulateMessages() {
-    // CORRECCIÓN: Función modificada para NO mostrar mensajes simulados por defecto
-    // Esta función ahora no hace nada para evitar los mensajes predeterminados
-    // Solo mantiene el scroll al final del chat
+    // Función ahora vacía, solo mantiene el scroll
     chatBody.scrollTop = chatBody.scrollHeight;
   }
 
