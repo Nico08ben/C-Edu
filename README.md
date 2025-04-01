@@ -12,3 +12,9 @@ Para abrir y editar este proyecto en Visual Studio desde la terminal, sigue esto
    ```sh
    cd C:\xampp\htdocs
    git clone https://github.com/Nico08ben/C-Edu.git
+
+```sh
+cd C:\xampp\htdocs
+git clone git@github.com:Nico08ben/C-Edu.git
+
+
