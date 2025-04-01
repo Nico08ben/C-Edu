@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<?php include "../../SIDEBAR/Docente/head.php" ?>
+<?php include "../../SIDEBAR/Admin/head.php" ?>
     <link rel="stylesheet" href="profile.css">
     <title>Perfil de Usuario</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -9,7 +9,7 @@
 </head>
 <body>
     <!-- Barra lateral -->
-    <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
+    <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
 
     <section class="home">
         <!-- Contenido principal -->
@@ -26,9 +26,44 @@
                 <!-- Columna izquierda (Foto y Botón) -->
                 <div class="profile-left">
                     <div class="user-avatar">
-                        <img src="avatar.png">
+                        <?php
+                        // Aquí obtendrías la imagen de la base de datos
+                        // Por ejemplo: $userId = $_SESSION['id_usuario']; 
+                        $userId = 6; // Usamos un ID de prueba, ajustar según corresponda
+                        
+                        // Incluir archivo de conexión a la base de datos
+                        include "../../C-EDU/conexion.php"; // Ajusta la ruta según tu estructura
+                        
+                        // Consultar la imagen del usuario
+                        $query = "SELECT foto_perfil, foto_tipo FROM usuario WHERE id_usuario = ?";
+                        $stmt = $conn->prepare($query);
+                        $stmt->bind_param("i", $userId);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                        
+                        if ($result->num_rows > 0) {
+                            $row = $result->fetch_assoc();
+                            if ($row['foto_perfil']) {
+                                // Si hay una imagen en la base de datos, mostrarla
+                                $imgData = base64_encode($row['foto_perfil']);
+                                $imgType = $row['foto_tipo'];
+                                echo "<img src='data:$imgType;base64,$imgData'>";
+                            } else {
+                                // Si no hay imagen, mostrar la predeterminada
+                                echo "<img src='avatar.png'>";
+                            }
+                        } else {
+                            // Si no se encuentra el usuario, mostrar imagen predeterminada
+                            echo "<img src='avatar.png'>";
+                        }
+                        $stmt->close();
+                        ?>
                     </div>
-                    <button class="edit-btn">EDITAR</button>
+                    <form id="upload-form" enctype="multipart/form-data">
+                        <input type="file" id="profile-image-input" name="profile_image" accept="image/*" style="display: none;">
+                        <button type="button" class="edit-btn">EDITAR</button>
+                        <div id="upload-status"></div>
+                    </form>
                 </div>
 
                 <!-- Columna derecha (Información) -->
