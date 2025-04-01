@@ -4,7 +4,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const profileContainer = document.querySelector(".profile-container");
     const ayuda = document.querySelector(".ayuda");
     const editImageButton = document.querySelector(".edit-btn");
-    const profileImage = document.querySelector(".user-avatar");
+    const profileImage = document.querySelector(".user-avatar img");
+    const fileInput = document.getElementById("profile-image-input");
+    const uploadForm = document.getElementById("upload-form");
+    const uploadStatus = document.getElementById("upload-status");
+    
     ayuda.style.display = "none";
 
     // Ocultar perfil al hacer clic en "Ayuda"
@@ -23,11 +27,57 @@ document.addEventListener("DOMContentLoaded", function () {
         helpText.style.fontWeight = "normal"; // Normalizar "Ayuda"
     });
 
-    // Editar Imagen de Perfil
+    // Abrir el selector de archivos al hacer clic en "EDITAR"
     editImageButton.addEventListener("click", function () {
-        const newImageUrl = prompt("Ingresa la URL de tu nueva imagen:");
-        if (newImageUrl) {
-            profileImage.style.backgroundImage = `url(${newImageUrl})`;
+        fileInput.click();
+    });
+
+    // Manejar la selección de archivos
+    fileInput.addEventListener("change", function () {
+        if (fileInput.files && fileInput.files[0]) {
+            // Mostrar una vista previa de la imagen seleccionada
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                profileImage.src = e.target.result;
+                
+                // Subir la imagen automáticamente
+                uploadImage();
+            };
+            reader.readAsDataURL(fileInput.files[0]);
         }
     });
+
+    // Función para subir la imagen seleccionada
+    function uploadImage() {
+        const formData = new FormData(uploadForm);
+        
+        // Mostrar mensaje de carga
+        uploadStatus.textContent = "Subiendo imagen...";
+        uploadStatus.style.color = "blue";
+        
+        fetch("upload_image.php", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                uploadStatus.textContent = "¡Imagen actualizada!";
+                uploadStatus.style.color = "green";
+                
+                // Ocultar el mensaje después de 3 segundos
+                setTimeout(() => {
+                    uploadStatus.textContent = "";
+                }, 3000);
+            } else {
+                uploadStatus.textContent = "Error: " + data.message;
+                uploadStatus.style.color = "red";
+            }
+        })
+        .catch(error => {
+            uploadStatus.textContent = "Error de conexión";
+            uploadStatus.style.color = "red";
+            console.error("Error:", error);
+        });
+    }
 });

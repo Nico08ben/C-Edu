@@ -41,7 +41,7 @@
                                 <td>Coordinador</td>
                                 <td>Planificar el calendario para este nuevo año lectivo</td>
                                 <td>Pendiente</td>
-                                <td><button class="btn-datalles">Detalles</button></td>
+                                <td><a href="./TareasDetalles.php"><button class="btn-datalles" >Detalles</button></a></td>
                             </tr>
                         </tbody>
                         
