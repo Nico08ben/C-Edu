@@ -1,72 +1,99 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     // Elementos del DOM
-    const userTable = document.querySelector('table tbody');
-    const newUserButton = document.getElementById('newUser');
-    const saveButton = document.getElementById('save');
-    const userModal = document.getElementById('userModal');
-    const closeButton = document.querySelector('.close-button');
-    const newUserForm = document.getElementById('newUserForm');
+    const userTable = document.querySelector("table tbody");
+    const newUserButton = document.getElementById("newUser");
+    const saveButton = document.getElementById("save");
+    const userModal = document.getElementById("userModal");
+    const editUserModal = document.getElementById("editUserModal");
+    const closeButtons = document.querySelectorAll(".close-button");
+    const newUserForm = document.getElementById("newUserForm");
+    const editUserForm = document.getElementById("editUserForm");
 
-    // Funciones para el modal
-    function openModal() {
-        userModal.style.display = 'flex';
+    // Funciones para los modales
+    function openModal(modal) {
+        modal.style.display = "flex";
         setTimeout(() => {
-            userModal.classList.add('show');
+            modal.classList.add("show");
         }, 10);
     }
 
-    function closeModal() {
-        userModal.classList.remove('show');
+    function closeModal(modal) {
+        modal.classList.remove("show");
         setTimeout(() => {
-            userModal.style.display = 'none';
+            modal.style.display = "none";
         }, 300);
     }
 
-    // Event listeners para abrir/cerrar el modal
-    newUserButton.addEventListener('click', openModal);
-    closeButton.addEventListener('click', closeModal);
-    userModal.addEventListener('click', (e) => {
-        if (e.target === userModal) {
-            closeModal();
-        }
+    // Event listeners para abrir/cerrar el modal de creación
+    newUserButton.addEventListener("click", () => openModal(userModal));
+
+    // Cerrar cualquier modal al hacer clic en sus botones de cierre
+    closeButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            const modal = this.closest(".modal");
+            closeModal(modal);
+        });
     });
 
-    // Manejar envío del formulario
-    newUserForm.addEventListener('submit', async (e) => {
+    // Cerrar cualquier modal al hacer clic fuera del contenido
+    document.querySelectorAll(".modal").forEach((modal) => {
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                closeModal(modal);
+            }
+        });
+    });
+
+    // Manejar envío del formulario de nuevo usuario
+    newUserForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData(newUserForm);
 
         try {
-            const response = await fetch('procesar_usuario.php', {
-                method: 'POST',
-                body: formData
+            const response = await fetch("procesar_usuario.php", {
+                method: "POST",
+                body: formData,
             });
 
             const result = await response.text();
             alert(result); // Muestra mensaje de éxito o error
 
             if (response.ok) {
+                // Intentar extraer el ID del usuario recién creado (si el servidor lo devuelve)
+                let userId = "";
+                if (result.includes("id:")) {
+                    const match = result.match(/id:\s*(\d+)/);
+                    if (match && match[1]) {
+                        userId = match[1];
+                    }
+                }
+
                 // Elegir avatar aleatorio
                 const avatarNum = Math.floor(Math.random() * 4) + 1;
-                
+
                 // Agregar a la tabla solo si el usuario fue insertado correctamente
-                userTable.innerHTML += `
-                    <tr>
-                        <td><img src="../../assets/avatar${avatarNum}.jpg" alt="Avatar"></td>
-                        <td>${formData.get("nombre_usuario")}</td>
-                        <td>${formData.get("materia")}</td>
-                        <td>${formData.get("email_usuario")}</td>
-                        <td class="action-buttons">
-                            <button class="edit"><i class="fas fa-edit"></i></button>
-                            <button class="delete"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
+                const newRow = document.createElement("tr");
+                newRow.dataset.userId = userId;
+                newRow.dataset.telefono = formData.get("telefono_usuario") || "";
+                newRow.dataset.institucion = formData.get("id_institucion");
+                newRow.dataset.rol = formData.get("id_rol");
+
+                newRow.innerHTML = `
+                    <td><img src="../../assets/avatar${avatarNum}.jpg" alt="Avatar"></td>
+                    <td>${formData.get("nombre_usuario")}</td>
+                    <td>${formData.get("materia")}</td>
+                    <td>${formData.get("email_usuario")}</td>
+                    <td class="action-buttons">
+                        <button class="edit"><i class="fas fa-edit"></i></button>
+                        <button class="delete"><i class="fas fa-trash"></i></button>
+                    </td>
                 `;
 
+                userTable.appendChild(newRow);
                 newUserForm.reset();
-                closeModal();
-                
+                closeModal(userModal);
+
                 // Actualizar los event listeners para los nuevos botones
                 setupActionButtons();
             }
@@ -75,52 +102,171 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Función para configurar los listeners de los botones de acción
-    function setupActionButtons() {
-        // Configurar botones de edición
-        document.querySelectorAll('.edit').forEach(button => {
-            button.addEventListener('click', function() {
-                const row = this.closest('tr');
-                const name = row.querySelector('td:nth-child(2)').textContent;
-                const materia = row.querySelector('td:nth-child(3)').textContent;
-                const email = row.querySelector('td:nth-child(4)').textContent;
-                
-                // Llenar el formulario con los datos actuales
-                document.getElementById('nombre_usuario').value = name;
-                document.getElementById('email_usuario').value = email;
-                
-                // Seleccionar la materia correcta
-                const materiaSelect = document.getElementById('materia');
-                for(let i = 0; i < materiaSelect.options.length; i++) {
-                    if(materiaSelect.options[i].value === materia) {
-                        materiaSelect.selectedIndex = i;
+    // Manejar envío del formulario de edición de usuario
+    editUserForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(editUserForm);
+        const userId = formData.get("id_usuario");
+
+        try {
+            const response = await fetch("procesar_usuario.php", {
+                method: "POST",
+                body: formData,
+            });
+
+            const result = await response.text();
+
+            if (response.ok) {
+                alert(result); // Muestra mensaje de éxito
+
+                // Buscar la fila correspondiente al usuario editado
+                const rows = userTable.querySelectorAll("tr");
+                for (let row of rows) {
+                    if (row.dataset.userId === userId) {
+                        // Actualizar los datos en la tabla
+                        row.querySelector("td:nth-child(2)").textContent =
+                            formData.get("nombre_usuario");
+                        row.querySelector("td:nth-child(3)").textContent =
+                            formData.get("materia");
+                        row.querySelector("td:nth-child(4)").textContent =
+                            formData.get("email_usuario");
+
+                        // Actualizar los datos en los atributos data-*
+                        row.dataset.telefono = formData.get("telefono_usuario") || "";
+                        row.dataset.institucion = formData.get("id_institucion");
+                        row.dataset.rol = formData.get("id_rol");
                         break;
                     }
                 }
-                
-                openModal();
+
+                closeModal(editUserModal);
+            } else {
+                alert("Error al actualizar: " + result);
+            }
+        } catch (error) {
+            console.error("Error al actualizar los datos:", error);
+            alert("Error de conexión al actualizar el usuario");
+        }
+    });
+
+    // Función para configurar los listeners de los botones de acción
+    function setupActionButtons() {
+        // Configurar botones de edición
+        document.querySelectorAll(".edit").forEach((button) => {
+            button.addEventListener("click", function () {
+                handleEditButton(this);
             });
         });
-        
+
         // Configurar botones de eliminación
-        document.querySelectorAll('.delete').forEach(button => {
-            button.addEventListener('click', function() {
-                const row = this.closest('tr');
-                const userName = row.querySelector('td:nth-child(2)').textContent;
-                
-                if (confirm('¿Estás seguro de que deseas eliminar a ' + userName + '?')) {
-                    row.remove();
-                    alert('Usuario eliminado correctamente');
-                }
+        document.querySelectorAll(".delete").forEach((button) => {
+            button.addEventListener("click", function () {
+                handleDeleteButton(this);
             });
         });
     }
 
+    // Función para manejar el botón de edición
+    function handleEditButton(button) {
+        const row = button.closest("tr");
+        const userId = row.dataset.userId || "";
+        const name = row.querySelector("td:nth-child(2)").textContent;
+        const materia = row.querySelector("td:nth-child(3)").textContent;
+        const email = row.querySelector("td:nth-child(4)").textContent;
+        const telefono = row.dataset.telefono || "";
+        const institucion = row.dataset.institucion || "1";
+        const rol = row.dataset.rol || "1";
+
+        // Llenar el formulario de edición con los datos actuales
+        document.getElementById("edit_id_usuario").value = userId;
+        document.getElementById("edit_nombre_usuario").value = name;
+        document.getElementById("edit_email_usuario").value = email;
+        document.getElementById("edit_telefono_usuario").value = telefono;
+
+        // Seleccionar la materia correcta
+        const materiaSelect = document.getElementById("edit_materia");
+        for (let i = 0; i < materiaSelect.options.length; i++) {
+            if (materiaSelect.options[i].value === materia) {
+                materiaSelect.selectedIndex = i;
+                break;
+            }
+        }
+
+        // Seleccionar institución y rol
+        document.getElementById("edit_id_institucion").value = institucion;
+        document.getElementById("edit_id_rol").value = rol;
+
+        // Abrir el modal de edición
+        openModal(editUserModal);
+    }
+
+    // Función para manejar el botón de eliminación
+    function handleDeleteButton(button) {
+        const row = button.closest("tr");
+        const userName = row.querySelector("td:nth-child(2)").textContent;
+        const userId = row.dataset.userId;
+
+        if (confirm("¿Estás seguro de que deseas eliminar a " + userName + "?")) {
+            // Si hay un ID de usuario, enviar solicitud para eliminarlo de la base de datos
+            if (userId) {
+                fetch("eliminar_usuario.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: "id_usuario=" + userId,
+                })
+                    .then((response) => response.text())
+                    .then((result) => {
+                        alert(result);
+                        if (result.includes("correctamente")) {
+                            row.remove();
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error al eliminar usuario:", error);
+                    });
+            } else {
+                // Si no hay ID (usuario nuevo que aún no está en la BD), simplemente eliminar la fila
+                row.remove();
+                alert("Usuario eliminado correctamente");
+            }
+        }
+    }
+
+    // Para manejar los botones de edición dinámicamente
+    document.addEventListener("click", function (e) {
+        // Si se hizo clic en un botón de edición o en el ícono dentro del botón
+        if (
+            e.target.classList.contains("edit") ||
+            (e.target.parentElement &&
+                e.target.parentElement.classList.contains("edit"))
+        ) {
+            const button = e.target.classList.contains("edit")
+                ? e.target
+                : e.target.parentElement;
+            handleEditButton(button);
+        }
+
+        // Si se hizo clic en un botón de eliminación o en el ícono dentro del botón
+        if (
+            e.target.classList.contains("delete") ||
+            (e.target.parentElement &&
+                e.target.parentElement.classList.contains("delete"))
+        ) {
+            const button = e.target.classList.contains("delete")
+                ? e.target
+                : e.target.parentElement;
+            handleDeleteButton(button);
+        }
+    });
+
     // Configurar los event listeners iniciales
     setupActionButtons();
-    
+
     // Botón de guardar
-    saveButton.addEventListener('click', function() {
-        alert('Cambios guardados correctamente');
+    saveButton.addEventListener("click", function () {
+        alert("Cambios guardados correctamente");
     });
 });
