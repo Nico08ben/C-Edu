@@ -26,18 +26,18 @@ $resultado = $conn->query($sql);
     <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
 
     <section class="home">
-    <div class="user-info">
-                    <div class="notifications">
-                        <i class="fa-solid fa-bell"></i>
-                    </div>
-                    <div class="profile">
-                        <img src="../../assets/perfil.jpg" alt="Perfil">
-                        <div class="profile-text">
-                            <span class="name">Fernando</span>
-                            <span class="role">Coordinador</span>
-                        </div>
-                    </div>
+        <div class="user-info">
+            <div class="notifications">
+                <i class="fa-solid fa-bell"></i>
+            </div>
+            <div class="profile">
+                <img src="../../assets/perfil.jpg" alt="Perfil">
+                <div class="profile-text">
+                    <span class="name">Fernando</span>
+                    <span class="role">Coordinador</span>
                 </div>
+            </div>
+        </div>
         <div class="container">
             <div class="header">
                 <h1>Gestión de Usuarios</h1>
@@ -62,12 +62,12 @@ $resultado = $conn->query($sql);
                         "Química",
                         "Lenguaje"
                     ];
-                    
+
                     if ($resultado->num_rows > 0) {
                         while ($fila = $resultado->fetch_assoc()) {
                             // Asignar materia basado en el ID del usuario para simular la relación
                             $materiaNombre = $materias[$fila["id_usuario"] % count($materias)];
-                            
+
                             echo "<tr>";
                             echo "<td><img src='../../assets/avatar" . (($fila["id_usuario"] % 4) + 1) . ".jpg' alt='Avatar'></td>";
                             echo "<td>" . $fila["nombre_usuario"] . "</td>";
@@ -143,6 +143,55 @@ $resultado = $conn->query($sql);
                 </form>
             </div>
         </div>
+
+        <!-- Modal for Edit User -->
+        <div id="editUserModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <div class="modal-header">
+                    <h2>Editar Usuario</h2>
+                </div>
+                <form id="editUserForm">
+                    <input type="hidden" id="edit_id_usuario" name="id_usuario">
+                    <div class="form-group">
+                        <label for="edit_nombre_usuario">Nombre Completo</label>
+                        <input type="text" id="edit_nombre_usuario" name="nombre_usuario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_email_usuario">Correo Electrónico</label>
+                        <input type="email" id="edit_email_usuario" name="email_usuario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_telefono_usuario">Teléfono</label>
+                        <input type="tel" id="edit_telefono_usuario" name="telefono_usuario">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_materia">Materia</label>
+                        <select id="edit_materia" name="materia">
+                            <option value="Matemáticas">Matemáticas</option>
+                            <option value="Física">Física</option>
+                            <option value="Química">Química</option>
+                            <option value="Lenguaje">Lenguaje</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_id_institucion">Institución</label>
+                        <select id="edit_id_institucion" name="id_institucion">
+                            <option value="1">Institución de prueba</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_id_rol">Rol</label>
+                        <select id="edit_id_rol" name="id_rol">
+                            <option value="1">Docente</option>
+                            <option value="2">Administrador</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+
         <script src="script.js"></script>
     </section>
 </body>
