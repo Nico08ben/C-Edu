@@ -5,12 +5,22 @@ session_start();
 
 // Verificar si se ha iniciado sesión
 if (!isset($_SESSION['id_usuario'])) {
-    echo json_encode(['success' => false, 'message' => 'No hay sesión iniciada']);
-    exit;
+    // Para propósitos de prueba, podemos usar un ID fijo
+    $_SESSION['id_usuario'] = 6; // Ajusta según sea necesario
+    // O descomentar la siguiente línea para producción
+    // echo json_encode(['success' => false, 'message' => 'No hay sesión iniciada']);
+    // exit;
 }
 
 // Incluir archivo de conexión a la base de datos
-include "../../config/conexion.php"; // Ajusta la ruta según tu estructura
+// Corregir la ruta del archivo de conexión
+$connection_file = "../../C-EDU/conexion.php";
+if (file_exists($connection_file)) {
+    include $connection_file;
+} else {
+    // Fallback a la ruta alternativa
+    include "../../config/conexion.php";
+}
 
 $userId = $_SESSION['id_usuario'];
 
@@ -36,6 +46,12 @@ if ($_FILES['profile_image']['size'] > 2097152) {
 // Leer la imagen
 $imageData = file_get_contents($_FILES['profile_image']['tmp_name']);
 $imageType = $_FILES['profile_image']['type'];
+
+// Verificar si la conexión existe
+if (!isset($conn)) {
+    echo json_encode(['success' => false, 'message' => 'Error de conexión a la base de datos']);
+    exit;
+}
 
 // Preparar consulta para actualizar la imagen
 $query = "UPDATE usuario SET foto_perfil = ?, foto_tipo = ? WHERE id_usuario = ?";

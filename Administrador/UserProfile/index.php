@@ -18,7 +18,7 @@
         <div class="card-profile">
             <!-- Encabezado con opciones -->
             <div class="profile-header">
-                <span class="profile-option" id="edit-profile">Editar Perfil</span>
+                <span class="profile-option" id="edit-profile" style="font-weight: bold;">Editar Perfil</span>
                 <span class="profile-option" id="help">Ayuda</span>
             </div>
 
@@ -32,31 +32,44 @@
                         $userId = 6; // Usamos un ID de prueba, ajustar según corresponda
                         
                         // Incluir archivo de conexión a la base de datos
-                        include "../../config/conexion.php"; // Ajusta la ruta según tu estructura
+                        // Corregir la ruta del archivo de conexión
+                        $connection_file = "../../C-EDU/conexion.php";
+                        if (file_exists($connection_file)) {
+                            include $connection_file;
+                        } else {
+                            // Fallback a la ruta alternativa
+                            include "../../config/conexion.php";
+                        }
                         
-                        // Consultar la imagen del usuario
-                        $query = "SELECT foto_perfil, foto_tipo FROM usuario WHERE id_usuario = ?";
-                        $stmt = $conn->prepare($query);
-                        $stmt->bind_param("i", $userId);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        
-                        if ($result->num_rows > 0) {
-                            $row = $result->fetch_assoc();
-                            if ($row['foto_perfil']) {
-                                // Si hay una imagen en la base de datos, mostrarla
-                                $imgData = base64_encode($row['foto_perfil']);
-                                $imgType = $row['foto_tipo'];
-                                echo "<img src='data:$imgType;base64,$imgData'>";
+                        // Verificar si la conexión existe
+                        if (isset($conn)) {
+                            // Consultar la imagen del usuario
+                            $query = "SELECT foto_perfil, foto_tipo FROM usuario WHERE id_usuario = ?";
+                            $stmt = $conn->prepare($query);
+                            $stmt->bind_param("i", $userId);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            
+                            if ($result->num_rows > 0) {
+                                $row = $result->fetch_assoc();
+                                if ($row['foto_perfil']) {
+                                    // Si hay una imagen en la base de datos, mostrarla
+                                    $imgData = base64_encode($row['foto_perfil']);
+                                    $imgType = $row['foto_tipo'];
+                                    echo "<img src='data:$imgType;base64,$imgData'>";
+                                } else {
+                                    // Si no hay imagen, mostrar la predeterminada
+                                    echo "<img src='avatar.png'>";
+                                }
                             } else {
-                                // Si no hay imagen, mostrar la predeterminada
+                                // Si no se encuentra el usuario, mostrar imagen predeterminada
                                 echo "<img src='avatar.png'>";
                             }
+                            $stmt->close();
                         } else {
-                            // Si no se encuentra el usuario, mostrar imagen predeterminada
+                            // Si no hay conexión, mostrar imagen predeterminada
                             echo "<img src='avatar.png'>";
                         }
-                        $stmt->close();
                         ?>
                     </div>
                     <form id="upload-form" enctype="multipart/form-data">
