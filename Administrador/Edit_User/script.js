@@ -78,6 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 newRow.dataset.telefono = formData.get("telefono_usuario") || "";
                 newRow.dataset.institucion = formData.get("id_institucion");
                 newRow.dataset.rol = formData.get("id_rol");
+                newRow.dataset.materia = formData.get("materia"); // Guardar materia en atributo data
 
                 newRow.innerHTML = `
                     <td><img src="../../assets/avatar${avatarNum}.jpg" alt="Avatar"></td>
@@ -110,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const userId = formData.get("id_usuario");
 
         try {
-            const response = await fetch("procesar_usuario.php", {
+            const response = await fetch("actualizar_usuario.php", {
                 method: "POST",
                 body: formData,
             });
@@ -136,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         row.dataset.telefono = formData.get("telefono_usuario") || "";
                         row.dataset.institucion = formData.get("id_institucion");
                         row.dataset.rol = formData.get("id_rol");
+                        row.dataset.materia = formData.get("materia");
                         break;
                     }
                 }
@@ -170,7 +172,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // Función para manejar el botón de edición
     function handleEditButton(button) {
         const row = button.closest("tr");
-        const userId = row.dataset.userId || "";
+        
+        // Si no hay un ID de usuario en el atributo data, buscar en las celdas para usuarios cargados desde PHP
+        let userId = row.dataset.userId;
+        if (!userId || userId === "") {
+            // Intentar extraer el ID del usuario del atributo data-id-usuario si existe
+            userId = row.getAttribute("data-id-usuario");
+            
+            // Si aún no hay ID, buscar en el DOM para usuarios generados por PHP
+            if (!userId || userId === "") {
+                // Asumimos que el ID debe estar disponible en algún lugar de la fila
+                // En este caso, vamos a añadir un método para obtenerlo de PHP directamente
+                console.warn("No se encontró ID de usuario para esta fila");
+                
+                // Opción alternativa: usar el índice de la fila + 1 como ID temporal
+                const rows = Array.from(userTable.querySelectorAll("tr"));
+                userId = rows.indexOf(row) + 1;
+            }
+        }
+        
         const name = row.querySelector("td:nth-child(2)").textContent;
         const materia = row.querySelector("td:nth-child(3)").textContent;
         const email = row.querySelector("td:nth-child(4)").textContent;
@@ -205,7 +225,17 @@ document.addEventListener("DOMContentLoaded", () => {
     function handleDeleteButton(button) {
         const row = button.closest("tr");
         const userName = row.querySelector("td:nth-child(2)").textContent;
-        const userId = row.dataset.userId;
+        
+        // Intentar obtener el ID de la misma manera que en handleEditButton
+        let userId = row.dataset.userId;
+        if (!userId || userId === "") {
+            userId = row.getAttribute("data-id-usuario");
+            
+            if (!userId || userId === "") {
+                const rows = Array.from(userTable.querySelectorAll("tr"));
+                userId = rows.indexOf(row) + 1;
+            }
+        }
 
         if (confirm("¿Estás seguro de que deseas eliminar a " + userName + "?")) {
             // Si hay un ID de usuario, enviar solicitud para eliminarlo de la base de datos
@@ -268,5 +298,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Botón de guardar
     saveButton.addEventListener("click", function () {
         alert("Cambios guardados correctamente");
+    });
+
+    // Modificación de la carga inicial de usuarios desde PHP
+    document.querySelectorAll("table tbody tr").forEach((row, index) => {
+        // Extraer ID de usuario del DOM si está disponible
+        const userId = row.getAttribute("data-id-usuario") || (index + 1).toString();
+        
+        // Agregar atributo data-user-id a todas las filas existentes
+        if (!row.dataset.userId) {
+            row.dataset.userId = userId;
+        }
     });
 });

@@ -1,7 +1,7 @@
 <?php
 include '../../conexion.php'; // Conexión a la base de datos
 
-// Consulta modificada que no hace referencia a la tabla materia
+// Consulta modificada que incluye todos los campos necesarios
 $sql = "SELECT id_usuario, email_usuario, nombre_usuario, telefono_usuario, 
         id_institucion, id_rol 
         FROM usuario";
@@ -68,14 +68,19 @@ $resultado = $conn->query($sql);
                             // Asignar materia basado en el ID del usuario para simular la relación
                             $materiaNombre = $materias[$fila["id_usuario"] % count($materias)];
 
-                            echo "<tr>";
+                            // Atributos data para almacenar información de usuario para JS
+                            echo "<tr data-id-usuario='" . $fila["id_usuario"] . "' 
+                                     data-telefono='" . htmlspecialchars($fila["telefono_usuario"]) . "' 
+                                     data-institucion='" . $fila["id_institucion"] . "' 
+                                     data-rol='" . $fila["id_rol"] . "'
+                                     data-materia='" . htmlspecialchars($materiaNombre) . "'>";
                             echo "<td><img src='../../assets/avatar" . (($fila["id_usuario"] % 4) + 1) . ".jpg' alt='Avatar'></td>";
-                            echo "<td>" . $fila["nombre_usuario"] . "</td>";
-                            echo "<td>" . $materiaNombre . "</td>";
-                            echo "<td>" . $fila["email_usuario"] . "</td>";
+                            echo "<td>" . htmlspecialchars($fila["nombre_usuario"]) . "</td>";
+                            echo "<td>" . htmlspecialchars($materiaNombre) . "</td>";
+                            echo "<td>" . htmlspecialchars($fila["email_usuario"]) . "</td>";
                             echo "<td class='action-buttons'>
-                                    <button class='edit'><i class='fas fa-edit'></i></button>
-                                    <button class='delete'><i class='fas fa-trash'></i></button>
+                                    <button class='edit' data-id='" . $fila["id_usuario"] . "'><i class='fas fa-edit'></i></button>
+                                    <button class='delete' data-id='" . $fila["id_usuario"] . "'><i class='fas fa-trash'></i></button>
                                   </td>";
                             echo "</tr>";
                         }
