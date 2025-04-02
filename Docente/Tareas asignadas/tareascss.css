@@ -51,7 +51,7 @@
     position: relative;
     top: -35px;
     left: -30px;
-    width: 1200px;
+    width: 1190px;
     height: 80px;
     justify-content: space-between;
     align-items: center;
@@ -231,6 +231,7 @@ table {
     width: 100%;
     background-color: white;
     border-collapse: collapse;
+    border-radius: 10px;
     
     
     
@@ -249,8 +250,8 @@ th{
     text-overflow: clip;
 }
 td{
-    border-bottom:1px solid rgb(203, 190, 190);
     border-right: 1px solid rgb(203, 190, 190);
+    
     
     text-align: left;
 }
@@ -294,7 +295,7 @@ td{
          radial-gradient(circle, var(--primary-color) 20%, transparent 20%);
          background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%,18% 18%, 10% 10%, 15% 15%, 18% 18%;
          background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
-         animation: topBubbles 0.6s ease-in-out infinite;
+         animation: topBubbles 0.6s ease-in-out forwards;
     
 
 }
@@ -318,7 +319,7 @@ td{
     radial-gradient(circle, var(--primary-color) 20%, transparent 20%);
     background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
     background-position: 10% 0%, 30% 10%, 55% 0%, 70% 0%, 85% 0%, 70% 0%, 70% 0%;
-    animation: bottomBubbles 0.6s ease-in-out infinite;
+    animation: bottomBubbles 0.6s ease-in-out forwards;
 }
 @keyframes bottomBubbles {
     50%{

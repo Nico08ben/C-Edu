@@ -41,7 +41,7 @@
                                 <td>Coordinador</td>
                                 <td>Planificar el calendario para este nuevo año lectivo</td>
                                 <td>Pendiente</td>
-                                <td><a href="./TareasDetalles.php"><button class="btn-datalles" >Detalles</button></a></td>
+                                <td><button class="btn-datalles" >Detalles</button></td>
                             </tr>
                         </tbody>
                         
@@ -75,18 +75,27 @@
         </div>
     </section>
     <script>
-            const buttons = document.querySelectorAll(".btn-datalles");
+    // Seleccionar todos los botones con la clase .btn-datalles
+    const buttons = document.querySelectorAll(".btn-datalles");
 
-buttons.forEach(button => {
-    button.addEventListener("click", (e) => {
-        e.preventDefault();
-        button.classList.add("animate");
-        setTimeout(() => {
-            button.classList.remove("animate");
-        }, 600);
+    buttons.forEach(button => {
+        button.addEventListener("click", (e) => {
+            e.preventDefault(); // Evitar la acción por defecto del botón
+
+            // Agregar animación al botón
+            button.classList.add("animate");
+
+            // Redirigir después de la animación
+            setTimeout(() => {
+                // Eliminar la clase de animación antes de redirigir
+                button.classList.remove("animate");
+                window.location.href = "http://localhost/C-Edu/Docente/Tareas%20asignadas/TareasDetalles.php";  // URL de destino
+            }, 600); // Esperar el tiempo de la animación antes de redirigir
+        });
     });
-});
-        </script>
+</script>
+
+
         
 </body>
 </html>
