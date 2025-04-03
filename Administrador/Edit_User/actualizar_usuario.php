@@ -11,6 +11,11 @@ foreach ($_POST as $key => $value) {
 }
 error_log($debug_log);
 
+session_start();
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Token CSRF inválido");
+}
+
 // Verificar si se recibieron datos del formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar que tenemos un ID de usuario válido
@@ -38,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $telefono = isset($_POST['telefono_usuario']) ? $conn->real_escape_string($_POST['telefono_usuario']) : '';
     $institucion = (int)$_POST['id_institucion'];
     $rol = (int)$_POST['id_rol'];
-    
+    $materia = isset($_POST['materia_usuario']) ? (int)$_POST['materia_usuario'] : 0;
     
     // Iniciar la consulta SQL base
     $sql = "UPDATE usuario SET 
@@ -49,8 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             id_rol = $rol";
     
     // Añadir materia si existe en el formulario
-    if (!empty($materia)) {
-        $sql .= ", materia = '$materia'";
+    if ($materia > 0) {
+        $sql .= ", id_materia = $materia";
     }
     
     // Agregar contraseña a la actualización solo si se proporcionó una nueva

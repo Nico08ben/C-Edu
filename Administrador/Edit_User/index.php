@@ -1,43 +1,82 @@
 <?php
-include '../../conexion.php'; // Conexión a la base de datos
+session_start();
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
+// ... resto del código
+include '../../conexion.php';
 
-// Consulta modificada que incluye todos los campos necesarios
-$sql = "SELECT id_usuario, email_usuario, nombre_usuario, telefono_usuario, 
-        id_institucion, id_rol 
-        FROM usuario";
+// Verificar sesión y rol de administrador (0 = Admin)
+if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] != 0) {
+    header("Location: ../../Inicio/Administrador/index.php");
+    exit;
+}
+
+// Generar token CSRF
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+
+
+// Consulta ajustada para nueva estructura de roles
+$sql = "SELECT 
+            u.id_usuario, 
+            u.email_usuario, 
+            u.nombre_usuario, 
+            u.telefono_usuario, 
+            u.id_institucion, 
+            u.id_rol,
+            u.id_materia,
+            m.nombre_materia,
+            i.nombre_institucion
+        FROM usuario u
+        LEFT JOIN materia m ON u.id_materia = m.id_materia
+        LEFT JOIN institucion i ON u.id_institucion = i.id_institucion";
 $resultado = $conn->query($sql);
+
+if (!$resultado) {
+    die("Error en la consulta: " . $conn->error);
+}
+
+// Obtener instituciones y materias
+$instituciones = $conn->query("SELECT id_institucion, nombre_institucion FROM institucion");
+$materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
+
+// Función para traducir roles
+function obtenerNombreRol($id_rol) {
+    return match($id_rol) {
+        0 => 'Administrador',
+        1 => 'Maestro',
+        default => 'Usuario'
+    };
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <?php include "../../SIDEBAR/Admin/head.php" ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="editcss.css">
     <title>Gestión de Usuarios</title>
 </head>
-
 <body>
     <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
 
     <section class="home">
         <div class="user-info">
-            <div class="notifications">
-                <i class="fa-solid fa-bell"></i>
-            </div>
             <div class="profile">
                 <img src="../../assets/perfil.jpg" alt="Perfil">
                 <div class="profile-text">
-                    <span class="name">Fernando</span>
-                    <span class="role">Coordinador</span>
+                    <span class="name"><?= htmlspecialchars($_SESSION['nombre_usuario']) ?></span>
+                    <span class="role"><?= obtenerNombreRol($_SESSION['id_rol']) ?></span>
                 </div>
             </div>
         </div>
+
         <div class="container">
             <div class="header">
                 <h1>Gestión de Usuarios</h1>
@@ -50,45 +89,33 @@ $resultado = $conn->query($sql);
                         <th>Nombre Completo</th>
                         <th>Materia</th>
                         <th>Correo</th>
+                        <th>Rol</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    // Definición de materias para asignar según el ID del usuario
-                    $materias = [
-                        "Matemáticas",
-                        "Física",
-                        "Química",
-                        "Lenguaje"
-                    ];
-
-                    if ($resultado->num_rows > 0) {
-                        while ($fila = $resultado->fetch_assoc()) {
-                            // Asignar materia basado en el ID del usuario para simular la relación
-                            $materiaNombre = $materias[$fila["id_usuario"] % count($materias)];
-
-                            // Atributos data para almacenar información de usuario para JS
-                            echo "<tr data-id-usuario='" . $fila["id_usuario"] . "' 
-                                     data-telefono='" . htmlspecialchars($fila["telefono_usuario"]) . "' 
-                                     data-institucion='" . $fila["id_institucion"] . "' 
-                                     data-rol='" . $fila["id_rol"] . "'
-                                     data-materia='" . htmlspecialchars($materiaNombre) . "'>";
-                            echo "<td><img src='../../assets/avatar" . (($fila["id_usuario"] % 4) + 1) . ".jpg' alt='Avatar'></td>";
-                            echo "<td>" . htmlspecialchars($fila["nombre_usuario"]) . "</td>";
-                            echo "<td>" . htmlspecialchars($materiaNombre) . "</td>";
-                            echo "<td>" . htmlspecialchars($fila["email_usuario"]) . "</td>";
-                            echo "<td class='action-buttons'>
-                                    <button class='edit' data-id='" . $fila["id_usuario"] . "'><i class='fas fa-edit'></i></button>
-                                    <button class='delete' data-id='" . $fila["id_usuario"] . "'><i class='fas fa-trash'></i></button>
-                                  </td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='5'>No hay usuarios registrados</td></tr>";
-                    }
-                    $conn->close();
-                    ?>
+                    <?php if ($resultado->num_rows > 0): ?>
+                        <?php while ($fila = $resultado->fetch_assoc()): ?>
+                            <tr data-id-usuario="<?= $fila['id_usuario'] ?>"
+                                data-telefono="<?= htmlspecialchars($fila['telefono_usuario']) ?>"
+                                data-institucion="<?= $fila['id_institucion'] ?>"
+                                data-rol="<?= $fila['id_rol'] ?>"
+                                data-materia="<?= $fila['id_materia'] ?>">
+                                
+                                <td><img src="../../assets/avatar<?= ($fila['id_usuario'] % 4) + 1 ?>.jpg" alt="Avatar"></td>
+                                <td><?= htmlspecialchars($fila['nombre_usuario']) ?></td>
+                                <td><?= htmlspecialchars($fila['nombre_materia'] ?? 'Sin asignar') ?></td>
+                                <td><?= htmlspecialchars($fila['email_usuario']) ?></td>
+                                <td><?= obtenerNombreRol($fila['id_rol']) ?></td>
+                                <td class="action-buttons">
+                                    <button class="edit" data-id="<?= $fila['id_usuario'] ?>"><i class="fas fa-edit"></i></button>
+                                    <button class="delete" data-id="<?= $fila['id_usuario'] ?>"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr><td colspan="6">No hay usuarios registrados</td></tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
 
@@ -98,20 +125,18 @@ $resultado = $conn->query($sql);
             </div>
         </div>
 
-        <!-- Modal for New User -->
+        <!-- Modal Nuevo Usuario -->
         <div id="userModal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
-                <div class="modal-header">
-                    <h2>Crear Nuevo Usuario</h2>
-                </div>
                 <form id="newUserForm">
+                    <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                     <div class="form-group">
                         <label for="nombre_usuario">Nombre Completo</label>
                         <input type="text" id="nombre_usuario" name="nombre_usuario" required>
                     </div>
                     <div class="form-group">
-                        <label for="email_usuario">Correo Electrónico</label>
+                        <label for="email_usuario">Correo</label>
                         <input type="email" id="email_usuario" name="email_usuario" required>
                     </div>
                     <div class="form-group">
@@ -123,25 +148,31 @@ $resultado = $conn->query($sql);
                         <input type="tel" id="telefono_usuario" name="telefono_usuario">
                     </div>
                     <div class="form-group">
-                        <label for="materia">Materia</label>
-                        <select id="materia" name="materia">
-                            <option value="Matemáticas">Matemáticas</option>
-                            <option value="Física">Física</option>
-                            <option value="Química">Química</option>
-                            <option value="Lenguaje">Lenguaje</option>
+                        <label for="id_materia">Materia</label>
+                        <select id="id_materia" name="id_materia">
+                            <option value="">Seleccionar materia</option>
+                            <?php while ($materia = $materias->fetch_assoc()): ?>
+                                <option value="<?= $materia['id_materia'] ?>">
+                                    <?= htmlspecialchars($materia['nombre_materia']) ?>
+                                </option>
+                            <?php endwhile; ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="id_institucion">Institución</label>
                         <select id="id_institucion" name="id_institucion">
-                            <option value="1">Institución de prueba</option>
+                            <?php while ($inst = $instituciones->fetch_assoc()): ?>
+                                <option value="<?= $inst['id_institucion'] ?>">
+                                    <?= htmlspecialchars($inst['nombre_institucion']) ?>
+                                </option>
+                            <?php endwhile; ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="id_rol">Rol</label>
                         <select id="id_rol" name="id_rol">
-                            <option value="1">Docente</option>
-                            <option value="2">Administrador</option>
+                            <option value="0">Administrador</option>
+                            <option value="1">Maestro</option>
                         </select>
                     </div>
                     <button type="submit" class="submit-btn">Crear Usuario</button>
@@ -149,21 +180,19 @@ $resultado = $conn->query($sql);
             </div>
         </div>
 
-        <!-- Modal for Edit User -->
+        <!-- Modal Editar Usuario -->
         <div id="editUserModal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
-                <div class="modal-header">
-                    <h2>Editar Usuario</h2>
-                </div>
                 <form id="editUserForm">
+                    <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                     <input type="hidden" id="edit_id_usuario" name="id_usuario">
                     <div class="form-group">
-                        <label for="edit_nombre_usuario">Nombre Completo</label>
+                        <label for="edit_nombre_usuario">Nombre</label>
                         <input type="text" id="edit_nombre_usuario" name="nombre_usuario" required>
                     </div>
                     <div class="form-group">
-                        <label for="edit_email_usuario">Correo Electrónico</label>
+                        <label for="edit_email_usuario">Correo</label>
                         <input type="email" id="edit_email_usuario" name="email_usuario" required>
                     </div>
                     <div class="form-group">
@@ -171,25 +200,35 @@ $resultado = $conn->query($sql);
                         <input type="tel" id="edit_telefono_usuario" name="telefono_usuario">
                     </div>
                     <div class="form-group">
-                        <label for="edit_materia">Materia</label>
-                        <select id="edit_materia" name="materia">
-                            <option value="Matemáticas">Matemáticas</option>
-                            <option value="Física">Física</option>
-                            <option value="Química">Química</option>
-                            <option value="Lenguaje">Lenguaje</option>
+                        <label for="edit_id_materia">Materia</label>
+                        <select id="edit_id_materia" name="id_materia">
+                            <option value="">Sin materia</option>
+                            <?php 
+                            $materias->data_seek(0);
+                            while ($materia = $materias->fetch_assoc()): ?>
+                                <option value="<?= $materia['id_materia'] ?>">
+                                    <?= htmlspecialchars($materia['nombre_materia']) ?>
+                                </option>
+                            <?php endwhile; ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="edit_id_institucion">Institución</label>
                         <select id="edit_id_institucion" name="id_institucion">
-                            <option value="1">Institución de prueba</option>
+                            <?php 
+                            $instituciones->data_seek(0);
+                            while ($inst = $instituciones->fetch_assoc()): ?>
+                                <option value="<?= $inst['id_institucion'] ?>">
+                                    <?= htmlspecialchars($inst['nombre_institucion']) ?>
+                                </option>
+                            <?php endwhile; ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="edit_id_rol">Rol</label>
                         <select id="edit_id_rol" name="id_rol">
-                            <option value="1">Docente</option>
-                            <option value="2">Administrador</option>
+                            <option value="0">Administrador</option>
+                            <option value="1">Maestro</option>
                         </select>
                     </div>
                     <button type="submit" class="submit-btn">Guardar Cambios</button>
@@ -200,5 +239,5 @@ $resultado = $conn->query($sql);
         <script src="script.js"></script>
     </section>
 </body>
-
 </html>
+<?php $conn->close(); ?>

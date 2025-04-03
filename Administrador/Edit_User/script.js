@@ -8,6 +8,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeButtons = document.querySelectorAll(".close-button");
     const newUserForm = document.getElementById("newUserForm");
     const editUserForm = document.getElementById("editUserForm");
+    
+    // Cargar materias al inicio
+    cargarMaterias();
+
+    // Función para cargar materias desde la base de datos
+    async function cargarMaterias() {
+        try {
+            const response = await fetch("obtener_materias.php");
+            const materias = await response.json();
+            
+            // Llenar los selectores de materia en ambos formularios
+            const materiaSelects = document.querySelectorAll('#materia_usuario, #edit_materia_usuario');
+            
+            materiaSelects.forEach(select => {
+                // Limpiar opciones existentes excepto la primera (si hay una opción predeterminada)
+                const defaultOption = select.options[0];
+                select.innerHTML = '';
+                if (defaultOption) {
+                    select.appendChild(defaultOption);
+                }
+                
+                // Agregar las materias como opciones
+                materias.forEach(materia => {
+                    const option = document.createElement('option');
+                    option.value = materia.id_materia;
+                    option.textContent = materia.nombre_materia;
+                    select.appendChild(option);
+                });
+            });
+        } catch (error) {
+            console.error("Error al cargar materias:", error);
+        }
+    }
 
     // Funciones para los modales
     function openModal(modal) {
@@ -49,6 +82,10 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
 
         const formData = new FormData(newUserForm);
+        
+        // Obtener el texto de la materia seleccionada
+        const materiaSelect = document.getElementById("materia_usuario");
+        const materiaNombre = materiaSelect.options[materiaSelect.selectedIndex].text;
 
         try {
             const response = await fetch("procesar_usuario.php", {
@@ -78,12 +115,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 newRow.dataset.telefono = formData.get("telefono_usuario") || "";
                 newRow.dataset.institucion = formData.get("id_institucion");
                 newRow.dataset.rol = formData.get("id_rol");
-                newRow.dataset.materia = formData.get("materia"); // Guardar materia en atributo data
+                newRow.dataset.materia = formData.get("materia_usuario"); // ID de la materia
 
                 newRow.innerHTML = `
                     <td><img src="../../assets/avatar${avatarNum}.jpg" alt="Avatar"></td>
                     <td>${formData.get("nombre_usuario")}</td>
-                    <td>${formData.get("materia")}</td>
+                    <td>${materiaNombre}</td>
                     <td>${formData.get("email_usuario")}</td>
                     <td class="action-buttons">
                         <button class="edit"><i class="fas fa-edit"></i></button>
@@ -109,6 +146,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const formData = new FormData(editUserForm);
         const userId = formData.get("id_usuario");
+        
+        // Obtener el texto de la materia seleccionada
+        const materiaSelect = document.getElementById("edit_materia_usuario");
+        const materiaNombre = materiaSelect.options[materiaSelect.selectedIndex].text;
 
         try {
             const response = await fetch("actualizar_usuario.php", {
@@ -128,8 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         // Actualizar los datos en la tabla
                         row.querySelector("td:nth-child(2)").textContent =
                             formData.get("nombre_usuario");
-                        row.querySelector("td:nth-child(3)").textContent =
-                            formData.get("materia");
+                        row.querySelector("td:nth-child(3)").textContent = materiaNombre;
                         row.querySelector("td:nth-child(4)").textContent =
                             formData.get("email_usuario");
 
@@ -137,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         row.dataset.telefono = formData.get("telefono_usuario") || "";
                         row.dataset.institucion = formData.get("id_institucion");
                         row.dataset.rol = formData.get("id_rol");
-                        row.dataset.materia = formData.get("materia");
+                        row.dataset.materia = formData.get("materia_usuario");
                         break;
                     }
                 }
@@ -181,8 +221,6 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Si aún no hay ID, buscar en el DOM para usuarios generados por PHP
             if (!userId || userId === "") {
-                // Asumimos que el ID debe estar disponible en algún lugar de la fila
-                // En este caso, vamos a añadir un método para obtenerlo de PHP directamente
                 console.warn("No se encontró ID de usuario para esta fila");
                 
                 // Opción alternativa: usar el índice de la fila + 1 como ID temporal
@@ -192,11 +230,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         
         const name = row.querySelector("td:nth-child(2)").textContent;
-        const materia = row.querySelector("td:nth-child(3)").textContent;
+        const materiaText = row.querySelector("td:nth-child(3)").textContent;
         const email = row.querySelector("td:nth-child(4)").textContent;
         const telefono = row.dataset.telefono || "";
         const institucion = row.dataset.institucion || "1";
         const rol = row.dataset.rol || "1";
+        const materiaId = row.dataset.materia || "1";
 
         // Llenar el formulario de edición con los datos actuales
         document.getElementById("edit_id_usuario").value = userId;
@@ -205,9 +244,14 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("edit_telefono_usuario").value = telefono;
 
         // Seleccionar la materia correcta
-        const materiaSelect = document.getElementById("edit_materia");
+        const materiaSelect = document.getElementById("edit_materia_usuario");
         for (let i = 0; i < materiaSelect.options.length; i++) {
-            if (materiaSelect.options[i].value === materia) {
+            if (materiaSelect.options[i].value === materiaId) {
+                materiaSelect.selectedIndex = i;
+                break;
+            }
+            // Si no encuentra por ID, intentar por texto
+            if (materiaSelect.options[i].textContent === materiaText) {
                 materiaSelect.selectedIndex = i;
                 break;
             }
