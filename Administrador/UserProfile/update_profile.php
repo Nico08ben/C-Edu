@@ -1,5 +1,5 @@
 <?php
-// upload_image.php - Script para subir imágenes de perfil
+// update_profile.php - Script para actualizar información del usuario
 
 // Ensure no output before our JSON response
 error_reporting(0); // Disable error reporting for production
@@ -11,6 +11,14 @@ session_start();
 if (!isset($_SESSION['id_usuario'])) {
     // Para propósitos de prueba, podemos usar un ID fijo
     $_SESSION['id_usuario'] = 6; // Ajusta según sea necesario
+}
+
+// Obtener y decodificar los datos JSON recibidos
+$data = json_decode(file_get_contents('php://input'), true);
+
+if (!$data) {
+    echo json_encode(['success' => false, 'message' => 'No se recibieron datos válidos']);
+    exit;
 }
 
 // Incluir archivo de conexión a la base de datos
@@ -50,39 +58,16 @@ if (!isset($conn)) {
 
 $userId = $_SESSION['id_usuario'];
 
-// Verificar que se ha subido una imagen
-if (!isset($_FILES['profile_image']) || $_FILES['profile_image']['error'] > 0) {
-    echo json_encode(['success' => false, 'message' => 'Error al subir el archivo: ' . $_FILES['profile_image']['error']]);
-    exit;
-}
-
-// Verificar que es una imagen
-$allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-if (!in_array($_FILES['profile_image']['type'], $allowedTypes)) {
-    echo json_encode(['success' => false, 'message' => 'Tipo de archivo no permitido. Use: JPG, PNG, GIF o WEBP']);
-    exit;
-}
-
-// Verificar tamaño (máximo 2MB)
-if ($_FILES['profile_image']['size'] > 2097152) {
-    echo json_encode(['success' => false, 'message' => 'El archivo es demasiado grande. Máximo 2MB']);
-    exit;
-}
-
-// Leer la imagen
-$imageData = file_get_contents($_FILES['profile_image']['tmp_name']);
-$imageType = $_FILES['profile_image']['type'];
-
-// Preparar consulta para actualizar la imagen
-$query = "UPDATE usuario SET foto_perfil = ?, foto_tipo = ? WHERE id_usuario = ?";
+// Preparar consulta para actualizar la información del usuario
+$query = "UPDATE usuario SET nombre_usuario = ?, email_usuario = ?, telefono_usuario = ? WHERE id_usuario = ?";
 $stmt = $conn->prepare($query);
-$stmt->bind_param("ssi", $imageData, $imageType, $userId);
+$stmt->bind_param("sssi", $data['nombre'], $data['email'], $data['telefono'], $userId);
 
 // Ejecutar la consulta
 if ($stmt->execute()) {
-    echo json_encode(['success' => true, 'message' => 'Imagen actualizada correctamente']);
+    echo json_encode(['success' => true, 'message' => 'Perfil actualizado correctamente']);
 } else {
-    echo json_encode(['success' => false, 'message' => 'Error al actualizar imagen: ' . $stmt->error]);
+    echo json_encode(['success' => false, 'message' => 'Error al actualizar perfil: ' . $stmt->error]);
 }
 
 $stmt->close();

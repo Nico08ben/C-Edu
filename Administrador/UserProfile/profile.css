@@ -288,4 +288,42 @@
     .ayuda span {
         font-size: 14px;
     }
+    /* Estilos para los botones de acción */
+.action-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0 5px;
+    transition: background-color 0.3s;
+}
+
+.action-btn.edit {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.action-btn.save {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+}
+
+.action-btn.cancel {
+    background-color: #f44336;
+    color: white;
+    border: none;
+}
+
+.action-btn:hover {
+    opacity: 0.8;
+}
+
+/* Estilos para los inputs en modo edición */
+input:not([disabled]) {
+    border: 1px solid #4CAF50;
+    background-color: #f9f9f9;
+}
 }
