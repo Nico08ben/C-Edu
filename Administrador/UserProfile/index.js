@@ -90,4 +90,49 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error:", error);
         });
     }
+
+    // Botón de guardar cambios
+    const saveBtn = document.getElementById("save-btn");
+    if (saveBtn) {
+        saveBtn.addEventListener("click", function() {
+            // Recoger los valores de los campos
+            const userData = {
+                nombre: document.getElementById("nombre").value,
+                email: document.getElementById("email").value,
+                telefono: document.getElementById("telefono").value,
+                // Añadir más campos según sea necesario
+            };
+
+            // Enviar los datos al servidor
+            fetch("update_profile.php", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redireccionar a la página sin el parámetro edit
+                    window.location.href = window.location.pathname;
+                } else {
+                    alert("Error al guardar los cambios: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Error al guardar los cambios. Por favor, inténtelo de nuevo.");
+            });
+        });
+    }
+
+    // Botón de cancelar edición
+    const cancelBtn = document.getElementById("cancel-btn");
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", function() {
+            // Redireccionar a la página sin el parámetro edit
+            window.location.href = window.location.pathname;
+        });
+    }
 });
