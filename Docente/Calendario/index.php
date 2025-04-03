@@ -19,7 +19,7 @@
         <header>
             <div class="header-left">
                 <button class="today-btn">
-                    <span class="calendar-icon">📅</span>
+                    <span class="calendar-icon"></span>
                     Hoy
                 </button>
                 <div class="navigation-buttons">
@@ -29,18 +29,15 @@
                 <div class="month-year">Agosto 2024</div>
             </div>
             <div class="header-right">
-                <button class="notification-btn">
-                    🔔
-                    <span class="notification-badge">2</span>
-                </button>
                 <div class="user-profile">
-                    <div class="profile-pic">
-                        <img src="https://via.placeholder.com/40" alt="Usuario">
+                    <div class="profile">
+                <i class="fa-regular fa-bell"></i>
+                    <div class="profile-info">
+                        <div><h3>Antonio</h3></div>
+                        <div><p>Docente de Matemáticas</p></div>
                     </div>
-                    <div class="user-info">
-                        <span class="user-name">Antonio</span>
-                        <span class="user-role">Docente de Matemáticas</span>
-                    </div>
+                    <a href="../UserProfile/index.php"><i class="fa-solid fa-user"></i></a>
+                </div>
                 </div>
             </div>
         </header>
