@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $telefono = isset($_POST['telefono_usuario']) ? $conn->real_escape_string($_POST['telefono_usuario']) : '';
     $institucion = (int)$_POST['id_institucion'];
     $rol = (int)$_POST['id_rol'];
-    $materia = isset($_POST['materia_usuario']) ? (int)$_POST['materia_usuario'] : 0;
+    $materia = isset($_POST['id_materia']) ? (int)$_POST['id_materia'] : 0;
     
     // Iniciar la consulta SQL base
     $sql = "UPDATE usuario SET 

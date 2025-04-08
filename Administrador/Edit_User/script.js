@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const materias = await response.json();
             
             // Llenar los selectores de materia en ambos formularios
-            const materiaSelects = document.querySelectorAll('#materia_usuario, #edit_materia_usuario');
+            const materiaSelects = document.querySelectorAll('#id_materia, #edit_id_materia');
             
             materiaSelects.forEach(select => {
                 // Limpiar opciones existentes excepto la primera (si hay una opción predeterminada)
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const formData = new FormData(newUserForm);
         
         // Obtener el texto de la materia seleccionada
-        const materiaSelect = document.getElementById("materia_usuario");
+        const materiaSelect = document.getElementById("id_materia");
         const materiaNombre = materiaSelect.options[materiaSelect.selectedIndex].text;
 
         try {
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 newRow.dataset.telefono = formData.get("telefono_usuario") || "";
                 newRow.dataset.institucion = formData.get("id_institucion");
                 newRow.dataset.rol = formData.get("id_rol");
-                newRow.dataset.materia = formData.get("materia_usuario"); // ID de la materia
+                newRow.dataset.materia = formData.get("id_materia"); // ID de la materia
 
                 newRow.innerHTML = `
                     <td><img src="../../assets/avatar${avatarNum}.jpg" alt="Avatar"></td>
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const userId = formData.get("id_usuario");
         
         // Obtener el texto de la materia seleccionada
-        const materiaSelect = document.getElementById("edit_materia_usuario");
+        const materiaSelect = document.getElementById("edit_id_materia");
         const materiaNombre = materiaSelect.options[materiaSelect.selectedIndex].text;
 
         try {
@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         row.dataset.telefono = formData.get("telefono_usuario") || "";
                         row.dataset.institucion = formData.get("id_institucion");
                         row.dataset.rol = formData.get("id_rol");
-                        row.dataset.materia = formData.get("materia_usuario");
+                        row.dataset.materia = formData.get("id_materia");
                         break;
                     }
                 }
@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("edit_telefono_usuario").value = telefono;
 
         // Seleccionar la materia correcta
-        const materiaSelect = document.getElementById("edit_materia_usuario");
+        const materiaSelect = document.getElementById("edit_id_materia");
         for (let i = 0; i < materiaSelect.options.length; i++) {
             if (materiaSelect.options[i].value === materiaId) {
                 materiaSelect.selectedIndex = i;

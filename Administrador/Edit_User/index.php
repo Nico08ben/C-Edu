@@ -1,13 +1,13 @@
 <?php
-session_start();
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
-// ... resto del código
 include '../../conexion.php';
+session_start();
+
+
+// ... resto del código
+
 
 // Verificar sesión y rol de administrador (0 = Admin)
-if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] != 0) {
+if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) {
     header("Location: ../../Inicio/Administrador/index.php");
     exit;
 }
@@ -72,7 +72,7 @@ function obtenerNombreRol($id_rol) {
                 <img src="../../assets/perfil.jpg" alt="Perfil">
                 <div class="profile-text">
                     <span class="name"><?= htmlspecialchars($_SESSION['nombre_usuario']) ?></span>
-                    <span class="role"><?= obtenerNombreRol($_SESSION['id_rol']) ?></span>
+                    <span class="role"><?= obtenerNombreRol($_SESSION['rol']) ?></span>
                 </div>
             </div>
         </div>
