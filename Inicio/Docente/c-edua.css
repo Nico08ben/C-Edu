@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 * {
     margin: 0;
@@ -11,14 +10,23 @@ body {
     display: flex;
     min-height: 100vh;
     background: white;
+    position: relative;
+    overflow-x: hidden;
 }
 
 .login-container {
     width: 50%;
-    padding: 40px;
-    text-align: center;
-    position: absolute;
-    top: 45px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-form-wrapper {
+    width: 100%;
+    max-width: 320px;
 }
 
 .admin-container {
@@ -37,12 +45,13 @@ body {
     align-items: center;
 }
 
-
 h1 {
     color: #333;
-    font-size: 3rem;
+    font-size: 2.8rem; /* Reducido un poco el tamaño para mejor ajuste */
     margin-bottom: 5px;
     text-align: center;
+    white-space: nowrap; /* Fuerza que el texto permanezca en una sola línea */
+    line-height: 1.2; /* Ajusta el espaciado entre líneas */
 }
 
 .subtitle {
@@ -52,65 +61,46 @@ h1 {
     text-align: center;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 .form-group {
     margin-bottom: 20px;
+    width: 100%;
+    text-align: left;
 }
 
 label {
     display: block;
     color: #666;
     margin-bottom: 8px;
-    border-radius: 3px;
+    text-align: left;
 }
 
 input {
-    width: 40%; 
+    width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
 }
-label{
-text-align: left;
-position: relative;
-right: -170px;
-}
-button {
-    width: 60%;
+
+.iniciar {
+    width: 100%;
     padding: 12px;
+    margin-top: 10px;
     background: #333;
     color: white;
     border: none;
     border-radius: 4px;
     font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
-    margin-bottom: 20px;
-}
-.iniciar{
-    width: 35%;
-    padding: 12px;
-    position: absolute;
-    right: 205px;
-    background: #333;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-bottom: 20px;
-}
-
-.forgot-password {
-    position: absolute;
-    top: 420px;
-    right: 217px;
-    color: #666;
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.forgot-password:hover {
-    text-decoration: underline;
+    text-transform: uppercase;
 }
 
 .admin-title {
@@ -128,24 +118,84 @@ button {
 .admin-button {
     background: transparent;
     border: 2px solid white;
+    color: white;
     padding: 12px 30px;
     width: auto;
     transition: .5s;
 }
 
-.admin-button:hover{
+.admin-button:hover {
     color: #40C3A5;
     background-color: rgb(255, 255, 255);
 }
 
+/* Media query for mobile devices */
 @media (max-width: 768px) {
     body {
         flex-direction: column;
     }
-    .login-container, .admin-container {
+    
+    .login-container {
         width: 100%;
+        padding: 20px;
+        height: auto;
+        min-height: 50vh;
+        justify-content: flex-start;
+        padding-top: 10vh;
     }
+    
+    .login-form-wrapper {
+        width: 90%;
+    }
+    
+    h1 {
+        font-size: 2.2rem; /* Tamaño más pequeño en móvil */
+    }
+    
     .admin-container {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        position: relative;
+        width: 100%;
+        border-radius: 50% 50% 0 0 / 20% 20% 0 0;
+        padding: 40px 20px;
+        margin-top: auto;
+        height: auto;
+        min-height: 50%;
+    }
+    
+    .subtitle {
+        margin-bottom: 30px;
+        font-size: 1rem;
+    }
+    
+    .admin-title {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+    }
+    
+    .admin-text {
+        font-size: 0.9rem;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .admin-button {
+        padding: 10px 30px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Specific tweaks for very small screens */
+@media (max-width: 400px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 25px;
+    }
+    
+    .admin-container {
+        padding-top: 30px;
     }
 }
