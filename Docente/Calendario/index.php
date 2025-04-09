@@ -1,284 +1,118 @@
 <!DOCTYPE html>
-    <html lang="es">
-
-    <head>
-        <?php include "../../SIDEBAR/Docente/head.php" ?>
-        <link rel="stylesheet" href="chat.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-            integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-            <link rel="stylesheet" href="calendario.css">
-        <title>Calendario</title>
-    </head>
-
+<html lang="es">
+<head>
+    <?php include "../../SIDEBAR/Docente/head.php" ?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>Calendario</title>
     
-    <body>
-        <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
-        <section class="home">
-    <div class="container">
-        <header>
-            <div class="header-left">
-                <button class="today-btn">
-                    <span class="calendar-icon"></span>
-                    Hoy
-                </button>
-                <div class="navigation-buttons">
-                    <button class="nav-btn">&#8249;</button>
-                    <button class="nav-btn">&#8250;</button>
+    <!-- FullCalendar CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+    <link rel="stylesheet" href="calendario.css">
+</head>
+
+<body>
+    <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
+    <section class="home">
+        <div class="container">
+            <header>
+                <div class="header-left">
+                    <button id="today-btn" class="today-btn">
+                        <i class="fas fa-calendar-day"></i> Hoy
+                    </button>
+                    <div class="navigation-buttons">
+                        <button id="prev-btn" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                        <button id="next-btn" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div id="month-year" class="month-year"></div>
                 </div>
-                <div class="month-year">Agosto 2024</div>
-            </div>
-            <div class="header-right">
-                <div class="user-profile">
+                <div class="header-right">
                     <div class="profile">
-                <i class="fa-regular fa-bell"></i>
-                    <div class="profile-info">
-                        <div><h3>Antonio</h3></div>
-                        <div><p>Docente de Matemáticas</p></div>
+                        <i class="fa-regular fa-bell"></i>
+                        <div class="profile-info">
+                            <h3>Antonio</h3>
+                            <p>Docente de Matemáticas</p>
+                        </div>
+                        <a href="../UserProfile/index.php"><i class="fa-solid fa-user"></i></a>
                     </div>
-                    <a href="../UserProfile/index.php"><i class="fa-solid fa-user"></i></a>
                 </div>
-                </div>
-            </div>
-        </header>
-        
-        <div class="action-bar">
-            <button class="new-event-btn">NUEVO EVENTO</button>
-            <div class="view-options">
-                <button class="view-btn">Día</button>
-                <button class="view-btn">Semana</button>
-                <button class="view-btn active">Mes</button>
-            </div>
-        </div>
-        
-        <div class="calendar-container">
-            <div class="mini-calendar">
-                <h3>Agosto 2024</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>D</th>
-                            <th>L</th>
-                            <th>M</th>
-                            <th>M</th>
-                            <th>J</th>
-                            <th>V</th>
-                            <th>S</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td class="selected">5</td>
-                            <td>6</td>
-                            <td>7</td>
-                            <td>8</td>
-                            <td>9</td>
-                            <td>10</td>
-                        </tr>
-                        <tr>
-                            <td>11</td>
-                            <td>12</td>
-                            <td>13</td>
-                            <td>14</td>
-                            <td>15</td>
-                            <td>16</td>
-                            <td class="today">17</td>
-                        </tr>
-                        <tr>
-                            <td>18</td>
-                            <td>19</td>
-                            <td>20</td>
-                            <td>21</td>
-                            <td>22</td>
-                            <td>23</td>
-                            <td>24</td>
-                        </tr>
-                        <tr>
-                            <td>25</td>
-                            <td>26</td>
-                            <td>27</td>
-                            <td>28</td>
-                            <td>29</td>
-                            <td>30</td>
-                            <td>31</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="calendar-lists">
-                    <div class="calendars-header">
-                        <span>Mis calendarios</span> ▼
-                    </div>
-                    <div class="calendar-item">
-                        <div class="checkbox checked"></div>
-                        Mi calendario
-                    </div>
-                    <div class="calendar-item">
-                        <div class="checkbox checked"></div>
-                        Calendario del colegio
-                    </div>
-                    <div class="calendar-item">
-                        <div class="checkbox"></div>
-                        Calendario 11B
-                    </div>
+            </header>
+            
+            <div class="action-bar">
+                <button id="new-event-btn" class="new-event-btn">
+                    <i class="fas fa-plus"></i> NUEVO EVENTO
+                </button>
+                <div class="view-options">
+                    <button id="day-view" class="view-btn">Día</button>
+                    <button id="week-view" class="view-btn">Semana</button>
+                    <button id="month-view" class="view-btn active">Mes</button>
                 </div>
             </div>
             
-            <div class="main-calendar">
-                <div class="calendar-header">
-                    <h2>Agosto 2024</h2>
-                </div>
-                <div class="days-header">
-                    <div>Lunes</div>
-                    <div>Martes</div>
-                    <div>Miércoles</div>
-                    <div>Jueves</div>
-                    <div>Viernes</div>
-                    <div>Sábado</div>
-                    <div>Domingo</div>
-                </div>
-                <div class="month-grid">
-                    <!-- Primera semana -->
-                    <div class="day-cell">
-                        <span class="day-number">31</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">01</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">02</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">03</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">04</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">05</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">06</span>
-                    </div>
-                    
-                    <!-- Segunda semana -->
-                    <div class="day-cell">
-                        <span class="day-number">07</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">08</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">09</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">10</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">11</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">12</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">13</span>
-                    </div>
-                    
-                    <!-- Tercera semana -->
-                    <div class="day-cell">
-                        <span class="day-number">14</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">15</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">16</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">17</span>
-                        <div class="event">Reunión Padres de Familia</div>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">18</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">19</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">20</span>
-                    </div>
-                    
-                    <!-- Cuarta semana -->
-                    <div class="day-cell">
-                        <span class="day-number">21</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">22</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">23</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">24</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">25</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">26</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">27</span>
-                    </div>
-                    
-                    <!-- Quinta semana -->
-                    <div class="day-cell">
-                        <span class="day-number">28</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">29</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">30</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">31</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">01</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">02</span>
-                    </div>
-                    <div class="day-cell">
-                        <span class="day-number">03</span>
-                    </div>
+            <div class="calendar-container">
+                <div class="mini-calendar" id="mini-calendar"></div>
+                
+                <div class="main-calendar">
+                    <div id="calendar"></div>
                 </div>
             </div>
         </div>
-    </div>
-
     </section>
 
+    <!-- Modal para eventos -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="event-title"></h2>
+            <p><i class="fas fa-clock"></i> <span id="event-date"></span></p>
+            <p><i class="fas fa-align-left"></i> <span id="event-description"></span></p>
+            <button id="delete-event" class="btn-danger">
+                <i class="fas fa-trash"></i> Eliminar
+            </button>
+        </div>
+    </div>
 
-    <div class="loading-indicator">
-    <div class="spinner"></div>
-</div>
+    <!-- Modal para nuevo evento -->
+    <div id="new-event-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-calendar-plus"></i> Nuevo Evento</h2>
+            <form id="event-form">
+                <div class="form-group">
+                    <label for="event-name"><i class="fas fa-heading"></i> Título:</label>
+                    <input type="text" id="event-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-start"><i class="fas fa-calendar-day"></i> Inicio:</label>
+                    <input type="datetime-local" id="event-start" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-end"><i class="fas fa-calendar-times"></i> Fin:</label>
+                    <input type="datetime-local" id="event-end">
+                </div>
+                <div class="form-group">
+                    <label for="event-color"><i class="fas fa-palette"></i> Color:</label>
+                    <select id="event-color">
+                        <option value="#3eb489">Verde</option>
+                        <option value="#2196F3">Azul</option>
+                        <option value="#9C27B0">Morado</option>
+                        <option value="#FF9800">Naranja</option>
+                        <option value="#F44336">Rojo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="event-description"><i class="fas fa-align-left"></i> Descripción:</label>
+                    <textarea id="event-description" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+            </form>
+        </div>
+    </div>
 
-<script src="googleCalendar.js"></script>
-<link rel="stylesheet" href="googleCalendar.css">
+    <!-- FullCalendar JS -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js'></script>
+    <script src="calendario.js"></script>
 </body>
 </html>
-
-
-

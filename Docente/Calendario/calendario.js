@@ -1,260 +1,273 @@
-// Configuración del cliente de Google Calendar API
-const CLIENT_ID = 'TU_CLIENT_ID';
-const API_KEY = 'TU_API_KEY';
-const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
-
-let tokenClient;
-let gapiInited = false;
-let gisInited = false;
-
-document.addEventListener('DOMContentLoaded', initializeApp);
-
-function initializeApp() {
-    // Cargar el script de la API de Google
-    const script1 = document.createElement('script');
-    script1.src = 'https://apis.google.com/js/api.js';
-    script1.onload = gapiLoaded;
-    document.body.appendChild(script1);
-    
-    const script2 = document.createElement('script');
-    script2.src = 'https://accounts.google.com/gsi/client';
-    script2.onload = gisLoaded;
-    document.body.appendChild(script2);
-    
-    // Agregar botón de autorización
-    const actionBar = document.querySelector('.action-bar');
-    const authButton = document.createElement('button');
-    authButton.textContent = 'Conectar con Google Calendar';
-    authButton.className = 'google-auth-btn';
-    authButton.onclick = handleAuthClick;
-    actionBar.appendChild(authButton);
-}
-
-function gapiLoaded() {
-    gapi.load('client', initializeGapiClient);
-}
-
-async function initializeGapiClient() {
-    await gapi.client.init({
-        apiKey: API_KEY,
-        discoveryDocs: DISCOVERY_DOCS,
-    });
-    gapiInited = true;
-    maybeEnableButtons();
-}
-
-function gisLoaded() {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: SCOPES,
-        callback: '', // definido después en handleAuthClick
-    });
-    gisInited = true;
-    maybeEnableButtons();
-}
-
-function maybeEnableButtons() {
-    if (gapiInited && gisInited) {
-        document.querySelector('.google-auth-btn').disabled = false;
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener eventos guardados en localStorage
+    function getSavedEvents() {
+        const savedEvents = localStorage.getItem('calendarEvents');
+        return savedEvents ? JSON.parse(savedEvents) : [];
     }
-}
 
-function handleAuthClick() {
-    tokenClient.callback = async (resp) => {
-        if (resp.error !== undefined) {
-            throw (resp);
-        }
-        await listUpcomingEvents();
-    };
-
-    if (gapi.client.getToken() === null) {
-        tokenClient.requestAccessToken({prompt: 'consent'});
-    } else {
-        tokenClient.requestAccessToken({prompt: ''});
+    // Guardar eventos en localStorage
+    function saveEvents(events) {
+        localStorage.setItem('calendarEvents', JSON.stringify(events));
     }
-}
 
-async function listUpcomingEvents() {
-    try {
-        const response = await gapi.client.calendar.events.list({
-            'calendarId': 'primary',
-            'timeMin': (new Date()).toISOString(),
-            'showDeleted': false,
-            'singleEvents': true,
-            'maxResults': 30,
-            'orderBy': 'startTime'
-        });
-
-        const events = response.result.items;
-        populateCalendar(events);
-        
-    } catch (err) {
-        console.error('Error al obtener eventos:', err);
-        alert('Error al obtener eventos de Google Calendar');
-    }
-}
-
-function populateCalendar(events) {
-    // Limpiar eventos existentes
-    document.querySelectorAll('.event').forEach(el => el.remove());
-    
-    // Agregar eventos al calendario
-    events.forEach(event => {
-        const startDate = new Date(event.start.dateTime || event.start.date);
-        const day = startDate.getDate();
-        const month = startDate.getMonth();
-        
-        // Buscar la celda correspondiente a la fecha del evento
-        // Esto es simplificado - necesitarás ajustarlo para que funcione con tu estructura de calendario
-        const cells = document.querySelectorAll('.day-cell');
-        cells.forEach(cell => {
-            const dayNumber = parseInt(cell.querySelector('.day-number').textContent);
+    // Inicializar FullCalendar
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'es',
+        initialView: 'dayGridMonth',
+        headerToolbar: false, // Ocultamos la barra de herramientas nativa
+        firstDay: 1, // Lunes como primer día de la semana
+        events: getSavedEvents(),
+        eventDisplay: 'block',
+        eventColor: '#3eb489', // Color por defecto
+        eventTextColor: '#333',
+        eventTimeFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        },
+        dateClick: function(info) {
+            // Abrir modal para nuevo evento al hacer clic en una fecha
+            const startDate = new Date(info.date);
+            startDate.setHours(12, 0); // Hora por defecto: 12:00 PM
             
-            // Comprobar si esta celda corresponde al día del evento
-            // Nota: Esta es una implementación básica, deberás adaptar la lógica a tu calendario
-            if (dayNumber === day && currentMonth === month) {
-                // Crear elemento del evento
-                const eventElement = document.createElement('div');
-                eventElement.className = 'event';
-                eventElement.textContent = event.summary;
-                eventElement.title = event.summary;
+            document.getElementById('event-start').value = formatDateTimeLocal(startDate);
+            document.getElementById('new-event-modal').style.display = 'block';
+        },
+        eventClick: function(info) {
+            // Mostrar detalles del evento al hacer clic en él
+            const event = info.event;
+            document.getElementById('event-title').textContent = event.title;
+            
+            // Formatear fecha y hora
+            let dateStr = '';
+            if (event.allDay) {
+                dateStr = event.start.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            } else {
+                dateStr = event.start.toLocaleString('es-ES', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
                 
-                // Añadir información adicional como atributos de datos
-                eventElement.dataset.eventId = event.id;
-                eventElement.dataset.startTime = event.start.dateTime || event.start.date;
-                eventElement.dataset.endTime = event.end.dateTime || event.end.date;
-                
-                // Añadir evento para mostrar detalles al hacer clic
-                eventElement.addEventListener('click', () => showEventDetails(event));
-                
-                // Añadir a la celda del día
-                cell.appendChild(eventElement);
+                if (event.end) {
+                    dateStr += ' - ' + event.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                }
             }
+            
+            document.getElementById('event-date').innerHTML = `<span>${dateStr}</span>`;
+            document.getElementById('event-description').innerHTML = `<span>${event.extendedProps.description || 'Sin descripción'}</span>`;
+            
+            // Configurar botón de eliminar
+            document.getElementById('delete-event').onclick = function() {
+                if (confirm('¿Estás seguro de eliminar este evento?')) {
+                    const savedEvents = getSavedEvents();
+                    const updatedEvents = savedEvents.filter(e => e.id !== event.id);
+                    saveEvents(updatedEvents);
+                    
+                    event.remove();
+                    document.getElementById('event-modal').style.display = 'none';
+                }
+            };
+            
+            document.getElementById('event-modal').style.display = 'block';
+        },
+        eventDidMount: function(info) {
+            // Establecer color del evento
+            if (info.event.backgroundColor) {
+                info.el.style.backgroundColor = info.event.backgroundColor;
+                info.el.style.borderLeft = `4px solid ${info.event.backgroundColor}`;
+            }
+        }
+    });
+
+    calendar.render();
+    updateMonthYear(calendar);
+
+    // Función para formatear fecha para input datetime-local
+    function formatDateTimeLocal(date) {
+        const d = new Date(date);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        return d.toISOString().slice(0, 16);
+    }
+
+    // Actualizar el mes y año mostrado
+    function updateMonthYear(calendar) {
+        const view = calendar.view;
+        const title = view.title;
+        document.getElementById('month-year').textContent = title;
+    }
+
+    // Configurar botones de navegación
+    document.getElementById('today-btn').addEventListener('click', function() {
+        calendar.today();
+        updateMonthYear(calendar);
+    });
+
+    document.getElementById('prev-btn').addEventListener('click', function() {
+        calendar.prev();
+        updateMonthYear(calendar);
+    });
+
+    document.getElementById('next-btn').addEventListener('click', function() {
+        calendar.next();
+        updateMonthYear(calendar);
+    });
+
+    // Configurar botones de vista
+    document.getElementById('day-view').addEventListener('click', function() {
+        calendar.changeView('timeGridDay');
+        setActiveView('day');
+    });
+
+    document.getElementById('week-view').addEventListener('click', function() {
+        calendar.changeView('timeGridWeek');
+        setActiveView('week');
+    });
+
+    document.getElementById('month-view').addEventListener('click', function() {
+        calendar.changeView('dayGridMonth');
+        setActiveView('month');
+    });
+
+    // Función para marcar la vista activa
+    function setActiveView(view) {
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.getElementById(`${view}-view`).classList.add('active');
+    }
+
+    // Configurar modal de nuevo evento
+    document.getElementById('new-event-btn').addEventListener('click', function() {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        
+        document.getElementById('event-start').value = formatDateTimeLocal(now);
+        document.getElementById('event-end').value = '';
+        document.getElementById('event-name').value = '';
+        document.getElementById('event-description').value = '';
+        document.getElementById('event-color').value = '#3eb489';
+        
+        document.getElementById('new-event-modal').style.display = 'block';
+    });
+
+    // Manejar envío del formulario de nuevo evento
+    document.getElementById('event-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const title = document.getElementById('event-name').value;
+        const start = document.getElementById('event-start').value;
+        const end = document.getElementById('event-end').value;
+        const description = document.getElementById('event-description').value;
+        const color = document.getElementById('event-color').value;
+        
+        const newEvent = {
+            id: 'event_' + Date.now(),
+            title: title,
+            start: start,
+            end: end || undefined,
+            description: description,
+            backgroundColor: color,
+            borderColor: color
+        };
+        
+        // Guardar el evento
+        const savedEvents = getSavedEvents();
+        savedEvents.push(newEvent);
+        saveEvents(savedEvents);
+        
+        // Añadir al calendario
+        calendar.addEvent(newEvent);
+        
+        // Cerrar modal y limpiar formulario
+        document.getElementById('new-event-modal').style.display = 'none';
+        this.reset();
+    });
+
+    // Cerrar modales
+    document.querySelectorAll('.close').forEach(button => {
+        button.addEventListener('click', function() {
+            this.closest('.modal').style.display = 'none';
         });
     });
-}
 
-function showEventDetails(event) {
-    // Implementar un modal o diálogo para mostrar detalles del evento
-    console.log('Detalles del evento:', event);
-    
-    // Ejemplo básico de modal (puedes implementar uno más sofisticado)
-    const modal = document.createElement('div');
-    modal.className = 'event-modal';
-    
-    const modalContent = document.createElement('div');
-    modalContent.className = 'event-modal-content';
-    
-    // Crear contenido del modal
-    const title = document.createElement('h3');
-    title.textContent = event.summary;
-    
-    const time = document.createElement('p');
-    const startTime = new Date(event.start.dateTime || event.start.date);
-    const endTime = new Date(event.end.dateTime || event.end.date);
-    time.textContent = `${formatDate(startTime)} - ${formatDate(endTime)}`;
-    
-    const description = document.createElement('p');
-    description.textContent = event.description || 'Sin descripción';
-    
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = 'Cerrar';
-    closeBtn.onclick = () => document.body.removeChild(modal);
-    
-    // Ensamblar el modal
-    modalContent.appendChild(title);
-    modalContent.appendChild(time);
-    modalContent.appendChild(description);
-    modalContent.appendChild(closeBtn);
-    modal.appendChild(modalContent);
-    
-    // Añadir al cuerpo del documento
-    document.body.appendChild(modal);
-}
+    // Cerrar modal al hacer clic fuera del contenido
+    window.addEventListener('click', function(event) {
+        if (event.target.className === 'modal') {
+            event.target.style.display = 'none';
+        }
+    });
 
-function formatDate(date) {
-    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
-}
+    // Mini calendario
+    const miniCalendar = new FullCalendar.Calendar(document.getElementById('mini-calendar'), {
+        locale: 'es',
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            start: 'title',
+            center: '',
+            end: 'today prev,next'
+        },
+        height: 'auto',
+        dateClick: function(info) {
+            calendar.gotoDate(info.date);
+            updateMonthYear(calendar);
+        },
+        datesSet: function() {
+            // Sincronizar el mini calendario con el principal
+            calendar.gotoDate(miniCalendar.getDate());
+            updateMonthYear(calendar);
+        }
+    });
 
-// Variable para rastrear el mes y año actual en el calendario
-let currentMonth = new Date().getMonth();
-let currentYear = new Date().getFullYear();
+    miniCalendar.render();
 
-// Función para actualizar el mes en pantalla
-function updateCalendarMonth(year, month) {
-    currentMonth = month;
-    currentYear = year;
-    
-    // Actualizar título del calendario
-    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    document.querySelector('.month-year').textContent = `${monthNames[month]} ${year}`;
-    document.querySelector('.main-calendar h2').textContent = `${monthNames[month]} ${year}`;
-    
-    // Aquí implementarías la lógica para actualizar la vista del calendario
-    // con los días correspondientes al mes y año especificados
-    
-    // Luego cargar eventos de Google Calendar para este mes
-    if (gapi.client && gapi.client.getToken() !== null) {
-        // Crear fechas para el primer y último día del mes
-        const firstDay = new Date(year, month, 1);
-        const lastDay = new Date(year, month + 1, 0);
-        
-        fetchEventsForMonth(firstDay, lastDay);
+    let syncing = false;
+
+calendar.on('datesSet', function() {
+    if (!syncing) {
+        syncing = true;
+        miniCalendar.gotoDate(calendar.getDate());
+        setTimeout(() => syncing = false, 10);
     }
-}
+});
 
-async function fetchEventsForMonth(startDate, endDate) {
-    try {
-        const response = await gapi.client.calendar.events.list({
-            'calendarId': 'primary',
-            'timeMin': startDate.toISOString(),
-            'timeMax': endDate.toISOString(),
-            'showDeleted': false,
-            'singleEvents': true,
-            'maxResults': 100,
-            'orderBy': 'startTime'
-        });
-
-        const events = response.result.items;
-        populateCalendar(events);
-        
-    } catch (err) {
-        console.error('Error al obtener eventos:', err);
+miniCalendar.setOption('datesSet', function() {
+    if (!syncing) {
+        syncing = true;
+        calendar.gotoDate(miniCalendar.getDate());
+        updateMonthYear(calendar);
+        setTimeout(() => syncing = false, 10);
     }
-}
+});
 
-// Inicializar botones de navegación
-document.addEventListener('DOMContentLoaded', () => {
-    // Botón Hoy
-    const todayBtn = document.querySelector('.today-btn');
-    todayBtn.addEventListener('click', () => {
+
+    // Cargar eventos iniciales si no hay ninguno guardado
+    if (getSavedEvents().length === 0) {
         const today = new Date();
-        updateCalendarMonth(today.getFullYear(), today.getMonth());
-    });
-    
-    // Botones de navegación anterior y siguiente
-    const prevBtn = document.querySelector('.nav-btn:first-child');
-    const nextBtn = document.querySelector('.nav-btn:last-child');
-    
-    prevBtn.addEventListener('click', () => {
-        let month = currentMonth - 1;
-        let year = currentYear;
-        if (month < 0) {
-            month = 11;
-            year--;
-        }
-        updateCalendarMonth(year, month);
-    });
-    
-    nextBtn.addEventListener('click', () => {
-        let month = currentMonth + 1;
-        let year = currentYear;
-        if (month > 11) {
-            month = 0;
-            year++;
-        }
-        updateCalendarMonth(year, month);
-    });
+        const sampleEvents = [
+            {
+                id: 'event_1',
+                title: 'Reunión de profesores',
+                start: new Date(today.getFullYear(), today.getMonth(), 5, 10, 0),
+                end: new Date(today.getFullYear(), today.getMonth(), 5, 12, 0),
+                description: 'Reunión mensual del departamento',
+                backgroundColor: '#3eb489'
+            },
+            {
+                id: 'event_2',
+                title: 'Entrega de calificaciones',
+                start: new Date(today.getFullYear(), today.getMonth(), 15),
+                allDay: true,
+                description: 'Fecha límite para subir calificaciones',
+                backgroundColor: '#2196F3'
+            }
+        ];
+        
+        sampleEvents.forEach(event => calendar.addEvent(event));
+        saveEvents(sampleEvents);
+    }
 });
