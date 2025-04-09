@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -12,26 +11,28 @@
 
 <body>
     <div class="login-container">
-        <h1>Iniciar Sesión</h1>
-        <div class="subtitle">DOCENTES</div>
-        <form action="validar_login.php" method="POST">
-            <div class="form-group">
-                <label class="etiquetas">Usuario</label>
-                <input type="text" name="usuario" placeholder="Usuario" required>
-            </div>
-            <div class="form-group">
-                <label class="etiquetas">Contraseña</label>
-                <input type="password" name="password" placeholder="Contraseña" required>
-            </div>
-            <button type="submit" class="iniciar">INICIAR</button>
-        </form>
-
+        <div class="login-form-wrapper">
+            <!-- Cambio en el título para evitar posibles saltos de línea -->
+            <h1>Iniciar Sesión</h1>
+            <div class="subtitle">DOCENTES</div>
+            <form action="validar_login.php" method="POST">
+                <div class="form-group">
+                    <label for="usuario">Usuario</label>
+                    <input type="text" id="usuario" name="usuario" placeholder="Usuario" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="iniciar">INICIAR</button>
+            </form>
+        </div>
     </div>
     <div class="admin-container">
         <h2 class="admin-title">¿ADMINISTRATIVO?</h2>
         <p class="admin-text">Inicia sesión en nuestro apartado de administrativos para poder ingresar a nuestra pagina
             web en modo administrativo.</p>
-        <a href="Inicio/Administrador/index.php ">
+        <a href="Inicio/Administrador/index.php">
             <button class="admin-button">Iniciar Sesión</button>
         </a>
     </div>
