@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-04-2025 a las 22:53:38
+-- Tiempo de generación: 09-04-2025 a las 18:00:06
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -115,7 +115,7 @@ CREATE TABLE `notificacion` (
 
 CREATE TABLE `rol` (
   `id_rol` int(11) NOT NULL,
-  `tipo_rol` enum('admin','maestro') NOT NULL,
+  `tipo_rol` enum('Administrador','Maestro') NOT NULL,
   `permisos_rol` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -124,8 +124,8 @@ CREATE TABLE `rol` (
 --
 
 INSERT INTO `rol` (`id_rol`, `tipo_rol`, `permisos_rol`) VALUES
-(0, 'admin', NULL),
-(1, 'maestro', NULL);
+(0, 'Administrador', NULL),
+(1, 'Maestro', NULL);
 
 -- --------------------------------------------------------
 
@@ -165,8 +165,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contraseña_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`) VALUES
-(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', NULL, 1, 0, NULL, NULL),
-(4, 'maestro@cedu.com', '$2y$10$t0W3UDCQIVFPvgI.3by66ulc3bxqZLVXxu6lj8O4zTnNpx1hmL4VG', 'Maestro Ejemplo', NULL, 1, 1, NULL, NULL);
+(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL),
+(4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL),
+(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL);
 
 -- --------------------------------------------------------
 
@@ -290,7 +291,7 @@ ALTER TABLE `tarea`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas

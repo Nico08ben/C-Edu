@@ -59,10 +59,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     // Agregar contraseña a la actualización solo si se proporcionó una nueva
-    if (isset($_POST['password_usuario']) && !empty($_POST['password_usuario'])) {
-        $password = password_hash($_POST['password_usuario'], PASSWORD_DEFAULT);
-        $sql .= ", contraseña_usuario = '$password'";
-    }
     
     // Completar la consulta con la condición WHERE
     $sql .= " WHERE id_usuario = $id";

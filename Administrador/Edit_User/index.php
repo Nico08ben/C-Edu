@@ -21,18 +21,20 @@ $csrf_token = $_SESSION['csrf_token'];
 
 // Consulta ajustada para nueva estructura de roles
 $sql = "SELECT 
-            u.id_usuario, 
-            u.email_usuario, 
-            u.nombre_usuario, 
-            u.telefono_usuario, 
-            u.id_institucion, 
-            u.id_rol,
-            u.id_materia,
-            m.nombre_materia,
-            i.nombre_institucion
-        FROM usuario u
-        LEFT JOIN materia m ON u.id_materia = m.id_materia
-        LEFT JOIN institucion i ON u.id_institucion = i.id_institucion";
+    u.id_usuario,
+    u.email_usuario,
+    u.nombre_usuario,
+    u.telefono_usuario,
+    u.id_institucion,
+    m.id_materia,
+    u.id_rol,
+    r.tipo_rol AS nombre_rol,
+    m.nombre_materia,
+    i.nombre_institucion
+FROM usuario u
+LEFT JOIN materia m ON u.id_materia = m.id_materia
+LEFT JOIN institucion i ON u.id_institucion = i.id_institucion
+LEFT JOIN rol r ON u.id_rol = r.id_rol";
 $resultado = $conn->query($sql);
 
 if (!$resultado) {
@@ -42,19 +44,11 @@ if (!$resultado) {
 // Obtener instituciones y materias
 $instituciones = $conn->query("SELECT id_institucion, nombre_institucion FROM institucion");
 $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
-
-// Función para traducir roles
-function obtenerNombreRol($id_rol) {
-    return match($id_rol) {
-        0 => 'Administrador',
-        1 => 'Maestro',
-        default => 'Usuario'
-    };
-}
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <?php include "../../SIDEBAR/Admin/head.php" ?>
     <meta charset="UTF-8">
@@ -63,19 +57,12 @@ function obtenerNombreRol($id_rol) {
     <link rel="stylesheet" href="editcss.css">
     <title>Gestión de Usuarios</title>
 </head>
+
 <body>
     <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
 
     <section class="home">
-        <div class="user-info">
-            <div class="profile">
-                <img src="../../assets/perfil.jpg" alt="Perfil">
-                <div class="profile-text">
-                    <span class="name"><?= htmlspecialchars($_SESSION['nombre_usuario']) ?></span>
-                    <span class="role"><?= obtenerNombreRol($_SESSION['rol']) ?></span>
-                </div>
-            </div>
-        </div>
+        <?php include '../../PHP/user_info.php'; ?>
 
         <div class="container">
             <div class="header">
@@ -98,23 +85,26 @@ function obtenerNombreRol($id_rol) {
                         <?php while ($fila = $resultado->fetch_assoc()): ?>
                             <tr data-id-usuario="<?= $fila['id_usuario'] ?>"
                                 data-telefono="<?= htmlspecialchars($fila['telefono_usuario']) ?>"
-                                data-institucion="<?= $fila['id_institucion'] ?>"
-                                data-rol="<?= $fila['id_rol'] ?>"
+                                data-institucion="<?= $fila['id_institucion'] ?>" data-rol="<?= $fila['id_rol'] ?>"
                                 data-materia="<?= $fila['id_materia'] ?>">
-                                
+
                                 <td><img src="../../assets/avatar<?= ($fila['id_usuario'] % 4) + 1 ?>.jpg" alt="Avatar"></td>
                                 <td><?= htmlspecialchars($fila['nombre_usuario']) ?></td>
                                 <td><?= htmlspecialchars($fila['nombre_materia'] ?? 'Sin asignar') ?></td>
                                 <td><?= htmlspecialchars($fila['email_usuario']) ?></td>
-                                <td><?= obtenerNombreRol($fila['id_rol']) ?></td>
+                                <td><?= htmlspecialchars($fila['nombre_rol'] ?? 'Sin asignar') ?></td>
                                 <td class="action-buttons">
-                                    <button class="edit" data-id="<?= $fila['id_usuario'] ?>"><i class="fas fa-edit"></i></button>
-                                    <button class="delete" data-id="<?= $fila['id_usuario'] ?>"><i class="fas fa-trash"></i></button>
+                                    <button class="edit" data-id="<?= $fila['id_usuario'] ?>"><i
+                                            class="fas fa-edit"></i></button>
+                                    <button class="delete" data-id="<?= $fila['id_usuario'] ?>"><i
+                                            class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <tr><td colspan="6">No hay usuarios registrados</td></tr>
+                        <tr>
+                            <td colspan="6">No hay usuarios registrados</td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -129,6 +119,7 @@ function obtenerNombreRol($id_rol) {
         <div id="userModal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
+                <h2 class="modal-title">Crear Nuevo Usuario</h2>
                 <form id="newUserForm">
                     <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                     <div class="form-group">
@@ -184,6 +175,7 @@ function obtenerNombreRol($id_rol) {
         <div id="editUserModal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
+                <h2 class="modal-title">Editar Usuario</h2>
                 <form id="editUserForm">
                     <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                     <input type="hidden" id="edit_id_usuario" name="id_usuario">
@@ -203,7 +195,7 @@ function obtenerNombreRol($id_rol) {
                         <label for="edit_id_materia">Materia</label>
                         <select id="edit_id_materia" name="id_materia">
                             <option value="">Sin materia</option>
-                            <?php 
+                            <?php
                             $materias->data_seek(0);
                             while ($materia = $materias->fetch_assoc()): ?>
                                 <option value="<?= $materia['id_materia'] ?>">
@@ -215,7 +207,7 @@ function obtenerNombreRol($id_rol) {
                     <div class="form-group">
                         <label for="edit_id_institucion">Institución</label>
                         <select id="edit_id_institucion" name="id_institucion">
-                            <?php 
+                            <?php
                             $instituciones->data_seek(0);
                             while ($inst = $instituciones->fetch_assoc()): ?>
                                 <option value="<?= $inst['id_institucion'] ?>">
@@ -231,13 +223,42 @@ function obtenerNombreRol($id_rol) {
                             <option value="1">Maestro</option>
                         </select>
                     </div>
+                    <!-- Agrega este botón antes del botón de submit -->
+                    <div class="form-group">
+                        <button type="button" id="openPasswordChange" class="password-change-btn">
+                            Cambiar Contraseña
+                        </button>
+                    </div>
                     <button type="submit" class="submit-btn">Guardar Cambios</button>
                 </form>
             </div>
         </div>
+        <!-- Modal Cambiar Contraseña -->
+        <div id="changePasswordModal" class="modal">
+            <div class="modal-content">
+                <span class="close-password">&times;</span>
+                <h2 class="modal-title">Cambiar Contraseña</h2>
+                <form id="changePasswordForm">
+                    <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
+                    <input type="hidden" id="password_user_id" name="id_usuario">
 
+                    <div class="form-group">
+                        <label for="new_password">Nueva Contraseña</label>
+                        <input type="password" id="new_password" name="new_password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password">Confirmar Contraseña</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Cambiar Contraseña</button>
+                </form>
+            </div>
+        </div>
         <script src="script.js"></script>
     </section>
 </body>
+
 </html>
 <?php $conn->close(); ?>

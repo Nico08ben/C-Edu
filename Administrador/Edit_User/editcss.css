@@ -32,49 +32,11 @@ h1 {
     font-weight: bold;
 }
 
-/* Posicionar .user-info en la esquina superior derecha */
-.user-info {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
 .notifications {
     position: relative;
     font-size: 20px;
     cursor: pointer;
     padding: 5px;
-}
-
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.profile img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.profile-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.name {
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.role {
-    font-size: 12px;
-    color: #888;
 }
 
 /* Estilos mejorados para la tabla */
@@ -301,4 +263,38 @@ img {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.password-change-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.password-change-btn:hover {
+    background-color: #45a049;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.close-password{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #aaa;
 }

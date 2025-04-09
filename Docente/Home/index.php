@@ -21,14 +21,7 @@ if (!isset($_SESSION['id_usuario'])) {
         <main class="main-content">
             <div class="header">
                 <h1 id="titulo1-header">Bienvenido a C-EDU</h1>
-                <div class="profile">
-                <i class="fa-regular fa-bell"></i>
-                    <div class="profile-info">
-                        <div><h3>Antonio</h3></div>
-                        <div><p>Docente de Matemáticas</p></div>
-                    </div>
-                    <a href="../UserProfile/index.php"><i class="fa-solid fa-user"></i></a>
-                </div>
+                <?php include '../../PHP/user_info.php'; ?>
             </div>
     
             <div class="cards-container">
