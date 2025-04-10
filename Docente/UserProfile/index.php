@@ -1,3 +1,28 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+include '../../conexion.php';
+
+$id_usuario = $_SESSION['id_usuario'] ?? null;
+
+if ($id_usuario) {
+    $stmt = $conn->prepare("SELECT u.nombre_usuario, u.email_usuario, u.telefono_usuario, u.grupo_cargo_usuario,
+                                r.tipo_rol AS nombre_rol, m.nombre_materia AS nombre_materia, i.nombre_institucion
+                                FROM usuario u
+                                INNER JOIN rol r ON u.id_rol = r.id_rol 
+                                LEFT JOIN materia m ON u.id_materia = m.id_materia 
+                                LEFT JOIN institucion i ON u.id_institucion = i.id_institucion
+                                WHERE u.id_usuario = ?
+                                            ");
+    $stmt->bind_param("i", $id_usuario);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $fila = $result->fetch_assoc();
+    $stmt->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -10,69 +35,20 @@
 </head>
 
 <body>
-    <!-- Barra lateral -->
     <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
 
     <section class="home">
-        <!-- Contenido principal -->
         <div class="main-content">
-            <!-- Tarjeta de perfil -->
             <div class="card-profile">
-                <!-- Encabezado con opciones -->
                 <div class="profile-header">
-                    <span class="profile-option" id="edit-profile" style="font-weight: bold;">Editar Perfil</span>
+                    <span class="profile-option" id="edit-profile" style="font-weight: bold; cursor: pointer;">Editar
+                        Perfil</span>
                     <span class="profile-option" id="help">Ayuda</span>
                 </div>
 
                 <div class="profile-container">
-                    <!-- Columna izquierda (Foto y Botón) -->
                     <div class="profile-left">
                         <div class="user-avatar">
-                            <?php
-                            // Aquí obtendrías la imagen de la base de datos
-                            // Por ejemplo: $userId = $_SESSION['id_usuario']; 
-                            $userId = 6; // Usamos un ID de prueba, ajustar según corresponda
-                            
-                            // Incluir archivo de conexión a la base de datos
-                            // Corregir la ruta del archivo de conexión
-                            $connection_file = "../../C-EDU/conexion.php";
-                            if (file_exists($connection_file)) {
-                                include $connection_file;
-                            } else {
-                                // Fallback a la ruta alternativa
-                                include "../../config/conexion.php";
-                            }
-
-                            // Verificar si la conexión existe
-                            if (isset($conn)) {
-                                // Consultar la imagen del usuario
-                                $query = "SELECT foto_perfil, foto_tipo FROM usuario WHERE id_usuario = ?";
-                                $stmt = $conn->prepare($query);
-                                $stmt->bind_param("i", $userId);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-
-                                if ($result->num_rows > 0) {
-                                    $row = $result->fetch_assoc();
-                                    if ($row['foto_perfil']) {
-                                        // Si hay una imagen en la base de datos, mostrarla
-                                        $imgData = base64_encode($row['foto_perfil']);
-                                        $imgType = $row['foto_tipo'];
-                                        echo "<img src='data:$imgType;base64,$imgData'>";
-                                    } else {
-                                        // Si no hay imagen, mostrar la predeterminada
-                                        echo "<img src='avatar.png'>";
-                                    }
-                                } else {
-                                    // Si no se encuentra el usuario, mostrar imagen predeterminada
-                                    echo "<img src='avatar.png'>";
-                                }
-                                $stmt->close();
-                            } else {
-                                // Si no hay conexión, mostrar imagen predeterminada
-                                echo "<img src='avatar.png'>";
-                            }
-                            ?>
                         </div>
                         <form id="upload-form" enctype="multipart/form-data">
                             <input type="file" id="profile-image-input" name="profile_image" accept="image/*"
@@ -81,63 +57,46 @@
                             <div id="upload-status"></div>
                         </form>
                     </div>
-                    <?php
-                    $userData = null;
-                    if (isset($conn)) {
-                        $query = "SELECT nombre_completo, correo, fecha_nacimiento, materia, colegio, usuario, telefono, grupo_cargo FROM usuario WHERE id_usuario = ?";
-                        $stmt = $conn->prepare($query);
-                        $stmt->bind_param("i", $userId);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        if ($result->num_rows > 0) {
-                            $userData = $result->fetch_assoc();
-                        }
-                        $stmt->close();
-                    }
-                    ?>
 
-                    <!-- Columna derecha (Información) -->
                     <div class="profile-right">
                         <div class="container">
                             <div class="columna">
                                 <label>Nombre</label>
-                                <input type="text"
-                                    value="<?php echo htmlspecialchars($userData['nombre_completo'] ?? ''); ?>"
-                                    disabled>
+                                <input type="text" name="nombre_completo"
+                                    value="<?= htmlspecialchars($fila['nombre_usuario'] ?? '') ?>" readonly>
 
                                 <label>Email</label>
-                                <input type="text" value="<?php echo htmlspecialchars($userData['correo'] ?? ''); ?>"
-                                    disabled>
+                                <input type="text" name="correo"
+                                    value="<?= htmlspecialchars($fila['email_usuario'] ?? '') ?>" readonly>
 
                                 <label>Fecha de Nacimiento</label>
-                                <input type="text"
-                                    value="<?php echo htmlspecialchars($userData['fecha_nacimiento'] ?? ''); ?>"
-                                    disabled>
+                                <input type="text" name="fecha_nacimiento"
+                                    value="<?= htmlspecialchars($fila['fecha_nacimiento'] ?? '') ?>" readonly>
 
                                 <label>Materia</label>
-                                <input type="text" value="<?php echo htmlspecialchars($userData['materia'] ?? ''); ?>"
-                                    disabled>
+                                <input type="text" name="materia"
+                                    value="<?= htmlspecialchars($fila['nombre_materia'] ?? '') ?>" readonly>
 
                                 <label>Colegio</label>
-                                <input type="text" value="<?php echo htmlspecialchars($userData['colegio'] ?? ''); ?>"
-                                    disabled>
+                                <input type="text" name="colegio"
+                                    value="<?= htmlspecialchars($fila['nombre_institucion'] ?? '') ?>" readonly>
                             </div>
 
                             <div class="columna">
                                 <label>Nombre de Usuario</label>
-                                <input type="text" value="<?php echo htmlspecialchars($userData['usuario'] ?? ''); ?>"
-                                    disabled>
+                                <input type="text" name="usuario"
+                                    value="<?= htmlspecialchars($fila['nombre_usuario'] ?? '') ?>" readonly>
 
                                 <label>Contraseña</label>
-                                <input type="password" value="************" disabled>
+                                <input type="password" name="password" value="************" readonly>
 
                                 <label>Teléfono</label>
-                                <input type="text" value="<?php echo htmlspecialchars($userData['telefono'] ?? ''); ?>"
-                                    disabled>
+                                <input type="text" name="telefono"
+                                    value="<?= htmlspecialchars($fila['telefono_usuario'] ?? '') ?>" readonly>
 
                                 <label>Grupo a Cargo</label>
-                                <input type="text"
-                                    value="<?php echo htmlspecialchars($userData['grupo_cargo'] ?? ''); ?>" disabled>
+                                <input type="text" name="grupo_cargo"
+                                    value="<?= htmlspecialchars($fila['grupo_cargo_usuario'] ?? '') ?>" readonly>
                             </div>
                         </div>
                     </div>
@@ -145,12 +104,11 @@
                 </div>
                 <div class="ayuda">
                     <h3>CONTACTANOS</h3>
-                    <p>Contacta con un asesor tecnico el cual te puede ayudar si presentas algun problema con nuestro
-                        programa. Puedes contactactarnos por medio de correo electronico, Whatsapp y numero de telefono.
-                    </p>
+                    <p>Contacta con un asesor técnico si presentas algún problema. Puedes escribirnos por correo
+                        electrónico, WhatsApp o teléfono.</p>
                     <div class="correo">
                         <i class="fa-regular fa-envelope"></i>
-                        <span>CORREO ELECTRONICO</span>
+                        <span>CORREO ELECTRÓNICO</span>
                         <i class="fa-solid fa-chevron-right"></i>
                     </div>
                     <div class="whatsapp">
@@ -160,7 +118,7 @@
                     </div>
                     <div class="correo">
                         <i class="fa-solid fa-phone"></i>
-                        <span>TELEFONO</span>
+                        <span>TELÉFONO</span>
                         <i class="fa-solid fa-chevron-right"></i>
                     </div>
                 </div>
