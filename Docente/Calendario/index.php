@@ -1,3 +1,7 @@
+<?php
+session_start(); // Must be at the VERY TOP
+include "../../conexion.php";
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -14,7 +18,7 @@
     <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
     <section class="home">
         <div class="container">
-            <header>
+            <header class="header-calendario">
                 <div class="header-left">
                     <button id="today-btn" class="today-btn">
                         <i class="fas fa-calendar-day"></i> Hoy
@@ -26,14 +30,7 @@
                     <div id="month-year" class="month-year"></div>
                 </div>
                 <div class="header-right">
-                    <div class="profile">
-                        <i class="fa-regular fa-bell"></i>
-                        <div class="profile-info">
-                            <h3>Antonio</h3>
-                            <p>Docente de Matemáticas</p>
-                        </div>
-                        <a href="../UserProfile/index.php"><i class="fa-solid fa-user"></i></a>
-                    </div>
+                <?php include '../../PHP/user_info.php'; ?>
                 </div>
             </header>
             
