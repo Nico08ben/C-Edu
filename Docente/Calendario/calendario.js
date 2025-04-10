@@ -248,24 +248,7 @@ miniCalendar.setOption('datesSet', function() {
     // Cargar eventos iniciales si no hay ninguno guardado
     if (getSavedEvents().length === 0) {
         const today = new Date();
-        const sampleEvents = [
-            {
-                id: 'event_1',
-                title: 'Reunión de profesores',
-                start: new Date(today.getFullYear(), today.getMonth(), 5, 10, 0),
-                end: new Date(today.getFullYear(), today.getMonth(), 5, 12, 0),
-                description: 'Reunión mensual del departamento',
-                backgroundColor: '#3eb489'
-            },
-            {
-                id: 'event_2',
-                title: 'Entrega de calificaciones',
-                start: new Date(today.getFullYear(), today.getMonth(), 15),
-                allDay: true,
-                description: 'Fecha límite para subir calificaciones',
-                backgroundColor: '#2196F3'
-            }
-        ];
+        
         
         sampleEvents.forEach(event => calendar.addEvent(event));
         saveEvents(sampleEvents);
