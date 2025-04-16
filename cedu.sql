@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-04-2025 a las 18:00:06
--- Versión del servidor: 10.4.27-MariaDB
+-- Tiempo de generación: 17-04-2025 a las 01:37:24
+-- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -24,6 +24,28 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `asignacion_academica`
+--
+
+CREATE TABLE `asignacion_academica` (
+  `id_asignacion` int(11) NOT NULL,
+  `id_institucion` int(11) DEFAULT NULL,
+  `nivel_educativo` enum('Preescolar','Primaria','Secundaria','Media') DEFAULT NULL,
+  `jornada` enum('Única','Contraria') DEFAULT NULL,
+  `periodo_duracion` int(11) DEFAULT NULL,
+  `total_periodos` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `asignacion_academica`
+--
+
+INSERT INTO `asignacion_academica` (`id_asignacion`, `id_institucion`, `nivel_educativo`, `jornada`, `periodo_duracion`, `total_periodos`) VALUES
+(1, 2, 'Primaria', 'Contraria', 50, 32);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `evento`
 --
 
@@ -32,8 +54,18 @@ CREATE TABLE `evento` (
   `fecha_evento` date NOT NULL,
   `hora_evento` time NOT NULL,
   `tipo_evento` varchar(100) DEFAULT NULL,
-  `asignacion_evento` varchar(255) DEFAULT NULL
+  `asignacion_evento` varchar(255) DEFAULT NULL,
+  `categoria_evento` enum('Reunión','Semillero','Club','Capacitación','Otro') DEFAULT 'Otro',
+  `id_responsable` int(11) DEFAULT NULL,
+  `enlace_recurso` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `evento`
+--
+
+INSERT INTO `evento` (`id_evento`, `fecha_evento`, `hora_evento`, `tipo_evento`, `asignacion_evento`, `categoria_evento`, `id_responsable`, `enlace_recurso`) VALUES
+(1, '2025-05-15', '14:00:00', 'Capacitación en ABP', NULL, 'Capacitación', 7, NULL);
 
 -- --------------------------------------------------------
 
@@ -53,7 +85,8 @@ CREATE TABLE `institucion` (
 --
 
 INSERT INTO `institucion` (`id_institucion`, `nombre_institucion`, `asignacion_institucion`, `direccion_institucion`) VALUES
-(1, 'Institución de Prueba', NULL, NULL);
+(1, 'Institución de Prueba', NULL, NULL),
+(2, 'Colegio Comfandi Calipso', NULL, 'Cali, Colombia');
 
 -- --------------------------------------------------------
 
@@ -77,7 +110,12 @@ INSERT INTO `materia` (`id_materia`, `nombre_materia`, `descripcion`, `activo`, 
 (1, 'Matemáticas', 'Estudio de números y operaciones', 1, '2025-04-03 20:33:18'),
 (2, 'Física', 'Estudio de la materia y energía', 1, '2025-04-03 20:33:18'),
 (3, 'Química', 'Estudio de la composición molecular', 1, '2025-04-03 20:33:18'),
-(4, 'Literatura', 'Estudio de obras literarias', 1, '2025-04-03 20:33:18');
+(4, 'Literatura', 'Estudio de obras literarias', 1, '2025-04-03 20:33:18'),
+(5, 'Tecnología e informática', 'Área de tecnología y herramientas digitales', 1, '2025-04-16 23:23:42'),
+(6, 'Cátedra de Paz', 'Formación en resolución de conflictos', 1, '2025-04-16 23:23:42'),
+(7, 'Competencia ciudadana', 'Desarrollo de habilidades sociales', 1, '2025-04-16 23:23:42'),
+(8, 'Emprendimiento', 'Gestión de proyectos innovadores', 1, '2025-04-16 23:23:42'),
+(9, 'Ética y valores', 'Educación en principios morales', 1, '2025-04-16 23:23:42');
 
 -- --------------------------------------------------------
 
@@ -92,6 +130,13 @@ CREATE TABLE `mensaje` (
   `mensaje` text NOT NULL,
   `fecha_mensaje` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `mensaje`
+--
+
+INSERT INTO `mensaje` (`id_mensaje`, `id_emisor`, `id_receptor`, `mensaje`, `fecha_mensaje`) VALUES
+(1, 3, 7, 'Recuerda enviar el informe de avance para la capacitación', '2025-04-16 23:35:38');
 
 -- --------------------------------------------------------
 
@@ -139,8 +184,18 @@ CREATE TABLE `tarea` (
   `fecha_fin_tarea` date DEFAULT NULL,
   `instruccion_tarea` text DEFAULT NULL,
   `estado_tarea` enum('pendiente','completada','cancelada') NOT NULL,
-  `id_usuario` int(11) DEFAULT NULL
+  `id_usuario` int(11) DEFAULT NULL,
+  `prioridad` enum('Alta','Media','Baja') DEFAULT 'Media',
+  `porcentaje_avance` int(11) DEFAULT 0,
+  `id_asignador` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tarea`
+--
+
+INSERT INTO `tarea` (`id_tarea`, `fecha_inicio_tarea`, `fecha_fin_tarea`, `instruccion_tarea`, `estado_tarea`, `id_usuario`, `prioridad`, `porcentaje_avance`, `id_asignador`) VALUES
+(1, '2025-05-01', '2025-05-10', 'Preparar material para capacitación en ABP', 'pendiente', 7, 'Alta', 0, 3);
 
 -- --------------------------------------------------------
 
@@ -157,17 +212,19 @@ CREATE TABLE `usuario` (
   `id_institucion` int(11) DEFAULT NULL,
   `id_rol` int(11) NOT NULL,
   `id_materia` int(11) DEFAULT NULL,
-  `grupo_cargo_usuario` varchar(11) DEFAULT NULL
+  `grupo_cargo_usuario` varchar(11) DEFAULT NULL,
+  `fecha_nacimiento` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contraseña_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`) VALUES
-(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL),
-(4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL),
-(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL);
+INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contraseña_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`, `fecha_nacimiento`) VALUES
+(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL, NULL),
+(4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL, NULL),
+(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL, NULL),
+(7, 'matematicas@calipso.edu.co', '$2y$10$EjemploHashSeguro', 'Profesor Matemáticas Calipso', NULL, 2, 1, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -185,10 +242,18 @@ CREATE TABLE `usuario_evento` (
 --
 
 --
+-- Indices de la tabla `asignacion_academica`
+--
+ALTER TABLE `asignacion_academica`
+  ADD PRIMARY KEY (`id_asignacion`),
+  ADD KEY `id_institucion` (`id_institucion`);
+
+--
 -- Indices de la tabla `evento`
 --
 ALTER TABLE `evento`
-  ADD PRIMARY KEY (`id_evento`);
+  ADD PRIMARY KEY (`id_evento`),
+  ADD KEY `id_responsable` (`id_responsable`);
 
 --
 -- Indices de la tabla `institucion`
@@ -228,7 +293,8 @@ ALTER TABLE `rol`
 --
 ALTER TABLE `tarea`
   ADD PRIMARY KEY (`id_tarea`),
-  ADD KEY `id_usuario` (`id_usuario`);
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_asignador` (`id_asignador`);
 
 --
 -- Indices de la tabla `usuario`
@@ -252,28 +318,34 @@ ALTER TABLE `usuario_evento`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `asignacion_academica`
+--
+ALTER TABLE `asignacion_academica`
+  MODIFY `id_asignacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT de la tabla `evento`
 --
 ALTER TABLE `evento`
-  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `institucion`
 --
 ALTER TABLE `institucion`
-  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_institucion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `materia`
 --
 ALTER TABLE `materia`
-  MODIFY `id_materia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_materia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `mensaje`
 --
 ALTER TABLE `mensaje`
-  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `notificacion`
@@ -285,17 +357,29 @@ ALTER TABLE `notificacion`
 -- AUTO_INCREMENT de la tabla `tarea`
 --
 ALTER TABLE `tarea`
-  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `asignacion_academica`
+--
+ALTER TABLE `asignacion_academica`
+  ADD CONSTRAINT `asignacion_academica_ibfk_1` FOREIGN KEY (`id_institucion`) REFERENCES `institucion` (`id_institucion`);
+
+--
+-- Filtros para la tabla `evento`
+--
+ALTER TABLE `evento`
+  ADD CONSTRAINT `evento_ibfk_1` FOREIGN KEY (`id_responsable`) REFERENCES `usuario` (`id_usuario`);
 
 --
 -- Filtros para la tabla `mensaje`
@@ -314,7 +398,8 @@ ALTER TABLE `notificacion`
 -- Filtros para la tabla `tarea`
 --
 ALTER TABLE `tarea`
-  ADD CONSTRAINT `tarea_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
+  ADD CONSTRAINT `tarea_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
+  ADD CONSTRAINT `tarea_ibfk_2` FOREIGN KEY (`id_asignador`) REFERENCES `usuario` (`id_usuario`);
 
 --
 -- Filtros para la tabla `usuario`

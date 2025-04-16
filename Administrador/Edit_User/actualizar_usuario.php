@@ -44,14 +44,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $institucion = (int)$_POST['id_institucion'];
     $rol = (int)$_POST['id_rol'];
     $materia = isset($_POST['id_materia']) ? (int)$_POST['id_materia'] : 0;
-    
+    $fecha_nacimiento = $conn->real_escape_string($_POST['fecha_nacimiento']);
+
     // Iniciar la consulta SQL base
     $sql = "UPDATE usuario SET 
             nombre_usuario = '$nombre',
             email_usuario = '$email',
             telefono_usuario = '$telefono',
             id_institucion = $institucion,
-            id_rol = $rol";
+            id_rol = $rol,
+            fecha_nacimiento = '$fecha_nacimiento' ";
     
     // Añadir materia si existe en el formulario
     if ($materia > 0) {

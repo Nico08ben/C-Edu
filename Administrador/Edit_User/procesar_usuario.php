@@ -20,13 +20,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $telefono = isset($_POST["telefono_usuario"]) ? $conn->real_escape_string($_POST["telefono_usuario"]) : '';
     $institucion = (int)$_POST["id_institucion"];
     $rol = (int)$_POST["id_rol"];
-    $materia = (int)$_POST["id_materia"]; // Campo corregido
+    $materia = (int)$_POST["id_materia"];
+    $fecha_nacimiento = $conn->real_escape_string($_POST["fecha_nacimiento"]); // Campo corregido
 
-    $sql = "INSERT INTO usuario (email_usuario, contraseña_usuario, nombre_usuario, telefono_usuario, id_institucion, id_rol, id_materia) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO usuario (email_usuario, contraseña_usuario, nombre_usuario, telefono_usuario, id_institucion, id_rol, id_materia, fecha_nacimiento) 
+            VALUES (?, ?, ?, ?, ?, ?, ?. ?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssiii", $email, $contraseña, $nombre, $telefono, $institucion, $rol, $materia); // "i" para id_materia
+    $stmt->bind_param("ssssiii", $email, $contraseña, $nombre, $telefono, $institucion, $rol, $materia, $fecha_nacimiento); // "i" para id_materia
     
     if ($stmt->execute()) {
         $userId = $stmt->insert_id;

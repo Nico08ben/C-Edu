@@ -30,7 +30,8 @@ $sql = "SELECT
     u.id_rol,
     r.tipo_rol AS nombre_rol,
     m.nombre_materia,
-    i.nombre_institucion
+    i.nombre_institucion,
+    u.fecha_nacimiento
 FROM usuario u
 LEFT JOIN materia m ON u.id_materia = m.id_materia
 LEFT JOIN institucion i ON u.id_institucion = i.id_institucion
@@ -135,6 +136,10 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                         <input type="password" id="contraseña_usuario" name="contraseña_usuario" required>
                     </div>
                     <div class="form-group">
+                        <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+                        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                    </div>
+                    <div class="form-group">
                         <label for="telefono_usuario">Teléfono</label>
                         <input type="tel" id="telefono_usuario" name="telefono_usuario">
                     </div>
@@ -186,6 +191,10 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                     <div class="form-group">
                         <label for="edit_email_usuario">Correo</label>
                         <input type="email" id="edit_email_usuario" name="email_usuario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit_fecha_nacimiento">Fecha de Nacimiento</label>
+                        <input type="date" id="edit_fecha_nacimiento" name="fecha_nacimiento" required>
                     </div>
                     <div class="form-group">
                         <label for="edit_telefono_usuario">Teléfono</label>
