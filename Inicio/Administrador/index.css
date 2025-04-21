@@ -1,244 +1,272 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
-*{
-    font-family: "Rubik", serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Rubik", sans-serif;
 }
 
-body{
-    background-color: white;
+html, body { /* Asegurar que html y body ocupen toda la altura */
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* Prevenir barras de scroll si el contenido encaja perfectamente */
+}
+
+main {
+    display: flex; /* Mantenemos flex por si acaso, pero sin centrar */
+    /* justify-content: center; */ /* <--- ELIMINADO */
+    /* align-items: center; */   /* <--- ELIMINADO */
+    width: 100%; /* Ocupa todo el ancho del body */
+    height: 100%; /* Ocupa toda la altura del body */
+    /* padding: 20px; */ /* <--- ELIMINADO (o ajusta si necesitas un pequeño margen) */
+}
+
+.container {
     display: flex;
-    min-height: 100vh;
-    margin: 0px;
-    padding: 0px;
+    position: relative;
+    width: 100%;  /* <--- CAMBIADO a 100% */
+    /* max-width: 1000px; */ /* <--- ELIMINADO */
+    height: 100%; /* <--- CAMBIADO a 100% */
+    /* min-height: 70vh; */ /* <--- ELIMINADO */
+    background-color: white;
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); */ /* <--- ELIMINADO/Comentado (opcional) */
     overflow: hidden;
+    /* border-radius: 10px; */ /* <--- ELIMINADO/Comentado (opcional) */
+}
 
-}
-.Login-container{
-    width: auto;
-    height: auto;
+.Login-container {
+    width: 52%;
     position: relative;
-    right: -750px;
-    top: 50px;
-    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    height: 100%; /* Asegura que ocupe toda la altura del contenedor padre */
 }
-#p-usuario{
-    width: 200px;
-}
-#p-contraseña{
-    width: 200px;
-}
-#Titulo-Login{
-    font-size: 55px;
-    color: #393E41;
-    width: 380px;
-}
-#Subtitulo-login{
-    font-size: 20px;
-    width: 200px;
-    color: #E7BB41;
-    position: relative;
-    right: -80px;
-    top: -40px;
-    font-weight: bold;
-}
-.Login{
-    text-align: left;
-    position: relative;
-    right: -60px;
-    width: 200px;
-}
-#campo-usuario{
-    width: 200px;
-    height: 15px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #000000;
-    border-radius: 5px;
-    padding: 12px;
 
-}
-#campo-contraseña{
-    width: 200px;
-    height: 15px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #000000;
-    border-radius: 5px;
-    padding: 12px;
-    
-}
-#button-login{
-    width: 225px;
-    height: 35px;
-    position: relative;
-    right: 0px;
-    top: 25px;
-    border-radius: 10px;
-    border-color: #000000;
-    border-width: 1px;
-    border-style: solid;
-    background-color: #000000;
-    color: white;
-    cursor: pointer;
-    transition: .5s;
-}
-#button-login:hover{
-    color: #E7BB41;
-    background-color: rgb(255, 255, 255);
-}
-#ad-contraseña{
-    width: 150px;
-    height: auto;
-    position: relative;
-    font-size: 12px;
-    color: #393E41;
-    text-decoration: none;
-    right: -35px;
-    top: 30px;
-}
-.Docente-container{
+.Docente-container {
     position: absolute;
-    top: -100px;
-    right: 650px;
-    background-color: #E7BB41;
-    width: 800px;
-    height: 800px;
-    border-radius: 50%;
-    z-index: 0;
-}
-#titulo-docente{
-    z-index: 2;
-    position: absolute;
-    font-size: 50px;
-    right: 200px;
-    width: auto;
-    height: auto;
-    top: 250px;
+    right: 0;
+    top: 0;
+    width: 48%;
+    height: 100%;
+    background: #E7BB41;
+    border-radius: 50% 0 0 50%;
+    padding: 50px;
     color: white;
-    font-weight: 600;
-    
-}
-#p-docente{
-    z-index: 2;
-    position: absolute;
-    font-size: 15px;
-    right: 130px;
-    width: 430px;
-    height: auto;
-    top: 350px;
-    color: white;
-    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
 }
-#button-docente{
-    z-index: 2;
-    border-radius: 4px ;
-    position: absolute;
-    right: 220px;
-    top: 430px;
-    width: 250px;
-    height: 40px;
-    font-size: 15px;
-    color: white;
-    background-color: #E7BB41;
-    border-color: white;
-    border-width: 1px;
-    border-style: solid;
-    cursor: pointer;
-    transition: .5s;
+
+/* --- Resto de los estilos (sin cambios) --- */
+
+#Titulo-Login {
+    color: #333;
+    font-size: 2.8rem;
+    margin-bottom: 5px;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 1.2;
 }
-#button-docente:hover{
+
+#Subtitulo-login {
     color: #E7BB41;
-    background-color: rgb(255, 255, 255);}
-    @media screen and (max-width: 768px) {
-        body {
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            overflow: auto;
-        }
-    
-        .Docente-container {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            border-radius: 0;
-            top: 0;
-            right: 0;
-            background-color: #E7BB41;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-    
-        #titulo-docente {
-            position: relative;
-            top: 0;
-            right: 0;
-            font-size: 30px;
-            text-align: center;
-        }
-    
-        #p-docente {
-            position: relative;
-            top: 0;
-            right: 0;
-            font-size: 14px;
-            width: 80%;
-            margin-top: 10px;
-        }
-    
-        #button-docente {
-            position: relative;
-            top: 20px;
-            right: 0;
-        }
-    
-        .Login-container {
-            position: relative;
-            top: 20px;
-            right: 0;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-    
-        #Titulo-Login {
-            font-size: 30px;
-            text-align: center;
-            width: auto;
-        }
-    
-        #Subtitulo-login {
-            position: relative;
-            top: 0;
-            right: 0;
-            text-align: center;
-            font-size: 18px;
-            width: auto;
-        }
-    
-        .Login {
-            position: relative;
-            right: 0;
-            width: auto;
-            text-align: center;
-        }
-    
-        #campo-usuario,
-        #campo-contraseña,
-        #button-login {
-            width: 80%;
-            max-width: 300px;
-        }
-    
-        #ad-contraseña {
-            top: 10px;
-            right: 0;
-            margin-bottom: 20px;
-        }
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+form.Login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 320px;
+}
+
+label {
+    display: block;
+    color: #666;
+    margin-bottom: 8px;
+    text-align: left;
+    width: 100%;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+#button-login {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+#button-login:hover {
+    background-color: #555;
+}
+
+#titulo-docente {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#p-docente {
+    text-align: center;
+    margin-bottom: 30px;
+    max-width: 90%;
+    line-height: 1.6;
+}
+
+#button-docente {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 12px 30px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: auto;
+}
+
+#button-docente:hover {
+    color: #E7BB41;
+    background-color: white;
+}
+
+/* --- Media Queries --- */
+
+@media (max-width: 992px) {
+     /* Ajustes menores si son necesarios para pantallas medianas */
+    .Docente-container {
+        padding: 40px;
     }
-    
-    
+    #Titulo-Login {
+        font-size: 2.5rem;
+    }
+     #titulo-docente {
+        font-size: 2.2rem;
+    }
+}
+
+/* Móviles en vertical */
+@media (max-width: 768px) {
+     html, body {
+        /* Permitir scroll en móvil si el contenido es largo */
+         overflow: auto;
+         height: auto; /* Altura definida por el contenido */
+     }
+
+    .container {
+        flex-direction: column;
+        height: auto; /* La altura se ajusta al contenido en móvil */
+        width: 100%; /* Ya ocupa el 100% */
+    }
+
+    .Login-container {
+        width: 100%;
+        padding: 40px 20px;
+        height: auto; /* Altura automática */
+        min-height: 50vh; /* Mantiene una altura mínima */
+        /* justify-content: flex-start; */ /* Opcional: alinear arriba */
+    }
+
+    form.Login {
+         max-width: 90%; /* Un pequeño margen lateral */
+         margin-left: auto;
+         margin-right: auto;
+    }
+
+    #Titulo-Login {
+        font-size: 2rem;
+        white-space: normal;
+    }
+     #Subtitulo-login {
+         font-size: 1rem;
+         margin-bottom: 30px;
+     }
+
+    .Docente-container {
+        position: relative; /* Mantiene relativo */
+        width: 100%;
+        height: auto;
+        min-height: 40vh;
+        /* Ajusta el border-radius para que se vea bien en modo columna */
+        border-radius: 50px 50px 0 0; /* Solo redondeo superior */
+        padding: 30px 20px;
+        margin-top: 0;
+    }
+
+    #titulo-docente {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+
+    #p-docente {
+        font-size: 0.9rem;
+        max-width: 95%;
+        margin-bottom: 20px;
+    }
+
+    #button-docente {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 400px) {
+    #Titulo-Login {
+        font-size: 1.8rem;
+    }
+
+    #Subtitulo-login {
+        font-size: 0.9rem;
+        margin-bottom: 25px;
+    }
+
+     #titulo-docente {
+        font-size: 1.6rem;
+    }
+
+     #p-docente {
+        font-size: 0.85rem;
+    }
+
+    label, input[type="text"], input[type="password"], #button-login, #button-docente {
+        font-size: 0.9rem;
+    }
+
+    .Docente-container {
+        padding-top: 25px;
+        padding-bottom: 25px;
+        border-radius: 40px 40px 0 0; /* Radio menor */
+    }
+
+    form.Login {
+        max-width: 95%;
+    }
+}
