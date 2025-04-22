@@ -234,17 +234,16 @@
 }
 /* Estilos del elemento de chat */
 .chat-item {
-    /* Utilizar flexbox para layout */
     display: flex;
-    /* Alinear elementos */
     align-items: center;
-    /* Establecer espacio entre elementos */
     gap: 15px;
-    /* Establecer relleno */
-    padding: 5px;
-    /* Establecer borde inferior */
-    border-bottom: 1px solid #eee;
+    padding: 10px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    margin-bottom: 10px;
 }
+
 
 /* Estilos de la imagen del chat */
 .chat-item img {
@@ -297,51 +296,24 @@
 }
 
 /* Estilos del punto de estado verde */
-.status-dot.green {
-    /* Establecer color de fondo */
-    background: #1eb110;
-}
-
-/* Estilos del punto de estado naranja */
-.status-dot.orange {
-    /* Establecer color de fondo */
-    background: #6e0101;
-}
-
-/* Estilos del punto de estado gris */
-.status-dot.gray {
-    /* Establecer color de fondo */
-    background: #666;
-}
+.status-dot.green { background-color: #00b300; }
+.status-dot.orange { background-color: #f0a500; }
+.status-dot.red { background-color: #d11a2a; }
 
 /* Estilos del botón de ingreso */
 .btn-ingresar {
-    font-family: "Rubik", serif;
-    font-weight: 400;
-    
-    /* Establecer visualización como bloque */
-    display: block;
-    /* Establecer ancho completo */
-    width: 150px;
-    /* Establecer relleno */
-    padding: 10px;
-    /* Establecer color de fondo */
-    background: white;
-    /* Eliminar borde */
-    border: none;
-    /* Establecer forma circular */
-    border-radius: 8px;
-    /* Establecer margen superior */
-    margin-top: 20px;
-    /* Cambiar cursor al pasar el mouse */
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    font-weight: 500;
+    font-size: 0.95em;
+    border-radius: 10px;
     cursor: pointer;
-    /* Establecer peso de fuente */
-    /* Establecer sombra */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    align-items: center;
-    text-align: center;
-    position: relative;
-    left: 70px;
+    transition: all 0.3s ease;
+}
+.btn-ingresar:hover {
+    background-color: #f0f0f0;
 }
 
 /* Estilos para pantallas pequeñas */

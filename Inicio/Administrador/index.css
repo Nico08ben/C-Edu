@@ -37,23 +37,25 @@ main {
 
 .Login-container {
     width: 52%;
+    margin-left: auto; /* Empuja hacia la derecha */
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 40px;
-    height: 100%; /* Asegura que ocupe toda la altura del contenedor padre */
+    height: 100%;
 }
+
 
 .Docente-container {
     position: absolute;
-    right: 0;
+    left: 0; /* <--- Cambiado de right: 0 */
     top: 0;
     width: 48%;
     height: 100%;
     background: #E7BB41;
-    border-radius: 50% 0 0 50%;
+    border-radius: 0 50% 50% 0; /* <--- Cambiado */
     padding: 50px;
     color: white;
     display: flex;
@@ -62,7 +64,6 @@ main {
     align-items: center;
     text-align: center;
 }
-
 /* --- Resto de los estilos (sin cambios) --- */
 
 #Titulo-Login {
@@ -96,7 +97,6 @@ label {
     margin-bottom: 8px;
     text-align: left;
     width: 100%;
-    font-weight: 500;
 }
 
 input[type="text"],
