@@ -70,19 +70,24 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                 <h1>Gestión de Usuarios</h1>
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Foto Perfil</th>
-                        <th>Nombre Completo</th>
-                        <th>Materia</th>
-                        <th>Correo</th>
-                        <th>Rol</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($resultado->num_rows > 0): ?>
+            <div class="table-scroll-container">
+    <table>
+        <thead>
+            <tr>
+                <!-- Tus columnas actuales sin cambios -->
+                <th>Foto Perfil</th>
+                <th>Nombre Completo</th>
+                <th>Materia</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+    </table>
+    <div class="tbody-wrapper">
+        <table>
+            <tbody>
+            <?php if ($resultado->num_rows > 0): ?>
                         <?php while ($fila = $resultado->fetch_assoc()): ?>
                             <tr data-id-usuario="<?= $fila['id_usuario'] ?>"
                                 data-telefono="<?= htmlspecialchars($fila['telefono_usuario']) ?>"
@@ -107,8 +112,10 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                             <td colspan="6">No hay usuarios registrados</td>
                         </tr>
                     <?php endif; ?>
-                </tbody>
-            </table>
+            </tbody>
+        </table>
+    </div>
+</div>
 
             <div class="buttons">
                 <button id="newUser">Crear nuevo usuario</button>
