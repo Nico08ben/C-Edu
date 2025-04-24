@@ -12,16 +12,6 @@
     font-family: "Rubik", sans-serif;
 }
 
-/* Variables para colores y transiciones (en caso de que falten en original) */
-:root {
-    --body-color: #f0f0f0;
-    --sidebar-color: #fff;
-    --primary-color: #40C3A5;
-    --text-color: #333;
-    --trans-04: all 0.4s ease;
-    --trans-05: all 0.5s ease;
-}
-
 /* Estilos de la barra lateral */
 .home {
     /* Posicionar la barra lateral */

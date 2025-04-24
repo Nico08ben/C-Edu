@@ -69,9 +69,6 @@ if ($id_usuario) {
                                 <input type="text" name="correo"
                                     value="<?= htmlspecialchars($fila['email_usuario'] ?? '') ?>" readonly>
 
-                                <label>Fecha de Nacimiento</label>
-                                <input type="text" name="fecha_nacimiento"
-                                    value="<?= htmlspecialchars($fila['fecha_nacimiento'] ?? '') ?>" readonly>
 
                                 <label>Materia</label>
                                 <input type="text" name="materia"

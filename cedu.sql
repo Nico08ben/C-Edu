@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-04-2025 a las 01:37:24
--- Versión del servidor: 10.4.32-MariaDB
+-- Tiempo de generación: 24-04-2025 a las 22:36:13
+-- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -59,13 +59,6 @@ CREATE TABLE `evento` (
   `id_responsable` int(11) DEFAULT NULL,
   `enlace_recurso` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `evento`
---
-
-INSERT INTO `evento` (`id_evento`, `fecha_evento`, `hora_evento`, `tipo_evento`, `asignacion_evento`, `categoria_evento`, `id_responsable`, `enlace_recurso`) VALUES
-(1, '2025-05-15', '14:00:00', 'Capacitación en ABP', NULL, 'Capacitación', 7, NULL);
 
 -- --------------------------------------------------------
 
@@ -131,13 +124,6 @@ CREATE TABLE `mensaje` (
   `fecha_mensaje` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `mensaje`
---
-
-INSERT INTO `mensaje` (`id_mensaje`, `id_emisor`, `id_receptor`, `mensaje`, `fecha_mensaje`) VALUES
-(1, 3, 7, 'Recuerda enviar el informe de avance para la capacitación', '2025-04-16 23:35:38');
-
 -- --------------------------------------------------------
 
 --
@@ -190,13 +176,6 @@ CREATE TABLE `tarea` (
   `id_asignador` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `tarea`
---
-
-INSERT INTO `tarea` (`id_tarea`, `fecha_inicio_tarea`, `fecha_fin_tarea`, `instruccion_tarea`, `estado_tarea`, `id_usuario`, `prioridad`, `porcentaje_avance`, `id_asignador`) VALUES
-(1, '2025-05-01', '2025-05-10', 'Preparar material para capacitación en ABP', 'pendiente', 7, 'Alta', 0, 3);
-
 -- --------------------------------------------------------
 
 --
@@ -212,19 +191,17 @@ CREATE TABLE `usuario` (
   `id_institucion` int(11) DEFAULT NULL,
   `id_rol` int(11) NOT NULL,
   `id_materia` int(11) DEFAULT NULL,
-  `grupo_cargo_usuario` varchar(11) DEFAULT NULL,
-  `fecha_nacimiento` date DEFAULT NULL
+  `grupo_cargo_usuario` varchar(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contraseña_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`, `fecha_nacimiento`) VALUES
-(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL, NULL),
-(4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL, NULL),
-(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL, NULL),
-(7, 'matematicas@calipso.edu.co', '$2y$10$EjemploHashSeguro', 'Profesor Matemáticas Calipso', NULL, 2, 1, 1, NULL, NULL);
+INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contraseña_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`) VALUES
+(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL),
+(4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL),
+(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL);
 
 -- --------------------------------------------------------
 
@@ -363,7 +340,7 @@ ALTER TABLE `tarea`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
