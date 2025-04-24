@@ -19,15 +19,17 @@ if (isset($data["action"])) {
     $action = $data["action"];
 
     if ($action === "crear") {
-        $nombre = $data["nombre_usuario"];
-        $email = $data["email_usuario"];
+        // Corrección: Usar nombres de columnas según la tabla 'usuario'
+        $nombre = $conn->real_escape_string($data["nombre_usuario"]);
+        $email = $conn->real_escape_string($data["email_usuario"]);
         $password = password_hash($data["contraseña_usuario"], PASSWORD_BCRYPT);
-        $telefono = $data["telefono_usuario"];
-        $institucion = $data["id_institucion"];
-        $rol = $data["id_rol"];
+        $telefono = $conn->real_escape_string($data["telefono_usuario"]);
+        $institucion = (int)$data["id_institucion"];
+        $rol = (int)$data["id_rol"];
 
-        $sql = "INSERT INTO usuarios (nombre, email, contraseña, telefono, id_institucion, id_rol) 
-                VALUES ('$nombre', '$email', '$password', '$telefono', '$institucion', '$rol')";
+        // Corrección: Nombre de la tabla 'usuario' y columnas
+        $sql = "INSERT INTO usuario (nombre_usuario, email_usuario, contraseña_usuario, telefono_usuario, id_institucion, id_rol) 
+                VALUES ('$nombre', '$email', '$password', '$telefono', $institucion, $rol)";
 
         if ($conn->query($sql) === TRUE) {
             echo json_encode(["status" => "success", "message" => "Usuario creado con éxito"]);
@@ -37,9 +39,10 @@ if (isset($data["action"])) {
     }
 
     elseif ($action === "eliminar") {
-        $id_usuario = $data["id_usuario"];
+        $id_usuario = (int)$data["id_usuario"];
 
-        $sql = "DELETE FROM usuarios WHERE id = '$id_usuario'";
+        // Corrección: Nombre de la tabla 'usuario'
+        $sql = "DELETE FROM usuario WHERE id_usuario = $id_usuario";
         if ($conn->query($sql) === TRUE) {
             echo json_encode(["status" => "success", "message" => "Usuario eliminado con éxito"]);
         } else {
@@ -48,20 +51,21 @@ if (isset($data["action"])) {
     }
 
     elseif ($action === "editar") {
-        $id_usuario = $data["id_usuario"];
-        $nombre = $data["nombre_usuario"];
-        $email = $data["email_usuario"];
-        $telefono = $data["telefono_usuario"];
-        $institucion = $data["id_institucion"];
-        $rol = $data["id_rol"];
+        $id_usuario = (int)$data["id_usuario"];
+        $nombre = $conn->real_escape_string($data["nombre_usuario"]);
+        $email = $conn->real_escape_string($data["email_usuario"]);
+        $telefono = $conn->real_escape_string($data["telefono_usuario"]);
+        $institucion = (int)$data["id_institucion"];
+        $rol = (int)$data["id_rol"];
 
-        $sql = "UPDATE usuarios SET 
-                    nombre = '$nombre', 
-                    email = '$email', 
-                    telefono = '$telefono', 
-                    id_institucion = '$institucion', 
-                    id_rol = '$rol'
-                WHERE id = '$id_usuario'";
+        // Corrección: Nombre de la tabla y columnas
+        $sql = "UPDATE usuario SET 
+                    nombre_usuario = '$nombre', 
+                    email_usuario = '$email', 
+                    telefono_usuario = '$telefono', 
+                    id_institucion = $institucion, 
+                    id_rol = $rol
+                WHERE id_usuario = $id_usuario";
 
         if ($conn->query($sql) === TRUE) {
             echo json_encode(["status" => "success", "message" => "Usuario actualizado con éxito"]);

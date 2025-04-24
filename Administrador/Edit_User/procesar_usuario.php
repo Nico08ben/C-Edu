@@ -21,13 +21,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $institucion = (int)$_POST["id_institucion"];
     $rol = (int)$_POST["id_rol"];
     $materia = (int)$_POST["id_materia"];
-    $fecha_nacimiento = $conn->real_escape_string($_POST["fecha_nacimiento"]); // Campo corregido
 
-    $sql = "INSERT INTO usuario (email_usuario, contraseña_usuario, nombre_usuario, telefono_usuario, id_institucion, id_rol, id_materia, fecha_nacimiento) 
-            VALUES (?, ?, ?, ?, ?, ?, ?. ?)";
+    // Corrección en la sintaxis de VALUES y número de parámetros
+    $sql = "INSERT INTO usuario (email_usuario, contraseña_usuario, nombre_usuario, telefono_usuario, id_institucion, id_rol, id_materia) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssiii", $email, $contraseña, $nombre, $telefono, $institucion, $rol, $materia, $fecha_nacimiento); // "i" para id_materia
+    // Corrección en los tipos: 8 parámetros (ssssiiis)
+    $stmt->bind_param("ssssiiis", $email, $contraseña, $nombre, $telefono, $institucion, $rol, $materia);
     
     if ($stmt->execute()) {
         $userId = $stmt->insert_id;

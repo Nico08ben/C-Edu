@@ -119,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 newRow.dataset.institucion = formData.get("id_institucion");
                 newRow.dataset.rol = formData.get("id_rol");
                 newRow.dataset.materia = formData.get("id_materia"); // ID de la materia
-                newRow.dataset.fechaNacimiento = formData.get("fecha_nacimiento");
 
                 newRow.innerHTML = `
                     <td><img src="../../assets/avatar${avatarNum}.jpg" alt="Avatar"></td>
@@ -290,7 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("edit_nombre_usuario").value = name;
         document.getElementById("edit_email_usuario").value = email;
         document.getElementById("edit_telefono_usuario").value = telefono;
-        document.getElementById("edit_fecha_nacimiento").value = fechaNacimiento;
+        console.log(fechaNacimiento);
 
         // Seleccionar la materia correcta
         const materiaSelect = document.getElementById("edit_id_materia");
