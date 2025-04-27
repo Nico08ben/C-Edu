@@ -1,216 +1,197 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const contacts = document.querySelectorAll(".contact");
-  const chatHeader = document.querySelector(".chat-header h3");
-  const chatStatus = document.querySelector(".chat-header .status");
-  const chatBody = document.querySelector(".chat-body");
-  const messageInput = document.querySelector(".chat-footer input");
-  const sendButton = document.querySelector(".chat-footer button");
-  let currentContactId = null;
-  let typingTimeout;
-  let pollingInterval;
-
-  // Manejar la selección de contactos
-  contacts.forEach((contact) => {
-    contact.addEventListener("click", () => {
-      document.querySelector(".contact.active")?.classList.remove("active");
-      contact.classList.add("active");
-      
-      // Extraer el ID del contacto - Usamos el nombre del contacto como identificador temporal
-      currentContactId = contact.querySelector("h3").textContent;
-      
-      // Actualizar encabezado del chat
-      const contactName = contact.querySelector("h3").textContent;
-      chatHeader.textContent = contactName;
-      chatStatus.textContent = "Conectado";
-      chatBody.innerHTML = `<p>Chat con ${contactName}</p>`;
-      
-      // Iniciar polling para obtener mensajes
-      if (pollingInterval) clearInterval(pollingInterval);
-      fetchMessages();
-      pollingInterval = setInterval(fetchMessages, 3000);
-    });
-  });
-
-  // Enviar mensajes - Evento separado para click y tecla Enter
-  sendButton.addEventListener("click", (e) => {
-    e.preventDefault(); // Prevenir comportamiento por defecto
-    sendMessage();
-  });
-  
-  messageInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault(); // Prevenir comportamiento por defecto
-      sendMessage();
-    } else {
-      showTypingStatus();
+// start: Conversation
+// Delegación de eventos para dropdowns
+document.querySelector('.conversation-wrapper').addEventListener('click', function(e) {
+    const toggle = e.target.closest('.conversation-item-dropdown-toggle')
+    if (toggle) {
+        e.preventDefault()
+        const dropdown = toggle.closest('.conversation-item-dropdown')
+        
+        // Cerrar otros dropdowns y alternar el actual
+        document.querySelectorAll('.conversation-item-dropdown').forEach(item => {
+            if (item !== dropdown) item.classList.remove('active')
+        })
+        dropdown.classList.toggle('active')
     }
-  });
+})
 
-  function sendMessage() {
-    const mensaje = messageInput.value;  // Permite espacios
-    if (mensaje !== "" && currentContactId) {  // Permitir espacios en blanco
-      // CAMBIO IMPORTANTE: Deshabilitar modo de depuración para usar la base de datos real
-      const debugMode = false;
-      
-      if (debugMode) {
-        console.log("Modo de depuración: Mensaje enviado a " + currentContactId);
-        console.log("Contenido del mensaje: " + mensaje);
-        
-        // Agregar mensaje a la interfaz directamente
-        const messageElement = document.createElement("p");
-        messageElement.classList.add("sent-message");
-        messageElement.textContent = mensaje;
-        chatBody.appendChild(messageElement);
-        chatBody.scrollTop = chatBody.scrollHeight;
-        
-        // Limpiar input
-        messageInput.value = "";
-        return;
-      }
-      
-      // Versión con backend
-      fetch("send_message.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `id_receptor=${encodeURIComponent(currentContactId)}&mensaje=${encodeURIComponent(mensaje)}`
-      })
-      .then(response => {
-        if (!response.ok) {
-          console.error("Error HTTP: " + response.status);
-          // Aún así, mostrar el mensaje en la interfaz para mejorar experiencia
-          throw new Error('Error en la respuesta del servidor: ' + response.status);
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Respuesta del servidor:", data);
-        
-        // Limpiar input después de confirmación
-        messageInput.value = "";
-        
-        // Agregar mensaje a la interfaz
-        const messageElement = document.createElement("p");
-        messageElement.classList.add("sent-message");
-        messageElement.textContent = mensaje;
-        chatBody.appendChild(messageElement);
-        chatBody.scrollTop = chatBody.scrollHeight;
-        
-        // Refrescar mensajes
-        fetchMessages(); 
-      })
-      .catch(err => {
-        console.error("Error al enviar mensaje:", err);
-        
-        // Aún con error, mostrar el mensaje en la interfaz y limpiar input
-        const messageElement = document.createElement("p");
-        messageElement.classList.add("sent-message");
-        messageElement.textContent = mensaje;
-        chatBody.appendChild(messageElement);
-        chatBody.scrollTop = chatBody.scrollHeight;
-        
-        messageInput.value = "";
-      });
+// Cerrar dropdowns al hacer clic fuera
+document.addEventListener('click', function(e) {
+    if(!e.target.closest('.conversation-item-dropdown')) {
+        document.querySelectorAll('.conversation-item-dropdown').forEach(i => {
+            i.classList.remove('active')
+        })
     }
-  }
+})
 
-  function fetchMessages() {
-    if (!currentContactId) return;
-    
-    // CAMBIO: Deshabilitamos la simulación para usar datos reales
-    const useSimulation = false;
-    
-    if (useSimulation) {
-      simulateMessages();
-      return;
-    }
-    
-    fetch(`get_messages.php?id_contacto=${encodeURIComponent(currentContactId)}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error en la respuesta del servidor: ' + response.status);
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.error) {
-          console.error("Error del servidor:", data.error);
-          return;
-        }
-        
-        if (!Array.isArray(data)) {
-          console.error("La respuesta no es un array:", data);
-          return;
-        }
-        
-        // Limpiar chat body pero conservar el mensaje inicial
-        let mensajeInicial = "";
-        if (chatBody.innerHTML.includes("Chat con")) {
-          mensajeInicial = chatBody.innerHTML;
-        }
-        
-        chatBody.innerHTML = mensajeInicial;
-        
-        data.forEach(msg => {
-          const messageElement = document.createElement("p");
-          // Determinar si es un mensaje enviado o recibido
-          if (msg.id_emisor == currentContactId) {
-            messageElement.classList.add("received-message");
-          } else {
-            messageElement.classList.add("sent-message");
-          }
-          messageElement.textContent = msg.mensaje;
-          chatBody.appendChild(messageElement);
-        });
-        chatBody.scrollTop = chatBody.scrollHeight;
-      })
-      .catch(err => {
-        console.error("Error al obtener mensajes:", err);
-      });
-  }
-  
-  function simulateMessages() {
-    // Función ahora vacía, solo mantiene el scroll
-    chatBody.scrollTop = chatBody.scrollHeight;
-  }
+document.querySelectorAll('.conversation-form-input').forEach(function(item) {
+    item.addEventListener('input', function() {
+        this.rows = this.value.split('\n').length
+    })
+})
 
-  function showTypingStatus() {
-    chatStatus.textContent = "Escribiendo...";
-    clearTimeout(typingTimeout);
-    typingTimeout = setTimeout(() => {
-      chatStatus.textContent = "Conectado";
-    }, 1000);
-  }
+document.querySelectorAll('[data-conversation]').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+        e.preventDefault()
+        document.querySelectorAll('.conversation').forEach(function(i) {
+            i.classList.remove('active')
+        })
+        document.querySelector(this.dataset.conversation).classList.add('active')
+    })
+})
 
-  // Implementar funcionalidad para el modal del perfil
-  const profileModal = document.getElementById("profile-modal");
-  const closeModal = document.querySelector(".close-modal");
-  
-  // Abrir modal al hacer clic en la imagen de perfil del chat
-  document.querySelector(".chat-header img").addEventListener("click", () => {
-    const contactName = chatHeader.textContent;
-    document.getElementById("profile-name").textContent = contactName;
-    document.getElementById("profile-pic").src = document.querySelector(".chat-header img").src;
-    document.getElementById("profile-role").textContent = "Docente";
-    document.getElementById("profile-status").textContent = "Conectado";
-    profileModal.style.display = "flex";
-  });
-  
-  // Cerrar modal
-  closeModal.addEventListener("click", () => {
-    profileModal.style.display = "none";
-  });
-  
-  // Cerrar modal haciendo clic fuera del contenido
-  window.addEventListener("click", (e) => {
-    if (e.target === profileModal) {
-      profileModal.style.display = "none";
-    }
-  });
-  
-  // Seleccionar el primer contacto automáticamente para iniciar
-  if (contacts.length > 0) {
-    contacts[0].click();
-  }
-});
+document.querySelectorAll('.conversation-back').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+        e.preventDefault()
+        this.closest('.conversation').classList.remove('active')
+        document.querySelector('.conversation-default').classList.add('active')
+    })
+})
+
+document.addEventListener('DOMContentLoaded', function() {
+    let activeReplyPreview = null
+    let replyingToElement = null
+
+    // Delegación de eventos para acciones
+    document.querySelector('.conversation-wrapper').addEventListener('click', function(e) {
+        const target = e.target.closest('a')
+        if (!target) return
+        e.preventDefault()
+
+        // Eliminar mensaje
+        if (target.classList.contains('Delete-btn')) {
+            const messageItem = target.closest('.conversation-item-wrapper')
+            if (messageItem) messageItem.remove()
+        }
+
+        // Editar mensaje
+        else if (target.classList.contains('edit-btn')) {
+            const messageText = target.closest('.conversation-item-wrapper').querySelector('.conversation-item-text')
+            const paragraph = messageText.querySelector('p')
+            const textarea = document.createElement('textarea')
+            textarea.value = paragraph.textContent
+            messageText.innerHTML = ''
+            messageText.appendChild(textarea)
+
+            const saveButton = document.createElement('button')
+            saveButton.textContent = 'Save'
+            messageText.appendChild(saveButton)
+
+            saveButton.addEventListener('click', function() {
+                paragraph.textContent = textarea.value
+                messageText.innerHTML = ''
+                messageText.appendChild(paragraph)
+            })
+        }
+
+        // Responder mensaje
+        else if (target.classList.contains('forward-btn')) {
+            const conversationItem = target.closest('.conversation-item')
+            const messageText = conversationItem.querySelector('p').innerText
+            const replyPreview = document.querySelector('.conversation-reply-preview')
+            
+            if (replyPreview) {
+                replyPreview.querySelector('.reply-text').innerText = messageText
+                replyPreview.style.display = 'flex'
+                activeReplyPreview = replyPreview
+                replyingToElement = messageText
+            }
+        }
+    })
+
+    // Cancelar respuesta
+    document.querySelector('.cancel-reply').addEventListener('click', function(e) {
+        e.preventDefault()
+        const replyPreview = this.closest('.conversation-reply-preview')
+        if (replyPreview) {
+            replyPreview.style.display = 'none'
+            replyPreview.querySelector('.reply-text').innerText = ''
+            replyingToElement = null
+            activeReplyPreview = null
+        }
+    })
+
+    // Enviar mensaje
+    document.querySelector('.conversation-form-submit').addEventListener('click', function() {
+        const input = document.querySelector('.conversation-form-input')
+        const message = input.value.trim()
+        const replyPreview = document.querySelector('.conversation-reply-preview')
+        
+        const replyText = replyPreview ? replyPreview.querySelector('.reply-text').innerText : ''
+        
+        if (message === '') return
+
+        const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        let messageHTML = ''
+
+       if (replyText) {
+    messageHTML = `
+        <li class="conversation-item">
+            <div class="conversation-item-side">
+                <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
+            </div>
+            <div class="conversation-item-content">
+                <div class="conversation-item-wrapper">
+                    <div class="conversation-item-box">
+                        <!-- Aquí movemos la cita arriba del texto -->
+                        <div class="conversation-reply-preview" style="margin-bottom: 5px;">
+                            <div class="reply-text">${replyText}</div>
+                        </div>
+                        <div class="conversation-item-text">
+                            <p>${message}</p>
+                            <div class="conversation-item-time">${currentTime}</div>
+                        </div>
+                        <div class="conversation-item-dropdown">
+                            <button type="button" class="conversation-item-dropdown-toggle"><i class="ri-more-2-line"></i></button>
+                            <ul class="conversation-item-dropdown-list">
+                                <li><a href="#" class="edit-btn"><i class="ri-pencil-fill"></i>Edit</a></li>
+                                <li><a href="#" class="forward-btn"><i class="ri-share-forward-line"></i>Forward</a></li>
+                                <li><a href="#" class="Delete-btn"><i class="ri-delete-bin-line"></i>Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    `
+}
+ else {
+            messageHTML = `
+                <li class="conversation-item">
+                    <div class="conversation-item-side">
+                        <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
+                    </div>
+                    <div class="conversation-item-content">
+                        <div class="conversation-item-wrapper">
+                            <div class="conversation-item-box">
+                                <div class="conversation-item-text">
+                                    <p>${message}</p>
+                                    <div class="conversation-item-time">${currentTime}</div>
+                                </div>
+                                <div class="conversation-item-dropdown">
+                                    <button type="button" class="conversation-item-dropdown-toggle"><i class="ri-more-2-line"></i></button>
+                                    <ul class="conversation-item-dropdown-list">
+                                        <li><a href="#" class="edit-btn"><i class="ri-pencil-fill"></i>Edit</a></li>
+                                        <li><a href="#" class="forward-btn"><i class="ri-share-forward-line"></i>Forward</a></li>
+                                        <li><a href="#" class="Delete-btn"><i class="ri-delete-bin-line"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            `
+        }
+
+        document.querySelector('.conversation-wrapper').insertAdjacentHTML('beforeend', messageHTML)
+        input.value = ''
+        input.rows = 1
+
+        if (replyPreview) {
+            replyPreview.style.display = 'none'
+            replyPreview.querySelector('.reply-text').innerText = ''
+            activeReplyPreview = null
+            replyingToElement = null
+        }
+    })
+})
+// end: Conversation

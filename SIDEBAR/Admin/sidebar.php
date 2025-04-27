@@ -46,7 +46,7 @@
             </div>
             <div class="bottom-content">
                 <li class="">
-                    <a href="/C-Edu/Inicio/Administrador/index.php">
+                    <a href="/C-Edu/index.php">
                         <i class='bx bx-log-out icon' ></i>
                         <span class="text nav-text">Cerrar Sesion</span>
                     </a>
