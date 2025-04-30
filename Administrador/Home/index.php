@@ -41,7 +41,7 @@ if (!isset($_SESSION['id_usuario'])) {
                         <span class="red-dot"></span>
                     </div>
                 </div>
-                    <button class="btn-ingresar">INGRESAR</button>
+                    <button onclick="scrollToSection('chat')" class="btn-ingresar">INGRESAR</button>
                 </div>
     
                 <div class="card">
