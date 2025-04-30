@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -16,39 +17,49 @@
             <form class="sing-in" action="validar_login.php" method="POST">
                 <h2>Iniciar Sesión</h2>
                 <h4>Docentes</h4>
+                
                 <div class="social-networks">
                     <ion-icon name="logo-instagram"></ion-icon>
                 </div>
+                
                 <span>Use su correo y contraseña</span>
+                
                 <div class="container-input">
                     <ion-icon name="mail-outline"></ion-icon>
                     <input type="text" placeholder="Correo" name="email">
                 </div>
+                
                 <div class="container-input">
                     <ion-icon name="lock-closed-outline"></ion-icon>
                     <input type="password" placeholder="Contraseña" name="password">
                 </div>
+                
                 <button type="submit" class="boton" name="role" value="docente">Iniciar Sesión</button>
             </form>
         </div>
 
         <div class="container-form">
-             <form class="sing-up" action="validar_login.php" method="POST">
+            <form class="sing-up" action="validar_login.php" method="POST">
                 <h2>Iniciar Sesión</h2>
                 <h4 class="administrativos">Administrativos</h4>
+                
                 <div class="social-networks">
                     <ion-icon name="logo-instagram"></ion-icon>
                 </div>
+                
                 <span>Use su correo y contraseña</span>
+                
                 <div class="container-input">
                     <ion-icon name="mail-outline"></ion-icon>
                     <input type="text" placeholder="Correo" name="email">
                 </div>
+                
                 <div class="container-input">
                     <ion-icon name="lock-closed-outline"></ion-icon>
                     <input type="password" placeholder="Contraseña" name="password">
                 </div>
-                 <button type="submit" class="boton" name="role" value="administrativo">Iniciar Sesión</button>
+                
+                <button type="submit" class="boton" name="role" value="administrativo">Iniciar Sesión</button>
             </form>
         </div>
 

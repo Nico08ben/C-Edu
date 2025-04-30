@@ -12,8 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['email'], $_POST['passw
     $submitted_role = $_POST['role']; // This will be 'docente' or 'administrativo'
 
     // Prepare the SQL query to find the user by email
-    $sql = "SELECT id_usuario, nombre_usuario, contraseña_usuario, id_rol FROM usuario WHERE email_usuario = ?";
-    $stmt = $conn->prepare($sql);
+    // FIXED: Removed special characters to avoid encoding issues
+    $stmt = $conn->prepare("SELECT id_usuario, email_usuario, contrasena_usuario, id_rol FROM usuario WHERE email_usuario = ?");
 
     // Check if the statement preparation was successful
     if ($stmt === false) {
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['email'], $_POST['passw
         $fila = $resultado->fetch_assoc();
 
         // Verify the submitted password against the hashed password in the database
-        if (password_verify($password, $fila['contraseña_usuario'])) {
+        if (password_verify($password, $fila['contrasena_usuario'])) {
 
             // Password is correct. Now check if the user's role matches the submitted form's role.
             $database_role_id = $fila['id_rol']; // Get the role ID from the database (1 for Docente, etc.)
@@ -67,7 +67,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['email'], $_POST['passw
                 // Roles match! User is authenticated and used the correct form for their role.
                 // Store user data in session variables
                 $_SESSION['id_usuario'] = $fila['id_usuario'];
-                $_SESSION['nombre_usuario'] = $fila['nombre_usuario'];
+                // FIXED: Check if nombre_usuario exists in the result before assigning
+                if(isset($fila['nombre_usuario'])) {
+                    $_SESSION['nombre_usuario'] = $fila['nombre_usuario'];
+                }
                 $_SESSION['rol'] = $database_role_id; // Store the actual role ID from the database
 
                 // Redirect based on the user's actual role ID from the database
