@@ -435,4 +435,28 @@ body {
         justify-content: center;
     }
 }
+#new-event-modal,
+#event-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    z-index: 9999;
+}
+
+#new-event-modal .modal-content,
+#event-modal .modal-content {
+    margin: 50px auto;
+    background: white;
+    padding: 20px;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
 
