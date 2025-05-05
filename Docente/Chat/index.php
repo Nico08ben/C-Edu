@@ -32,10 +32,10 @@
                             <li class="content-message-title"><span>Recently</span></li>
                             <li>
                                 <a href="#" data-conversation="#conversation-1">
-                                    <img class="content-message-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
+                                    <img class="content-message-image" src="logofoto.jpg" alt="">
                                     <span class="content-message-info">
-                                        <span class="content-message-name">Someone</span>
-                                        <span class="content-message-text">Lorem ipsum dolor sit amet consectetur.</span>
+                                        <span class="content-message-name">Avisos Importantes</span>
+                                        <span class="content-message-text">Cambio de horario:</span>
                                     </span>
                                     <span class="content-message-more">
                                         <span class="content-message-unread">5</span>
@@ -56,7 +56,7 @@
                     <div class="conversation-top">
                         <button type="button" class="conversation-back"><i class="ri-arrow-left-line"></i></button>
                         <div class="conversation-user">
-                            <img class="conversation-user-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
+                            <img class="conversation-user-image" src="logofoto.jpg" alt="">
                             <div>
                                 <div class="conversation-user-name">Someone</div>
                                 <div class="conversation-user-status online">online</div>
@@ -73,7 +73,7 @@
                             <div class="coversation-divider"><span>Today</span></div>
                             <li class="conversation-item me">
                                 <div class="conversation-item-side">
-                                    <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
+                                    <img class="conversation-item-image" src="logofoto.jpg" alt="">
                                 </div>
                                 <div class="conversation-item-content">
                                     <div class="conversation-item-wrapper">
@@ -112,7 +112,7 @@
                             </li>
                             <li class="conversation-item">
                                 <div class="conversation-item-side">
-                                    <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
+                                    <img class="conversation-item-image" src="logofoto.jpg" alt="">
                                 </div>
                                 <div class="conversation-item-content">
                                     <div class="conversation-item-wrapper">
@@ -167,7 +167,7 @@
                             </li>
                             <li class="conversation-item me">
                                 <div class="conversation-item-side">
-                                    <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
+                                    <img class="conversation-item-image" src="logofoto.jpg" alt="">
                                 </div>
                                 <div class="conversation-item-content">
                                     <div class="conversation-item-wrapper">
@@ -205,7 +205,7 @@
                                     <div class="conversation-item-wrapper">
                                         <div class="conversation-item-box">
                                             <div class="conversation-item-text">
-                                                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusantium blanditiis ea, voluptatum, eveniet at harum minima maxime enim aut non, iure expedita excepturi tempore nostrum quasi natus voluptas dolore ducimus!</p>
+                                                <p>Cambio de horario: Consejo de Área ahora será a las 3:00 p.m. xd</p>
                                                 <div class="conversation-item-time">12:30</div>
                                             </div>
                                             <div class="conversation-item-dropdown">
