@@ -1,10 +1,5 @@
 <?php
 session_start();
-// Redirigir si el usuario no ha iniciado sesión
-if (!isset($_SESSION['id_usuario'])) {
-    header('Location: ../../index.php'); // Ajusta la ruta
-    exit();
-}
 
 // Incluir el archivo de conexión a la base de datos
 require_once(__DIR__ . '/../../conexion.php');
@@ -12,10 +7,9 @@ require_once(__DIR__ . '/../../conexion.php');
 $task_details = null;
 $error_message = '';
 $success_message = ''; // Variable para mensajes de éxito
+$mensaje = ''; // <-- Inicializar la variable $mensaje aquí
 $stmt = null; // Inicializar statement a null
 $result = null; // Inicializar resultado a null
-
-$current_user_id = $_SESSION['id_usuario']; // Obtener el ID del docente actual
 
 // --- INICIO: Lógica para cambiar el estado de la tarea ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['task_id'], $_POST['new_status'])) {
@@ -25,32 +19,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['task_id'], $_POST['ne
     // Validar que el nuevo estado sea uno permitido según la base de datos
     $allowed_statuses = ['Pendiente', 'Completada', 'Cancelada']; // <-- AJUSTADO según tu base de datos
     if (!in_array($new_status, $allowed_statuses)) {
-        $error_message = "Estado de tarea no válido.";
+        $mensaje = "Estado de tarea no válido."; // Usar $mensaje para este tipo de error también
     } else {
         if ($conn) {
-            // Consulta para actualizar el estado, PERO SOLO si la tarea está asignada al docente actual
-            $sql_update = "UPDATE tarea SET estado_tarea = ? WHERE id_tarea = ? AND id_usuario = ?";
+            // Consulta para actualizar el estado
+            $sql_update = "UPDATE tarea SET estado_tarea = ? WHERE id_tarea = ?";
             $stmt_update = $conn->prepare($sql_update);
 
             if ($stmt_update) {
-                $stmt_update->bind_param("sii", $new_status, $task_id_to_update, $current_user_id);
+                $stmt_update->bind_param("si", $new_status, $task_id_to_update);
                 if ($stmt_update->execute()) {
-                    // Verificar si alguna fila fue afectada (si la tarea existía y estaba asignada al usuario)
+                     // Verificar si alguna fila fue afectada
                     if ($stmt_update->affected_rows > 0) {
-                        $success_message = "Estado de la tarea actualizado exitosamente a '" . htmlspecialchars($new_status) . "'.";
-                        // No redirigimos para que el usuario vea el mensaje y el estado actualizado en la misma página
+                         $success_message = "Estado de la tarea actualizado exitosamente a '" . htmlspecialchars($new_status) . "'.";
                     } else {
-                        $error_message = "No se pudo actualizar el estado. La tarea no existe o no está asignada a ti.";
+                         // Esto podría ocurrir si la tarea_id no existe
+                         $error_message = "No se pudo actualizar el estado. La tarea no existe.";
                     }
+                    // No redirigimos para que el usuario vea el mensaje y el estado actualizado en la misma página
                 } else {
-                    $error_message = "Error al ejecutar la consulta de actualización: " . $stmt_update->error;
+                    $mensaje = "Error al ejecutar la consulta de actualización: " . $stmt_update->error; // Usar $mensaje
                 }
                 $stmt_update->close();
             } else {
-                $error_message = "Error al preparar la consulta de actualización: " . $conn->error;
+                $mensaje = "Error al preparar la consulta de actualización: " . $conn->error; // Usar $mensaje
             }
         } else {
-            $error_message = "Error: No se pudo establecer la conexión a la base de datos para actualizar.";
+            $mensaje = "Error: No se pudo establecer la conexión a la base de datos para actualizar."; // Usar $mensaje
         }
     }
 }
@@ -69,19 +64,18 @@ if ($id_tarea && !empty($id_tarea)) {
 
     if ($conn) {
         // Consulta para obtener detalles de la tarea, nombre del asignado y nombre del creador
-        // PERO SOLO si la tarea está asignada al docente actual
         $sql = "SELECT t.*,
                         u_asignado.nombre_usuario AS nombre_asignado,
                         u_creador.nombre_usuario AS nombre_creador
                 FROM tarea t
                 INNER JOIN usuario u_asignado ON t.id_usuario = u_asignado.id_usuario
                 INNER JOIN usuario u_creador ON t.id_asignador = u_creador.id_usuario
-                WHERE t.id_tarea = ? AND t.id_usuario = ?"; // Filtra por ID de tarea Y por el usuario asignado
+                WHERE t.id_tarea = ?"; // Filtra por el ID de la tarea
 
         $stmt = $conn->prepare($sql);
 
         if ($stmt) {
-            $stmt->bind_param("ii", $id_tarea, $current_user_id); // Bind ID de tarea y ID del usuario actual
+            $stmt->bind_param("i", $id_tarea);
             if ($stmt->execute()) {
                  $result = $stmt->get_result();
 
@@ -89,7 +83,7 @@ if ($id_tarea && !empty($id_tarea)) {
                     $task_details = $result->fetch_assoc();
                 } else {
                     // Si no se encuentran detalles, establecer un mensaje de error
-                    $error_message = "No se encontraron detalles para la tarea solicitada o no está asignada a ti.";
+                    $error_message = "No se encontraron detalles para la tarea solicitada.";
                 }
             } else {
                  $error_message = "Error al ejecutar la consulta preparada: " . $stmt->error;
@@ -134,7 +128,7 @@ $stmt = null;
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOCENTE - Detalles de Tarea</title> <?php include "../../SIDEBAR/Docente/head.php"; ?> <link rel="stylesheet" href="tareascss.css">
+    <title>ADMIN - Detalles de Tarea</title> <?php include "../../SIDEBAR/Admin/head.php"; ?> <link rel="stylesheet" href="tareascss.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -254,7 +248,7 @@ $stmt = null;
         }
 
         .status-update-form button:hover {
-            background-color: #35a88d; /* Tono más oscuro para hover (ajustado al nuevo color) */
+            background-color: #d4a738; /* Tono más oscuro para hover */
         }
 
         .btn-volver {
@@ -272,7 +266,7 @@ $stmt = null;
         }
 
         .btn-volver:hover {
-            background: #35a88d; /* Un tono ligeramente más oscuro para hover (ajustado al nuevo color) */
+            background: #d4a738; /* Un tono ligeramente más oscuro para hover */
         }
 
         /* Estilos responsivos para detalles */
@@ -321,20 +315,26 @@ $stmt = null;
 </head>
 
 <body>
-    <?php include "../../SIDEBAR/Docente/sidebar.php"; ?> <section class="home">
+    <?php include "../../SIDEBAR/Admin/sidebar.php"; ?> <section class="home">
         <div class="main-content">
             <div class="header">
-                <h1 id="titulo1-header">DOCENTE - DETALLES DE TAREA</h1> <?php include '../../PHP/user_info.php'; // Reutilizando user_info.php ?>
+                <h1 id="titulo1-header">ADMIN - DETALLES DE TAREA</h1> <?php include '../../PHP/user_info.php'; // Reutilizando user_info.php ?>
             </div>
 
             <div class="task-detail-container">
+                <?php if ($mensaje): // Mostrar mensajes de error o éxito de la actualización ?>
+                    <div class="alert <?php echo (strpos($mensaje, 'Error') !== false) ? 'alert-danger' : 'alert-success'; ?>">
+                        <?php echo htmlspecialchars($mensaje); ?>
+                    </div>
+                <?php endif; ?>
+
                  <?php if ($success_message): // Mostrar mensaje de éxito de la actualización de estado ?>
                     <div class="alert alert-success">
                         <?php echo htmlspecialchars($success_message); ?>
                     </div>
                 <?php endif; ?>
 
-                 <?php if ($error_message): // Mostrar mensaje de error ?>
+                 <?php if ($error_message && !$success_message): // Mostrar mensaje de error si no hubo éxito ?>
                     <div class="alert alert-danger">
                         <?php echo htmlspecialchars($error_message); ?>
                     </div>

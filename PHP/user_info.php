@@ -1,19 +1,20 @@
 <?php
+// Ensure NO output (including spaces, BOM, or HTML) exists before this line
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+    session_start(); // Start session if not already active
 }
 
-require_once __DIR__ . "/../conexion.php";
+require_once __DIR__ . "/../conexion.php"; // Ensure this file has no output
 
 $id_usuario = $_SESSION['id_usuario'] ?? null;
 $fila = [];
 
 if ($id_usuario) {
     $stmt = $conn->prepare("SELECT r.tipo_rol AS nombre_rol, m.nombre_materia AS materia 
-    FROM usuario u 
-    INNER JOIN rol r ON u.id_rol = r.id_rol 
-    LEFT JOIN materia m ON u.id_materia = m.id_materia 
-    WHERE u.id_usuario = ?");
+        FROM usuario u 
+        INNER JOIN rol r ON u.id_rol = r.id_rol 
+        LEFT JOIN materia m ON u.id_materia = m.id_materia 
+        WHERE u.id_usuario = ?");
     $stmt->bind_param("i", $id_usuario);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -21,6 +22,7 @@ if ($id_usuario) {
     $stmt->close();
 }
 ?>
+<!-- HTML starts AFTER all PHP logic -->
 <div id="user-profile-box" class="user-info">
     <div class="profile">
         <div class="profile-text">
@@ -35,7 +37,6 @@ if ($id_usuario) {
                 }
                 ?>
             </span>
-
         </div>
         <a href="../UserProfile/index.php">
             <img src="../../assets/perfil.jpg" alt="Perfil">
