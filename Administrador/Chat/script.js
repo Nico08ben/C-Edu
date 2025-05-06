@@ -89,12 +89,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const messageText = conversationItem.querySelector('p').innerText
             const replyPreview = document.querySelector('.conversation-reply-preview')
             
-            if (replyPreview) {
-                replyPreview.querySelector('.reply-text').innerText = messageText
-                replyPreview.style.display = 'flex'
-                activeReplyPreview = replyPreview
-                replyingToElement = messageText
-            }
+                if (replyPreview) {
+                    replyPreview.querySelector('.reply-text').innerText = messageText
+                    replyPreview.style.display = 'flex'
+                    activeReplyPreview = replyPreview
+                    replyingToElement = messageText
+                }
+           
         }
     })
 
