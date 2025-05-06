@@ -320,7 +320,7 @@ body {
     border: none;
     outline: transparent;
     cursor: pointer;
-    color: var(--slate-600);
+    color: var(--white);
     margin-left: 4px;
 }
 .conversation-buttons > :hover {
@@ -698,9 +698,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #f1f1f1;
+    background: var(--sidebar-color);
     padding: 8px 12px;
-    border-left: 4px solid #007bff;
+    border-left: 4px solid #e7bb41;
     margin: 10px 15px;
     border-radius: 4px;
     font-size: 14px;
