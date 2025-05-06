@@ -24,9 +24,6 @@
                 <h2>Iniciar Sesión</h2>
                 <h4>Docentes</h4>
                 
-                <div class="social-networks">
-                    <ion-icon name="logo-instagram"></ion-icon>
-                </div>
                 
                 <span>Use su correo y contraseña</span>
                 
@@ -49,9 +46,6 @@
                 <h2>Iniciar Sesión</h2>
                 <h4 class="administrativos">Administrativos</h4>
                 
-                <div class="social-networks">
-                    <ion-icon name="logo-instagram"></ion-icon>
-                </div>
                 
                 <span>Use su correo y contraseña</span>
                 
