@@ -1,0 +1,1002 @@
+/* Importar fuente de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+/* Definición de variables CSS para la paleta de colores */
+:root {
+    --body-color: #E4E9F7;
+    --sidebar-color: #FFF;
+    --primary-color: #40C3A5;
+    /* Nuevo color primario: un tono verde azulado */
+    --primary-color-ligth: #cdfff2;
+    /* Tono claro del nuevo color primario */
+    --toggle-color: #DDD;
+    --text-color: #707070;
+    --title-color: #333;
+
+    --trans-02: all 0.2s ease;
+    --trans-03: all 0.3s ease;
+    --trans-04: all 0.4s ease;
+    --trans-05: all 0.5s ease;
+}
+
+/* Estilos para el modo oscuro */
+body.dark {
+    --body-color: #18191A;
+    --sidebar-color: #242526;
+    --primary-color: #3A3B3C;
+    /* Color primario en modo oscuro (puede que quieras ajustarlo) */
+    --primary-color-ligth: #3A3B3C;
+    /* Tono claro en modo oscuro (puede que quieras ajustarlo) */
+    --toggle-color: #FFF;
+    --text-color: #CCC;
+    --title-color: #ffffff;
+}
+
+/* Estilos generales para todos los elementos */
+* {
+    /* Eliminar margenes y rellenos por defecto */
+    margin: 0;
+    padding: 0;
+    /* Utilizar caja de modelo de caja */
+    box-sizing: border-box;
+    /* Establecer fuente por defecto */
+    font-family: "Rubik", serif;
+}
+
+/* Estilos de la sección principal (donde se carga el contenido) */
+.home {
+    /* Posicionar la sección principal */
+    position: relative;
+    /* Establecer altura */
+    min-height: 100vh;
+    /* Usar min-height en lugar de height */
+    /* Establecer posición y ancho, ajustando por el ancho de la barra lateral */
+    left: 250px;
+    width: calc(100% - 250px);
+    /* Establecer color de fondo usando variable */
+    background-color: var(--body-color);
+    /* Transición para cambios de estilo */
+    transition: var(--trans-05);
+    padding-bottom: 30px;
+    /* Añadir padding inferior para espacio */
+}
+
+/* Estilos de la sección principal cuando la barra lateral está cerrada */
+.sidebar.close~.home {
+    /* Ajustar posición y ancho cuando la barra lateral está cerrada */
+    left: 88px;
+    width: calc(100% - 88px);
+}
+
+/* Estilos del contenido principal dentro de la sección home */
+.main-content {
+    /* Permitir que el contenido principal crezca para ocupar el espacio disponible */
+    flex-grow: 1;
+    /* Establecer relleno alrededor del contenido principal */
+    padding: 30px;
+}
+
+/* Estilos del encabezado principal */
+.header {
+    background-color: var(--sidebar-color);
+    /* Usando variable de color de sidebar */
+    display: flex;
+    position: relative;
+    top: -35px;
+    left: -30px;
+    /* Ajustar ancho para que sea flexible */
+    width: calc(100% + 60px);
+    height: 80px;
+    justify-content: space-between;
+    align-items: center;
+    /* Establecer margen inferior */
+    margin-bottom: 30px;
+    padding-right: 30px;
+    padding-left: 30px;
+    box-sizing: border-box;
+    /* Incluir padding en el cálculo del ancho */
+}
+
+/* Estilos del título principal en el encabezado */
+#titulo1-header {
+    color: var(--text-color);
+    /* Usando variable de color de texto */
+    font-family: "Rubik", serif;
+    font-weight: normal;
+}
+
+/* Estilos del perfil de usuario en el encabezado */
+.profile {
+    position: relative;
+    /* Ajustar posición para que sea flexible */
+    left: 0;
+    /* Eliminar left fijo */
+    width: auto;
+    /* Ancho automático */
+    height: 50px;
+    display: flex;
+    text-align: end;
+    align-items: center;
+    padding: 0 20px;
+    /* Ajustar padding */
+    border-radius: 10px;
+    gap: 20px;
+}
+
+/* Estilos de la información de texto dentro del perfil */
+.profile-info h3 {
+    color: var(--title-color);
+    /* Usando variable de color de título */
+    font-weight: normal;
+}
+
+.profile-info {
+    color: var(--text-color);
+    /* Usando variable de color de texto */
+}
+
+/* Estilos de la imagen del perfil */
+.profile img {
+    /* Establecer ancho y alto */
+    width: 40px;
+    height: 40px;
+    /* Establecer forma circular */
+    border-radius: 50%;
+}
+
+/* Estilos para el icono de campana en el perfil */
+.profile .fa-regular.fa-bell {
+    background-color: var(--primary-color);
+    /* Usando variable de color primario */
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    text-align: center;
+    padding: 9px;
+    color: white;
+}
+
+/* Estilos para el icono de usuario en el perfil */
+.profile .fa-solid.fa-user {
+    font-size: 25px;
+    text-align: center;
+    padding: 4px;
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+    color: gray;
+    /* Considera usar una variable si este color es parte de la paleta */
+    background-color: white;
+    /* Considera usar una variable si este color es parte de la paleta */
+}
+
+/* Contenedor para los controles del administrador/docente (filtro y botón crear) */
+.admin-controls {
+    display: flex;
+    /* Usa flexbox para alinear elementos */
+    justify-content: space-between;
+    /* Distribuye el espacio entre los elementos */
+    align-items: center;
+    /* Centra verticalmente los elementos */
+    margin-bottom: 20px;
+    /* Espacio debajo de los controles */
+    padding: 0 10px;
+    /* Añade padding horizontal */
+    flex-wrap: wrap;
+    /* Permite que los elementos se envuelvan en pantallas pequeñas */
+    gap: 15px;
+    /* Espacio entre los elementos flex */
+}
+
+/* Estilos para el contenedor del desplegable de filtro */
+.filter-dropdown {
+    display: flex;
+    /* Usa flexbox para alinear label y select */
+    align-items: center;
+    /* Centra verticalmente label y select */
+    gap: 10px;
+    /* Espacio entre label y select */
+}
+
+/* Estilos para la etiqueta del filtro */
+.filter-dropdown label {
+    font-weight: bold;
+    color: var(--text-color);
+    /* Usando color de texto */
+}
+
+/* Estilos para el select del filtro */
+.filter-dropdown select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--sidebar-color);
+    /* Usando color de sidebar */
+    color: var(--text-color);
+    /* Usando color de texto */
+    cursor: pointer;
+    outline: none;
+    /* Elimina el contorno al enfocar */
+    transition: border-color 0.3s ease;
+    min-width: 150px;
+    /* Ancho mínimo para el select */
+}
+
+.filter-dropdown select:focus {
+    border-color: var(--primary-color);
+    /* Resalta el borde al enfocar */
+}
+
+/* Estilos para el botón de "Crear Nueva Tarea" */
+.btn-crear-tarea {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    /* Usando tu variable primary */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Sombra para el botón */
+}
+
+.btn-crear-tarea:hover {
+    background-color: #35a88d;
+    /* Un tono ligeramente más oscuro para hover (ajustado al nuevo color) */
+}
+
+/* Estilos para el contenedor de la tabla de tareas */
+.tabla-contenedor {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: var(--sidebar-color);
+    /* Fondo de la tabla usando color de sidebar */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Sombra para la tabla */
+    overflow-x: auto;
+    /* Agrega scroll horizontal si la tabla es demasiado ancha */
+}
+
+/* Estilos para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    /* Asegura que los bordes redondeados se apliquen */
+    min-width: 600px;
+    /* Ancho mínimo para la tabla para evitar que se comprima demasiado */
+}
+
+/* Estilos para las celdas de encabezado y datos */
+th,
+td {
+    padding: 12px 10px;
+    /* Aumentar padding para mejor legibilidad */
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    /* Línea sutil entre filas */
+    color: var(--text-color);
+    /* Color de texto para celdas */
+}
+
+/* Estilos específicos para las celdas de encabezado */
+th {
+    color: var(--primary-color);
+    /* Color primario para encabezados */
+    font-family: "Rubik", serif;
+    font-weight: normal;
+    background-color: var(--primary-color-ligth);
+    /* Fondo ligero para encabezados */
+}
+
+/* Estilos para la última celda de datos (para acciones) */
+td:last-child {
+    border-right: none;
+    /* Eliminar borde derecho en la última columna */
+    text-align: center;
+    /* Centrar contenido en la columna de acciones */
+}
+
+/* Estilos para el botón de detalles */
+.btn-datalles {
+    padding: 8px 15px;
+    /* Ajustar padding */
+    background: var(--primary-color);
+    /* Usando variable primary */
+    color: white;
+    border: none;
+    font-size: 1rem;
+    /* Ajustar tamaño de fuente */
+    font-weight: 400;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Sombra más sutil */
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    border-radius: 5px;
+    /* Ajustar radio del borde */
+    text-decoration: none;
+    /* Asegurar que no tenga subrayado si se usa en <a> */
+    display: inline-block;
+    /* Para aplicar padding y margen correctamente si es <a> */
+}
+
+.btn-datalles:active {
+    transform: scale(0.95);
+    /* Ajustar escala activa */
+}
+
+/* Animaciones para el botón de detalles */
+/* Se mantienen las animaciones existentes, ajustando el color si es necesario */
+.btn-datalles.animate::before,
+.btn-datalles.animate::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: 150%;
+    background-repeat: no-repeat;
+
+}
+
+.btn-datalles.animate::before {
+    top: -70%;
+    background-image: radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
+        radial-gradient(circle, transparent 20%, var(--primary-color) 20%, transparent 30%),
+        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
+        radial-gradient(circle, transparent 10%, var(--primary-color) 15%, transparent 20%),
+        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--primary-color) 20%, transparent 20%);
+    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 18% 18%;
+    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
+    animation: topBubbles 0.6s ease-in-out forwards;
+
+
+}
+
+@keyframes topBubbles {
+    50% {
+        background-position: 0% 80%, 10% 90%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
+    }
+
+    100% {
+        background-position: 0% 70%, 0% 10%, 10% 30%, 20% 10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
+        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+    }
+}
+
+.btn-datalles.animate::after {
+    bottom: -70%;
+    background-image: radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
+        radial-gradient(circle, transparent 10%, var(--primary-color) 15%, transparent 20%),
+        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--primary-color) 20%, transparent 20%);
+    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
+    background-position: 10% 0%, 30% 10%, 55% 0%, 70% 0%, 85% 0%, 70% 0%, 70% 0%;
+    animation: bottomBubbles 0.6s ease-in-out forwards;
+}
+
+@keyframes bottomBubbles {
+    50% {
+        background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
+    }
+
+    100% {
+        background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
+        background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+    }
+
+}
+
+
+/* Estilos de las tarjetas de tarea (mantener si aún se usan en alguna parte) */
+.task-card {
+    border: 0.5px solid;
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.task-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.task-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.task-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+}
+
+
+/* Estilos para el formulario de creación de tarea (Docente) */
+.create-task-container {
+    background-color: var(--sidebar-color);
+    /* Usando color de sidebar para el contenedor */
+    padding: 25px;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    /* Limitar ancho máximo para el formulario */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.create-task-container h2 {
+    color: var(--primary-color);
+    /* Usando color primario para el título */
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary-color-ligth);
+    /* Usando color primario ligero para el borde */
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--text-color);
+    /* Usando color de texto */
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    /* Borde gris */
+    border-radius: 4px;
+    box-sizing: border-box;
+    /* Incluir padding y border en el tamaño total */
+    color: var(--text-color);
+    /* Color de texto para inputs */
+    background-color: var(--body-color);
+    /* Fondo ligero para inputs */
+}
+
+body.dark .form-group input[type="text"],
+body.dark .form-group input[type="date"],
+body.dark .form-group select,
+body.dark .form-group textarea {
+    background-color: var(--primary-color-ligth);
+    /* Fondo oscuro para inputs en modo oscuro */
+    border-color: #555;
+    /* Borde más oscuro en modo oscuro */
+    color: var(--text-color);
+    /* Color de texto en modo oscuro */
+}
+
+.form-group textarea {
+    resize: vertical;
+    /* Permitir redimensionamiento vertical */
+    min-height: 100px;
+}
+
+.form-actions {
+    margin-top: 20px;
+    text-align: right;
+    /* Alinea los botones a la derecha */
+}
+
+.btn-submit-task {
+    padding: 10px 20px;
+    background: var(--primary-color);
+    /* Usando color primario */
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit-task:hover {
+    background-color: #35a88d;
+    /* Tono más oscuro para hover (ajustado al nuevo color) */
+}
+
+.btn-cancel {
+    padding: 10px 20px;
+    background: #ccc;
+    /* Color gris para cancelar */
+    color: var(--title-color);
+    /* Color de título para texto */
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background-color: #bbb;
+    /* Tono más oscuro para hover */
+}
+
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+
+    /* Estilos para el cuerpo en pantallas pequeñas */
+    body {
+        flex-direction: column;
+    }
+
+    /* Estilos para la barra lateral en pantallas pequeñas */
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        padding: 15px;
+    }
+
+    /* Estilos para los iconos de la barra lateral */
+    .sidebar-icon {
+        margin-bottom: 0;
+        margin-right: 20px;
+    }
+
+    /* Estilos para el contenido principal en pantallas pequeñas */
+    .main-content {
+        padding: 20px;
+    }
+
+    /* Estilos para la información del usuario en pantallas pequeñas */
+    .user-info {
+        justify-content: flex-start;
+        margin-bottom: 20px;
+    }
+
+    /* Ajustes para el header en pantallas pequeñas */
+    .header {
+        flex-direction: column;
+        /* Apila elementos en pantallas pequeñas */
+        height: auto;
+        /* Altura automática */
+        padding: 15px;
+        /* Ajustar padding */
+        left: 0;
+        /* Eliminar left fijo */
+        width: 100%;
+        /* Ancho completo */
+    }
+
+    #titulo1-header {
+        margin-bottom: 10px;
+        /* Espacio debajo del título */
+    }
+
+    .profile {
+        width: 100%;
+        /* Ocupa todo el ancho */
+        justify-content: center;
+        /* Centra el contenido del perfil */
+        padding: 10px;
+        /* Ajustar padding */
+        text-align: center;
+        /* Centrar texto */
+    }
+
+
+    /* Estilos responsivos para los controles del administrador/docente */
+    .admin-controls {
+        flex-direction: column;
+        /* Apila los controles en pantallas pequeñas */
+        align-items: stretch;
+        /* Estira los elementos para ocupar el ancho */
+        padding: 0;
+        /* Elimina padding horizontal */
+        gap: 10px;
+        /* Reducir espacio entre elementos */
+    }
+
+    .filter-dropdown {
+        margin-bottom: 5px;
+        /* Espacio debajo del desplegable */
+        justify-content: center;
+        /* Centra el contenido del desplegable */
+        width: 100%;
+        /* Ocupa todo el ancho disponible */
+    }
+
+    .filter-dropdown select {
+        width: 100%;
+        /* Asegura que el select ocupe todo el ancho en móvil */
+        min-width: unset;
+        /* Elimina el ancho mínimo en móvil */
+    }
+
+    .admin-actions {
+        text-align: center;
+        /* Centra el botón de crear tarea */
+        width: 100%;
+        /* Ocupa todo el ancho disponible */
+    }
+
+    .btn-crear-tarea {
+        width: 100%;
+        /* Estira el botón para ocupar todo el ancho */
+        text-align: center;
+        /* Centra el texto del botón */
+    }
+
+
+    .tabla-contenedor {
+        padding: 5px;
+    }
+
+    th,
+    td {
+        padding: 8px 5px;
+        /* Reducir padding en celdas */
+        font-size: 0.9rem;
+        /* Reducir tamaño de fuente en celdas */
+    }
+
+    .btn-datalles {
+        padding: 6px 10px;
+        /* Reducir padding del botón */
+        font-size: 0.9rem;
+        /* Reducir tamaño de fuente del botón */
+    }
+
+    /* Estilos para el formulario de creación de tarea en móvil */
+    .create-task-container {
+        padding: 15px;
+        margin-top: 15px;
+    }
+
+    .create-task-container h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+        margin-bottom: 3px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group select,
+    .form-group textarea {
+        padding: 6px;
+        font-size: 0.9rem;
+    }
+
+    .form-actions {
+        text-align: center;
+        /* Centra los botones en móvil */
+    }
+
+    .btn-submit-task,
+    .btn-cancel {
+        width: auto;
+        /* Ancho automático para los botones */
+        margin-left: 5px;
+        /* Espacio entre los botones */
+        margin-right: 5px;
+    }
+
+}
+
+/* Estilos específicos para el formulario de creación de tarea */
+.create-task-container {
+    background-color: var(--sidebar-color); /* Usando color de sidebar para el contenedor */
+    padding: 25px;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Limitar ancho máximo para el formulario */
+    margin-left: auto;
+    margin-right: auto;
+}
+.create-task-container h2 {
+    color: var(--primary-color); /* Usando color primario para el título */
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary-color-ligth); /* Usando color primario ligero para el borde */
+    padding-bottom: 10px;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--text-color); /* Usando color de texto */
+}
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 4px;
+    box-sizing: border-box; /* Incluir padding y border en el tamaño total */
+    color: var(--text-color); /* Color de texto para inputs */
+    background-color: var(--body-color); /* Fondo ligero para inputs */
+}
+ body.dark .form-group input[type="text"],
+ body.dark .form-group input[type="date"],
+ body.dark .form-group select,
+ body.dark .form-group textarea {
+     background-color: var(--primary-color-ligth); /* Fondo oscuro para inputs en modo oscuro */
+     border-color: #555; /* Borde más oscuro en modo oscuro */
+     color: var(--text-color); /* Color de texto en modo oscuro */
+ }
+
+.form-group textarea {
+    resize: vertical; /* Permitir redimensionamiento vertical */
+    min-height: 100px;
+}
+.form-actions {
+    margin-top: 20px;
+    text-align: right; /* Alinea los botones a la derecha */
+}
+.btn-submit-task {
+    padding: 10px 20px;
+    background: var(--primary-color); /* Usando color primario */
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+ .btn-submit-task:hover {
+    background-color: #d4a738; /* Tono más oscuro para hover */
+}
+ .btn-cancel {
+    padding: 10px 20px;
+    background: #ccc; /* Color gris para cancelar */
+    color: var(--title-color); /* Color de título para texto */
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+ .btn-cancel:hover {
+    background-color: #bbb; /* Tono más oscuro para hover */
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+ .alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+/* Estilos adicionales para la página de detalles */
+.task-detail-container {
+    background-color: var(--sidebar-color); /* Usando color de sidebar */
+    padding: 30px; /* Aumentar padding */
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
+    max-width: 800px; /* Limitar ancho máximo */
+    margin-left: auto; /* Centrar contenedor */
+    margin-right: auto; /* Centrar contenedor */
+}
+
+.task-detail-container h2 {
+    color: var(--primary-color);
+    margin-bottom: 25px; /* Aumentar margen */
+    border-bottom: 2px solid var(--primary-color-ligth); /* Usando la variable light */
+    padding-bottom: 15px; /* Aumentar padding */
+    font-size: 1.8rem; /* Aumentar tamaño de fuente */
+}
+
+.task-detail-item {
+    margin-bottom: 20px; /* Aumentar margen */
+    font-size: 1.1rem; /* Aumentar tamaño de fuente */
+    color: var(--text-color); /* Usando la variable de texto */
+    display: flex; /* Usar flexbox para alinear label y valor */
+    align-items: flex-start; /* Alinear al inicio */
+}
+
+.task-detail-item strong {
+    color: var(--title-color); /* Usando la variable de título */
+    min-width: 180px; /* Aumentar ancho mínimo para las etiquetas */
+    display: inline-block;
+    margin-right: 10px; /* Espacio entre label y valor */
+    flex-shrink: 0; /* Evitar que la etiqueta se encoja */
+}
+
+ .task-detail-item p {
+     margin-top: 0; /* Eliminar margen superior por defecto del párrafo */
+     flex-grow: 1; /* Permitir que el párrafo ocupe el espacio restante */
+ }
+
+.alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+
+ .alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+ .alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+
+.status-update-form {
+    margin-top: 30px; /* Espacio encima del formulario de estado */
+    padding-top: 20px;
+    border-top: 1px solid #eee; /* Línea separadora */
+    display: flex; /* Usar flexbox para alinear elementos del formulario */
+    align-items: center; /* Centrar verticalmente */
+    gap: 15px; /* Espacio entre elementos */
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+}
+
+.status-update-form label {
+    font-weight: bold;
+    color: var(--title-color);
+}
+
+.status-update-form select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--body-color); /* Fondo del select */
+    color: var(--text-color); /* Color de texto del select */
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+ body.dark .status-update-form select {
+     background-color: var(--primary-color-ligth); /* Fondo oscuro para select en modo oscuro */
+     border-color: #555; /* Borde más oscuro en modo oscuro */
+     color: var(--text-color); /* Color de texto en modo oscuro */
+ }
+
+
+.status-update-form button {
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.status-update-form button:hover {
+    background-color: #35a88d; /* Tono más oscuro para hover (ajustado al nuevo color) */
+}
+
+.btn-volver {
+    display: inline-block; /* Asegurar que padding y margin funcionen */
+    padding: 10px 20px;
+    background: var(--primary-color); /* Usando la variable primary */
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-volver:hover {
+    background: #35a88d; /* Un tono ligeramente más oscuro para hover (ajustado al nuevo color) */
+}
+
+/* Estilos responsivos para detalles */
+@media (max-width: 768px) {
+    .task-detail-container {
+        padding: 20px;
+        margin-top: 15px;
+    }
+
+     .task-detail-container h2 {
+         font-size: 1.5rem;
+         margin-bottom: 20px;
+         padding-bottom: 10px;
+     }
+
+    .task-detail-item {
+        flex-direction: column; /* Apila label y valor en móvil */
+        align-items: flex-start; /* Alinea al inicio */
+        margin-bottom: 15px;
+        font-size: 1rem;
+    }
+
+    .task-detail-item strong {
+        min-width: unset; /* Elimina el ancho mínimo */
+        margin-right: 0; /* Elimina el margen a la derecha */
+        margin-bottom: 5px; /* Espacio debajo de la etiqueta */
+    }
+
+    .status-update-form {
+        flex-direction: column; /* Apila elementos del formulario en móvil */
+        align-items: stretch; /* Estira elementos */
+        gap: 10px;
+    }
+
+    .status-update-form select,
+    .status-update-form button {
+        width: 100%; /* Ocupa todo el ancho */
+    }
+
+    .status-update-form label {
+         margin-bottom: 0; /* Elimina margen debajo de la etiqueta en móvil */
+    }
+}

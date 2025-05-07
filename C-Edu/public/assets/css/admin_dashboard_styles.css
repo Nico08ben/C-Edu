@@ -1,0 +1,368 @@
+/* Importar fuente de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+/* Estilos generales para todos los elementos */
+* {
+    /* Eliminar margenes y rellenos por defecto */
+    margin: 0;
+    padding: 0;
+    /* Utilizar caja de modelo de caja */
+    box-sizing: border-box;
+    /* Establecer fuente por defecto */
+    font-family: "Rubik", serif;
+}
+/* Estilos de la barra lateral */
+.home {
+    /* Posicionar la barra lateral */
+    position: relative;
+    /* Establecer altura */
+    height: 100vh;
+    /* Establecer posición y ancho */
+    left: 250px;
+    width: calc(100% - 250px);
+    /* Establecer color de fondo */
+    background-color: var(--body-color);
+    /* Transición para cambios de estilo */
+    transition: var(--trans-05);
+}
+
+/* Estilos de la barra lateral cuando está cerrada */
+.sidebar.close ~ .home {
+    /* Establecer posición y ancho cuando está cerrada */
+    left: 88px;
+    width: calc(100% - 88px);
+}
+
+/* Estilos del contenido principal */
+.main-content {
+    /* Establecer margen izquierdo */
+    margin-left: 80px;
+    /* Establecer relleno */
+    padding: 30px;
+    /* Establecer ancho */
+    width: calc(100% - 80px);
+}
+
+/* Estilos del encabezado */
+.header {
+    background-color: var(--sidebar-color);
+    display: flex;
+    position: relative;
+    top: -55px;
+    left: -110px;
+    width: 1175px;
+    height: 80px;
+    justify-content: space-between;
+    align-items: center;
+    /* Establecer margen inferior */
+    margin-bottom: 30px;
+    padding-right: 30px;
+    padding-left: 30px;
+}
+#titulo1-header{
+    color: var(--text-color);
+    font-family: "Rubik", serif;
+    font-weight: normal;
+}
+
+/* Estilos del perfil */
+.profile {
+    position: relative;
+    left: 30px;
+    width: 350px;
+    height: 50px;
+    display: flex;
+    text-align: end;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    gap: 20px;
+}
+.profile-info h3{
+    color: var(--title-color);
+    font-weight: normal;
+}
+.profile-info{
+    color: var(--text-color);
+}
+
+/* Estilos de la imagen del perfil */
+.profile img {
+    /* Establecer ancho y alto */
+    width: 40px;
+    height: 40px;
+    /* Establecer forma circular */
+    border-radius: 50%;
+}
+.profile .fa-regular.fa-bell{
+    background-color: var(--primary-color);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    text-align: center;
+    padding: 9px;
+    color: white;
+
+}
+.profile .fa-solid.fa-user{
+    font-size: 25px;
+    text-align: center;
+    padding: 4px;
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+    color: gray;
+    background-color: white;
+}
+
+/* Estilos del contenedor de tarjetas */
+.cards-container {
+    /* Utilizar grid para layout */
+    display: grid;
+    /* Establecer plantilla de columnas */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* Establecer espacio entre elementos */
+    gap: 20px;
+    position: relative;
+    top: -20px;
+    right: 30px;
+}
+.div-card{
+    background-color: #f9f5f5;
+    width: auto;
+    height: 300px;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+
+}
+
+
+/* Estilos de las tarjetas */
+.card {
+    /* Establecer color de fondo */
+    background: white;
+    /* Establecer borde */
+    border: 2px solid rgb(220, 220, 220);
+    /* Establecer forma circular */
+    border-radius: 15px;
+    /* Establecer relleno */
+    padding: 20px;
+    /* Establecer sombra */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Estilos del encabezado de la tarjeta */
+.card-header {
+    /* Utilizar flexbox para layout */
+    display: flex;
+    /* Alinear elementos */
+    align-items: center;
+    /* Establecer espacio entre elementos */
+    gap: 15px;
+    /* Establecer margen inferior */
+    margin-bottom: 20px;
+    /* Establecer tamaño de fuente */
+    font-size: 1.2rem;
+    /* Establecer peso de fuente */
+    font-weight: 400;
+}
+
+/* Estilos del elemento de tarea */
+.task-item {
+    /* Establecer color de fondo */
+    background: #ffffff;
+    /* Establecer forma circular */
+    border-radius: 10px;
+    /* Establecer relleno */
+    padding: 10px;
+    /* Establecer margen inferior */
+    margin-bottom: 10px;
+    /* Establecer posición relativa */
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Estilos del punto rojo en el elemento de tarea */
+.task-item .red-dot {
+    /* Establecer posición absoluta */
+    position: absolute;
+    /* Establecer posición derecha */
+    right: 15px;
+    /* Est ablecer posición vertical */
+    top: 50%;
+    /* Centrar verticalmente */
+    transform: translateY(-50%);
+    /* Establecer tamaño */
+    width: 8px;
+    height: 8px;
+    /* Establecer forma circular */
+    background: red;
+    border-radius: 50%;
+}
+
+/* Estilos de los detalles de la tarea */
+.task-details {
+    /* Establecer color del texto */
+    color: #666;
+    /* Establecer tamaño de fuente */
+    font-size: 0.9em;
+}
+
+/* Estilos del elemento de evento */
+.event-item {
+    
+    /* Utilizar flexbox para layout */
+    display: flex;
+    /* Alinear elementos */
+    align-items: center;
+    justify-content: space-between;
+    /* Establecer relleno */
+    padding: 15px;
+    /* Establecer margen */
+    margin: 5px;
+    /* Establecer forma circular */
+    border-radius: 10px;
+    /* Establecer borde inferior */
+    border-bottom: 1px solid #eee;
+    /* Establecer color de fondo */
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+}
+/* Estilos del elemento de chat */
+.chat-item {
+    /* Utilizar flexbox para layout */
+    display: flex;
+    /* Alinear elementos */
+    align-items: center;
+    /* Establecer espacio entre elementos */
+    gap: 15px;
+    /* Establecer relleno */
+    padding: 15px;
+    /* Establecer borde inferior */
+    border-bottom: 1px solid #eee;
+}
+
+/* Estilos de la imagen del chat */
+.chat-item img {
+    /* Establecer ancho y alto */
+    width: 50px;
+    height: 50px;
+    /* Establecer forma circular */
+    border-radius: 50%;
+}
+
+/* Estilos del contenido del chat */
+.chat-content {
+    /* Permitir que el contenido ocupe el espacio restante */
+    flex: 1;
+}
+
+/* Estilos del nombre en el chat */
+.chat-name {
+    /* Establecer peso de fuente */
+    font-weight: bold;
+    /* Establecer margen inferior */
+    margin-bottom: 5px;
+}
+
+/* Estilos del rol en el chat */
+.chat-role {
+    /* Establecer color del texto */
+    color: #666;
+    /* Establecer tamaño de fuente */
+    font-size: 0.9em;
+    /* Establecer margen inferior */
+    margin-bottom: 3px;
+}
+
+/* Estilos del mensaje en el chat */
+.chat-message {
+    /* Establecer color del texto */
+    color: #666;
+}
+/* Estilos del punto de estado */
+.status-dot {
+    /* Establecer tamaño */
+    width: 8px;
+    height: 8px;
+    /* Establecer forma circular */
+    border-radius: 50%;
+    /* Establecer margen derecho */
+    margin-right: 5px;
+}
+
+/* Estilos del punto de estado verde */
+.status-dot.green {
+    /* Establecer color de fondo */
+    background: #1eb110;
+}
+
+/* Estilos del punto de estado naranja */
+.status-dot.orange {
+    /* Establecer color de fondo */
+    background: #6e0101;
+}
+
+/* Estilos del punto de estado gris */
+.status-dot.gray {
+    /* Establecer color de fondo */
+    background: #666;
+}
+
+/* Estilos del botón de ingreso */
+.btn-ingresar {
+    font-family: "Rubik", serif;
+    font-weight: 400;
+    
+    /* Establecer visualización como bloque */
+    display: block;
+    /* Establecer ancho completo */
+    width: 150px;
+    /* Establecer relleno */
+    padding: 10px;
+    /* Establecer color de fondo */
+    background: white;
+    /* Eliminar borde */
+    border: none;
+    /* Establecer forma circular */
+    border-radius: 8px;
+    /* Establecer margen superior */
+    margin-top: 20px;
+    /* Cambiar cursor al pasar el mouse */
+    cursor: pointer;
+    /* Establecer peso de fuente */
+    /* Establecer sombra */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    align-items: center;
+    text-align: center;
+    position: relative;
+    left: 70px;
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+    /* Estilos de la barra lateral */
+    .sidebar {
+        /* Establecer ancho */
+        width: 60px;
+    }
+    
+    /* Estilos del contenido principal */
+    .main-content {
+        /* Establecer margen izquierdo */
+        margin-left:  60px;
+        /* Establecer ancho */
+        width: calc(100% - 60px);
+        /* Establecer relleno */
+        padding: 20px;
+    }
+
+    /* Estilos del contenedor de tarjetas */
+    .cards-container {
+        /* Establecer una sola columna */
+        grid-template-columns: 1fr;
+    }
+}
