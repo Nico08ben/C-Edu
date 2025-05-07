@@ -13,13 +13,6 @@ $result = null;
 $query_successful = false; // Bandera para rastrear si la consulta fue exitosa
 
 ?>
-    <section class="home">
-        <div class="main-content">
-            <div class="header">
-                <h1 id="titulo1-header">LISTA DE TAREAS (ADMIN)</h1>
-                <?php include '../../PHP/user_info.php'; // Reutilizando user_info.php ?>
-            </div>
-
             <div class="admin-controls">
                 <div class="filter-dropdown">
                     <label for="task-filter">Filtrar Tareas:</label>

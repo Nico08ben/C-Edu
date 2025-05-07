@@ -22,7 +22,7 @@
                         <a href="docente_chat.php">
                             <i class='bx bx-conversation icon' ></i>
                             <span class="text nav-text">Mensajes</span>
-                        </>
+                        </a>
                     </li>
                     <li class="nav-links">
                         <a href="docente_tasks.php">

@@ -24,6 +24,7 @@
                             <span class="text nav-text">Mensajes</span>
                         </a>
                     </li>
+                    
                     <li class="nav-links">
                         <a href="admin_tasks.php">
                             <i class='bx bx-book-open icon' ></i>

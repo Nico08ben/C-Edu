@@ -5,7 +5,7 @@ session_start();
 // Ajusta la condición de $_SESSION['rol'] si tienes un ID específico para admin, ej. $_SESSION['rol'] == 2
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] == 1) { // Asumiendo que rol 1 es Docente, cualquier otro es Admin
     // Si no está logueado o no es admin, redirigir a la página de login
-    header("Location: index.php");
+    header("Location: user_form_view.php");
     exit;
 }
 
@@ -34,21 +34,20 @@ $base_module_path = __DIR__ . '/../src/modules/user_management/';
     require_once __DIR__ . '/../src/includes/user_header.php'; 
     ?>
 
-    <div class="main-container">
+    
         <?php 
         require_once __DIR__ . '/../src/includes/admin_sidebar.php'; 
         ?>
 
-        <main class="content">
             <?php
             // Enrutador simple para cargar la vista o el manejador apropiado
             switch ($action) {
                 case 'list': // Acción por defecto
-                    require_once $base_module_path . 'index.php'; // Antes usuarios.php (lista de usuarios)
+                    require_once $base_module_path . 'user_form_view.php'; // Antes usuarios.php (lista de usuarios)
                     break;
                 case 'create_form': // Mostrar formulario de creación
                     $page_title = "Crear Nuevo Usuario - Administrador"; // Actualizar título
-                    require_once $base_module_path . 'user_form_view.php'; // Antes Edit_User/index.php (para creación)
+                    require_once $base_module_path . 'index.php'; // Antes Edit_User/user_form_view.php (para creación)
                     break;
                 case 'store_user': // Procesar creación de usuario
                     // La lógica de creación está en create_user_handler.php (antes procesar_usuario.php)
@@ -58,9 +57,9 @@ $base_module_path = __DIR__ . '/../src/modules/user_management/';
                 case 'edit_form': // Mostrar formulario de edición
                     if ($user_id) {
                         $page_title = "Editar Usuario - Administrador"; // Actualizar título
-                        // user_form_view.php necesitará el $user_id para cargar datos
+                        // index.php necesitará el $user_id para cargar datos
                         $_GET['id_usuario'] = $user_id; // Asegurar que id_usuario esté disponible para la vista
-                        require_once $base_module_path . 'user_form_view.php'; // Antes Edit_User/index.php (para edición)
+                        require_once $base_module_path . 'index.php'; // Antes Edit_User/user_form_view.php (para edición)
                     } else {
                         echo "<p>Error: ID de usuario no especificado para la edición.</p>";
                         echo '<a href="admin_user_management.php">Volver a la lista</a>';
@@ -85,12 +84,10 @@ $base_module_path = __DIR__ . '/../src/modules/user_management/';
 
                 default:
                     echo "<p>Acción no reconocida.</p>";
-                    require_once $base_module_path . 'index.php'; // Lista de usuarios por defecto
+                    require_once $base_module_path . 'user_form_view.php'; // Lista de usuarios por defecto
                     break;
             }
             ?>
-        </main>
-    </div>
     <script src="assets/js/user_management.js"></script>
 </body>
 </html>

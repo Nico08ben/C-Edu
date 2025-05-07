@@ -76,12 +76,6 @@ $stmt_insert = null;
 
 // $conn->close(); // Cerrar conexión si no se necesita más en este script
 ?>
-<section class="home">
-        <div class="main-content">
-             <div class="header">
-                <h1 id="titulo1-header">ADMIN - CREAR NUEVA TAREA</h1> <?php include '../../PHP/user_info.php'; // Reutilizando user_info.php ?>
-            </div>
-
             <div class="create-task-container">
                 <h2>Ingresar Detalles de la Tarea</h2>
                 <?php if ($mensaje): ?>

@@ -119,11 +119,6 @@ $stmt = null;
 
 // $conn->close(); // Cerrar conexión si no se necesita más en este script
 ?>
-        <div class="main-content">
-            <div class="header">
-                <h1 id="titulo1-header">ADMIN - DETALLES DE TAREA</h1> <?php include '../../PHP/user_info.php'; // Reutilizando user_info.php ?>
-            </div>
-
             <div class="task-detail-container">
                 <?php if ($mensaje): // Mostrar mensajes de error o éxito de la actualización ?>
                     <div class="alert <?php echo (strpos($mensaje, 'Error') !== false) ? 'alert-danger' : 'alert-success'; ?>">

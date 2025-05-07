@@ -19,7 +19,6 @@ if (!isset($_SESSION['csrf_token']) || !isset($_POST['csrf_token']) || $_POST['c
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $conn->set_charset("utf8mb4");
 
     // Validar campo materia, si es realmente obligatorio aquí (parece serlo)
     // if (!isset($_POST["id_materia"]) || empty($_POST['id_materia'])) { // Podrías querer que "sin materia" sea una opción válida (ej. valor 0 o NULL)

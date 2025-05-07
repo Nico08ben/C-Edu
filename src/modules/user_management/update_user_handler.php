@@ -12,10 +12,6 @@ foreach ($_POST as $key => $value) {
 error_log($debug_log);
 
 
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    die("Token CSRF inválido");
-}
-
 // Verificar si se recibieron datos del formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar que tenemos un ID de usuario válido

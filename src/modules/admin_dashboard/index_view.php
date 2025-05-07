@@ -1,31 +1,4 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['id_usuario'])) {
-    header("Location: index.php");
-    exit();
-}
-?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <?php include "../../SIDEBAR/Admin/head.php" ?>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Inicio</title>
-    <link rel="stylesheet" href="inciodocentess.css">
-</head>
-<body>
-    <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
-
-    <section class="home">
-        <main class="main-content">
-            <div class="header">
-                <h1 id="titulo1-header">Bienvenido a C-EDU</h1>
-                <?php include '../../PHP/user_info.php'; ?>
-            </div>
-    
-            <div class="cards-container">
+<div class="cards-container">
                 <div class="card">
                     <div class="card-header">
                         <i class="fa-regular fa-file"></i> Tareas Asignadas
@@ -101,11 +74,4 @@ if (!isset($_SESSION['id_usuario'])) {
                     <button class="btn-ingresar">INGRESAR</button>
                 </div>
             </div>
-        </main>
-    </section>
-    
-
-    
-
-</body>
-</html>
+            
