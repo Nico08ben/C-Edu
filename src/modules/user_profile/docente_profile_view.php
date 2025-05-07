@@ -1,9 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-include '../../conexion.php';
+require_once(__DIR__ . '/../../config/database.php');
 
 $id_usuario = $_SESSION['id_usuario'] ?? null;
 
@@ -23,20 +19,6 @@ if ($id_usuario) {
     $stmt->close();
 }
 ?>
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <?php include "../../SIDEBAR/Docente/head.php" ?>
-    <link rel="stylesheet" href="profile.css">
-    <title>Perfil de Usuario</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <script src="index.js" defer></script>
-</head>
-
-<body>
-    <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
-
     <section class="home">
         <div class="main-content">
             <div class="card-profile">
@@ -121,6 +103,3 @@ if ($id_usuario) {
             </div>
         </div>
     </section>
-</body>
-
-</html>

@@ -6,6 +6,7 @@ require_once(__DIR__ . '/../../config/database.php');
 // Obtener el filtro de la URL si existe
 // Los filtros para el docente serán 'current' (Pendiente/En Proceso) o 'finished' (Terminada/Cancelada/Completada)
 $filter = $_GET['filter'] ?? 'current'; // Valor por defecto: 'current'
+$page_title = "Gestión de Tareas - Docente"; // Título para esta página
 
 // Variables para almacenar el statement y el resultado
 $stmt = null;
@@ -13,12 +14,6 @@ $result = null;
 $query_successful = false; // Bandera para rastrear si la consulta fue exitosa
 
 ?>
-<section class="home">
-        <div class="main-content">
-            <div class="header">
-                <h1 id="titulo1-header">MIS TAREAS</h1> 
-            </div>
-
             <div class="admin-controls">
                 <div class="filter-dropdown">
                     <label for="task-filter">Filtrar Tareas:</label>

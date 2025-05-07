@@ -1,4 +1,3 @@
-<body>
 <section class="home">
     <!-- start: Chat -->
     <section class="chat-section">
