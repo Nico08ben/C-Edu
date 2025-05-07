@@ -1,15 +1,15 @@
 /* Importar fuente de Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
 /* Definición de variables CSS para la paleta de colores */
 :root {
-    --body-color: #E4E9F7;
-    --sidebar-color: #FFF;
-    --primary-color: #40C3A5;
-    /* Nuevo color primario: un tono verde azulado */
-    --primary-color-ligth: #cdfff2;
-    /* Tono claro del nuevo color primario */
-    --toggle-color: #DDD;
+    --body-color: #e4e9f7;
+    --sidebar-color: #fff;
+    --primary-color: #e7bb41;
+    /* Color primario: Amarillo */
+    --primary-color-ligth: #fff3d2;
+    /* Tono claro del amarillo */
+    --toggle-color: #ddd;
     --text-color: #707070;
     --title-color: #333;
 
@@ -21,14 +21,14 @@
 
 /* Estilos para el modo oscuro */
 body.dark {
-    --body-color: #18191A;
+    --body-color: #18191a;
     --sidebar-color: #242526;
-    --primary-color: #3A3B3C;
-    /* Color primario en modo oscuro (puede que quieras ajustarlo) */
-    --primary-color-ligth: #3A3B3C;
-    /* Tono claro en modo oscuro (puede que quieras ajustarlo) */
-    --toggle-color: #FFF;
-    --text-color: #CCC;
+    --primary-color: #3a3b3c;
+    /* Color primario en modo oscuro (manteniendo el del archivo original) */
+    --primary-color-ligth: #3a3b3c;
+    /* Tono claro en modo oscuro (manteniendo el del archivo original) */
+    --toggle-color: #fff;
+    --text-color: #ccc;
     --title-color: #ffffff;
 }
 
@@ -243,8 +243,8 @@ body.dark {
 }
 
 .btn-crear-tarea:hover {
-    background-color: #35a88d;
-    /* Un tono ligeramente más oscuro para hover (ajustado al nuevo color) */
+    background-color: #d4a738;
+    /* Un tono ligeramente más oscuro para hover */
 }
 
 /* Estilos para el contenedor de la tabla de tareas */
@@ -331,7 +331,7 @@ td:last-child {
 }
 
 /* Animaciones para el botón de detalles */
-/* Se mantienen las animaciones existentes, ajustando el color si es necesario */
+/* Se mantienen las animaciones existentes */
 .btn-datalles.animate::before,
 .btn-datalles.animate::after {
     content: "";
@@ -341,41 +341,55 @@ td:last-child {
     height: 100%;
     width: 150%;
     background-repeat: no-repeat;
-
 }
 
 .btn-datalles.animate::before {
     top: -70%;
-    background-image: radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, transparent 20%, var(--primary-color) 20%, transparent 30%),
+    background-image: radial-gradient(circle,
+            var(--primary-color) 20%,
+            transparent 20%),
+        radial-gradient(circle,
+            transparent 20%,
+            var(--primary-color) 20%,
+            transparent 30%),
         radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, transparent 10%, var(--primary-color) 15%, transparent 20%),
+        radial-gradient(circle,
+            transparent 10%,
+            var(--primary-color) 15%,
+            transparent 20%),
         radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
         radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
         radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
         radial-gradient(circle, var(--primary-color) 20%, transparent 20%);
-    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 18% 18%;
-    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
+    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%,
+        18% 18%;
+    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
+        40% 90%, 55% 90%, 70% 90%;
     animation: topBubbles 0.6s ease-in-out forwards;
-
-
 }
 
 @keyframes topBubbles {
     50% {
-        background-position: 0% 80%, 10% 90%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%, 90% 30%;
+        background-position: 0% 80%, 10% 90%, 0% 20%, 10% 40%, 20% 0%, 30% 30%,
+            22% 50%, 50% 50%, 65% 20%, 90% 30%;
     }
 
     100% {
-        background-position: 0% 70%, 0% 10%, 10% 30%, 20% 10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%, 90% 20%;
+        background-position: 0% 70%, 0% 10%, 10% 30%, 20% 10%, 30% 20%, 22% 40%,
+            50% 40%, 65% 10%, 90% 20%;
         background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
     }
 }
 
 .btn-datalles.animate::after {
     bottom: -70%;
-    background-image: radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, transparent 10%, var(--primary-color) 15%, transparent 20%),
+    background-image: radial-gradient(circle,
+            var(--primary-color) 20%,
+            transparent 20%),
+        radial-gradient(circle,
+            transparent 10%,
+            var(--primary-color) 15%,
+            transparent 20%),
         radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
         radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
         radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
@@ -388,49 +402,229 @@ td:last-child {
 
 @keyframes bottomBubbles {
     50% {
-        background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
+        background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,
+            105% 0%;
     }
 
     100% {
-        background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
+        background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,
+            110% 10%;
         background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
     }
-
 }
 
-
-/* Estilos de las tarjetas de tarea (mantener si aún se usan en alguna parte) */
-.task-card {
-    border: 0.5px solid;
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+/* Estilos para el botón de "Crear Nueva Tarea" */
+.btn-crear-tarea {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    /* Usando tu variable primary */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Sombra para el botón */
 }
 
-.task-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
+.btn-crear-tarea:hover {
+    background-color: #d4a738;
+    /* Un tono ligeramente más oscuro para hover */
 }
 
-.task-description {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 15px;
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .home {
+        left: 0;
+        width: 100%;
+    }
+
+    .sidebar.close~.home {
+        left: 0;
+        width: 100%;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .header {
+        width: 100%;
+        left: 0;
+        padding: 15px;
+        flex-direction: column;
+        /* Apila elementos en pantallas pequeñas */
+        height: auto;
+        /* Altura automática */
+    }
+
+    #titulo1-header {
+        margin-bottom: 10px;
+        /* Espacio debajo del título */
+    }
+
+    .profile {
+        left: 0;
+        width: 100%;
+        justify-content: center;
+        /* Centra el contenido del perfil */
+        padding: 10px;
+    }
+
+    .admin-controls {
+        flex-direction: column;
+        /* Apila los controles en pantallas pequeñas */
+        align-items: stretch;
+        /* Estira los elementos para ocupar el ancho */
+        padding: 0;
+        /* Elimina padding horizontal */
+    }
+
+    .filter-dropdown {
+        margin-bottom: 15px;
+        /* Espacio debajo del desplegable */
+        justify-content: center;
+        /* Centra el contenido del desplegable */
+        width: 100%;
+        /* Ocupa todo el ancho disponible */
+    }
+
+    .filter-dropdown select {
+        width: 100%;
+        /* Asegura que el select ocupe todo el ancho en móvil */
+        min-width: unset;
+        /* Elimina el ancho mínimo en móvil */
+    }
+
+    .admin-actions {
+        text-align: center;
+        /* Centra el botón de crear tarea */
+        width: 100%;
+        /* Ocupa todo el ancho disponible */
+    }
+
+    .btn-crear-tarea {
+        width: 100%;
+        /* Estira el botón para ocupar todo el ancho */
+        text-align: center;
+        /* Centra el texto del botón */
+    }
+
+    .tabla-contenedor {
+        padding: 5px;
+    }
+
+    th,
+    td {
+        padding: 8px 5px;
+        /* Reducir padding en celdas */
+        font-size: 0.9rem;
+        /* Reducir tamaño de fuente en celdas */
+    }
+
+    .btn-datalles {
+        padding: 6px 10px;
+        /* Reducir padding del botón */
+        font-size: 0.9rem;
+        /* Reducir tamaño de fuente del botón */
+    }
 }
 
-.task-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    color: #666;
+/* Estilos para Select2 para que se ajuste al diseño */
+.select2-container--default .select2-selection--single {
+    height: 38px;
+    /* Ajustar altura para que coincida con otros inputs */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 12px;
+    background-color: var(--body-color);
+    /* Fondo del select */
 }
 
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 24px;
+    /* Centrar texto verticalmente */
+    color: var(--text-color);
+    /* Color de texto */
+}
 
-/* Estilos para el formulario de creación de tarea (Docente) */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px;
+    /* Ajustar altura de la flecha */
+}
+
+.select2-dropdown {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--sidebar-color);
+    /* Fondo del dropdown */
+}
+
+.select2-results__option {
+    padding: 8px 12px;
+    color: var(--text-color);
+    /* Color de texto de las opciones */
+}
+
+.select2-results__option--highlighted[aria-selected] {
+    background-color: var(--primary-color-ligth);
+    /* Fondo de la opción resaltada */
+    color: var(--title-color);
+    /* Color de texto de la opción resaltada */
+}
+
+.select2-search--dropdown .select2-search__field {
+    border: 1px solid #ccc;
+    padding: 8px;
+    background-color: var(--body-color);
+    /* Fondo del campo de búsqueda */
+    color: var(--text-color);
+    /* Color de texto del campo de búsqueda */
+}
+
+/* Estilos para Select2 en modo oscuro */
+body.dark .select2-container--default .select2-selection--single {
+    background-color: var(--primary-color-ligth);
+    /* Fondo oscuro */
+    border-color: #555;
+    /* Borde más oscuro */
+}
+
+body.dark .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: var(--text-color);
+    /* Color de texto oscuro */
+}
+
+body.dark .select2-dropdown {
+    background-color: var(--sidebar-color);
+    /* Fondo oscuro del dropdown */
+    border-color: #555;
+    /* Borde más oscuro */
+}
+
+body.dark .select2-results__option {
+    color: var(--text-color);
+    /* Color de texto oscuro */
+}
+
+body.dark .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--primary-color);
+    /* Fondo resaltado oscuro */
+    color: white;
+    /* Color de texto resaltado oscuro */
+}
+
+body.dark .select2-search--dropdown .select2-search__field {
+    background-color: var(--body-color);
+    /* Fondo oscuro */
+    color: var(--text-color);
+    /* Color de texto oscuro */
+    border-color: #555;
+    /* Borde más oscuro */
+}
+
+/* Estilos para el formulario de creación de tarea */
 .create-task-container {
     background-color: var(--sidebar-color);
     /* Usando color de sidebar para el contenedor */
@@ -468,6 +662,7 @@ td:last-child {
 .form-group input[type="text"],
 .form-group input[type="date"],
 .form-group select,
+/* Incluir select aquí para estilos generales */
 .form-group textarea {
     width: 100%;
     padding: 8px;
@@ -485,6 +680,7 @@ td:last-child {
 body.dark .form-group input[type="text"],
 body.dark .form-group input[type="date"],
 body.dark .form-group select,
+/* Incluir select aquí para modo oscuro */
 body.dark .form-group textarea {
     background-color: var(--primary-color-ligth);
     /* Fondo oscuro para inputs en modo oscuro */
@@ -521,8 +717,8 @@ body.dark .form-group textarea {
 }
 
 .btn-submit-task:hover {
-    background-color: #35a88d;
-    /* Tono más oscuro para hover (ajustado al nuevo color) */
+    background-color: #d4a738;
+    /* Tono más oscuro para hover */
 }
 
 .btn-cancel {
@@ -545,7 +741,6 @@ body.dark .form-group textarea {
     background-color: #bbb;
     /* Tono más oscuro para hover */
 }
-
 
 /* Estilos responsivos */
 @media (max-width: 768px) {
@@ -610,7 +805,6 @@ body.dark .form-group textarea {
         /* Centrar texto */
     }
 
-
     /* Estilos responsivos para los controles del administrador/docente */
     .admin-controls {
         flex-direction: column;
@@ -652,7 +846,6 @@ body.dark .form-group textarea {
         text-align: center;
         /* Centra el texto del botón */
     }
-
 
     .tabla-contenedor {
         padding: 5px;
@@ -696,10 +889,26 @@ body.dark .form-group textarea {
 
     .form-group input[type="text"],
     .form-group input[type="date"],
-    .form-group select,
     .form-group textarea {
         padding: 6px;
         font-size: 0.9rem;
+    }
+
+    /* Ajustes responsivos para Select2 */
+    .select2-container--default .select2-selection--single {
+        height: 32px;
+        /* Ajustar altura en móvil */
+        padding: 4px 8px;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 24px;
+        /* Ajustar line-height */
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 30px;
+        /* Ajustar altura de la flecha */
     }
 
     .form-actions {
@@ -715,5 +924,4 @@ body.dark .form-group textarea {
         /* Espacio entre los botones */
         margin-right: 5px;
     }
-
 }
