@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = (int)$_POST['id_usuario'];
     $password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
    
-    $stmt = $conn->prepare("UPDATE usuario SET contraseña_usuario = ? WHERE id_usuario = ?");
+    $stmt = $conn->prepare("UPDATE usuario SET contrasena_usuario = ? WHERE id_usuario = ?");
     $stmt->bind_param("si", $password, $id);
    
     if ($stmt->execute()) {

@@ -28,7 +28,7 @@ if (isset($data["action"])) {
         $rol = (int)$data["id_rol"];
 
         // Corrección: Nombre de la tabla 'usuario' y columnas
-        $sql = "INSERT INTO usuario (nombre_usuario, email_usuario, contraseña_usuario, telefono_usuario, id_institucion, id_rol) 
+        $sql = "INSERT INTO usuario (nombre_usuario, email_usuario, contrasena_usuario, telefono_usuario, id_institucion, id_rol) 
                 VALUES ('$nombre', '$email', '$password', '$telefono', $institucion, $rol)";
 
         if ($conn->query($sql) === TRUE) {

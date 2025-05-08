@@ -9,4 +9,4 @@
 <link rel="shortcut icon" href="/C-Edu/SIDEBAR/favicon/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/C-Edu/SIDEBAR/favicon/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-title" content="C-Edu" />
-<link rel="manifest" href="/C-Edu/SIDEBAR/favicon/site.webmanifest" />>
+<link rel="manifest" href="/C-Edu/SIDEBAR/favicon/site.webmanifest" />

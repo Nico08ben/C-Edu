@@ -196,3 +196,61 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 })
 // end: Conversation
+document.getElementById('imageInput').addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file || !file.type.startsWith('image/')) {
+        alert('Solo se permiten imágenes.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    fetch('upload.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            insertImageMessage(data.imageUrl);
+        } else {
+            alert('No se pudo subir la imagen.');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error al subir la imagen.');
+    });
+});
+
+function insertImageMessage(imageUrl) {
+    const messageList = document.querySelector('#conversation-1 .conversation-wrapper');
+    const li = document.createElement('li');
+    li.className = 'conversation-item';
+    li.innerHTML = `
+        <div class="conversation-item-side">
+            <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?..." alt="">
+        </div>
+        <div class="conversation-item-content">
+            <div class="conversation-item-wrapper">
+                <div class="conversation-item-box">
+                    <div class="conversation-item-text">
+                        <img src="${imageUrl}" style="max-width: 200px; border-radius: 8px;" />
+                        <div class="conversation-item-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    </div>
+                    <div class="conversation-item-dropdown">
+                                    <button type="button" class="conversation-item-dropdown-toggle"><i class="ri-more-2-line"></i></button>
+                                    <ul class="conversation-item-dropdown-list">
+                                        <li><a href="#" class="edit-btn"><i class="ri-pencil-fill"></i>Edit</a></li>
+                                        <li><a href="#" class="forward-btn"><i class="ri-share-forward-line"></i>Forward</a></li>
+                                        <li><a href="#" class="Delete-btn"><i class="ri-delete-bin-line"></i>Delete</a></li>
+                                    </ul>
+                                </div>
+                </div>
+            </div>
+        </div>`;
+    messageList.appendChild(li); // Inserta el nuevo mensaje en el DOM
+    messageList.scrollTop = messageList.scrollHeight; // Asegura que la conversación se desplace al final
+    
+}

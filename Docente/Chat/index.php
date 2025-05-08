@@ -10,7 +10,9 @@
     <title>Chat</title>
 </head>
 <body>
-<?php include "../../SIDEBAR/Docente/sidebar.php" ?>
+    <?php 
+    include "../../SIDEBAR/Docente/sidebar.php" 
+    ?>
 <section class="home">
     <!-- start: Chat -->
     <section class="chat-section">

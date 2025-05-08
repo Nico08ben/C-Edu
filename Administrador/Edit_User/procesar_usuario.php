@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $materia = (int) $_POST["id_materia"];
 
     // Corrección en la sintaxis de VALUES y número de parámetros
-    $sql = "INSERT INTO usuario (email_usuario, contraseña_usuario, nombre_usuario, telefono_usuario, id_institucion, id_rol, id_materia) 
+    $sql = "INSERT INTO usuario (email_usuario, contrasena_usuario, nombre_usuario, telefono_usuario, id_institucion, id_rol, id_materia) 
         VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);

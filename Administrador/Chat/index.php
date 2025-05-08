@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="upload.php">
     <title>Chat</title>
 </head>
 <body>
@@ -227,7 +228,9 @@
                         <button type="button" class="cancel-reply"><i class="ri-close-line"></i></button>
                     </div>
                     <div class="conversation-form">
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
                         <button type="button" class="conversation-form-button"><i class="ri-emotion-line"></i></button>
+                        <button type="button" class="conversation-form-file" onclick="document.getElementById('imageInput').click()"><i class="ri-image-line"></i></button>
                         <div class="conversation-form-group">
                             <textarea class="conversation-form-input" rows="1" placeholder="Type here..."></textarea>
                             <button type="button" class="conversation-form-record"><i class="ri-mic-line"></i></button>
