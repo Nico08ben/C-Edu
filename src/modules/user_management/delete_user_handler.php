@@ -1,7 +1,17 @@
 <?php
-// if (session_status() === PHP_SESSION_NONE) { session_start(); } // Ya iniciado por el script que lo incluye
+// if (session_status() === PHP_SESSION_NONE) { session_start(); } // Ya iniciado por admin_user_management.php
 
 require_once(__DIR__ . '/../../config/database.php');
+
+// INICIO VALIDACIÓN CSRF
+if (!isset($_SESSION['csrf_token']) || !isset($_POST['csrf_token']) || empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    $_SESSION['user_management_message'] = "Error de seguridad: Token CSRF inválido o ausente.";
+    $_SESSION['user_management_message_type'] = "error";
+    // error_log("Fallo de CSRF en delete_user_handler.php. Sesión: ".$_SESSION['csrf_token']." POST: ".$_POST['csrf_token']);
+    header('Location: ../../public/admin_user_management.php'); // Ajusta la ruta si es necesario
+    exit();
+}
+// FIN VALIDACIÓN CSRF
 
 if (!$conn) {
     // $_SESSION['user_management_message'] = "Error crítico de conexión.";
@@ -11,16 +21,6 @@ if (!$conn) {
     die("Error crítico de conexión."); // Temporal, idealmente usar sesión/redirección
 }
 
-// Nota: Idealmente, la validación CSRF también debería estar aquí si este script
-// se puede llamar directamente de alguna forma, aunque si es solo incluido por
-// public/admin_user_management.php y esa página tiene su propia lógica CSRF para acciones POST,
-// podría ser suficiente. Por seguridad, añadirlo aquí no estaría de más.
-// if (!isset($_SESSION['csrf_token']) || !isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-//     $_SESSION['user_management_message'] = "Error de seguridad: Token CSRF inválido.";
-//     $_SESSION['user_management_message_type'] = "error";
-//     header('Location: admin_user_management.php');
-//     exit();
-// }
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

@@ -278,15 +278,19 @@ document.addEventListener("DOMContentLoaded", () => {
             if (userId) {
                 const formData = new FormData();
                 formData.append('id_usuario', userId);
-                // Considera añadir el token CSRF si tus handlers lo requieren para POST vía AJAX
-                // formData.append('csrf_token', document.querySelector('input[name="csrf_token"]').value);
-
-
-                // Antes: "eliminar_usuario.php"
-                // Ahora: "delete_user_handler.php"
-                fetch(`${basePath}delete_user_handler.php`, {
+                // Obtener el token CSRF del input hidden en el formulario principal (user_form_view.php)
+                const csrfTokenInput = document.querySelector('input[name="csrf_token"]');
+                if (csrfTokenInput) {
+                    formData.append('csrf_token', csrfTokenInput.value);
+                } else {
+                    alert('Error: No se encontró el token CSRF. La operación no puede continuar.');
+                    console.error('Token CSRF no encontrado en el DOM.');
+                    return; // Detener si no hay token
+                }
+        
+                fetch(`${basePath}delete_user_handler.php`, { // Asegúrate que basePath sea correcto
                     method: "POST",
-                    body: formData, // Enviar como FormData para que $_POST funcione bien en PHP
+                    body: formData,
                 })
                 .then(response => {
                     if (!response.ok) {
