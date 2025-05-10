@@ -460,3 +460,105 @@ body {
 }
 
 
+/* public/assets/css/docente_calendario.css */
+/* Estilos existentes de Docente/Calendario/calendario.css ... */
+
+/* Ajustes para la nueva estructura */
+.main-content .container-calendario {
+    max-width: 1200px; /* O el ancho que prefieras */
+    margin: 0 auto; /* Centrar el contenido del calendario */
+    padding: 20px;
+}
+
+.main-content .header-calendario-controles { /* Renombrado para evitar conflicto con .header general */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0px; /* Ajustar padding si es necesario */
+    background-color: var(--sidebar-color); /* Para consistencia con otros headers */
+    border-bottom: 1px solid var(--border-color, #e0e0e0);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+/* ... (resto de los estilos de calendario.css) ... */
+
+/* Asegurar que los modales tengan un z-index alto y se vean bien */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050; /* Asegurar que esté sobre otros elementos como el sidebar */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background-color: var(--sidebar-color); /* Usar variable para modo oscuro */
+    color: var(--text-color); /* Usar variable para modo oscuro */
+    margin: 10% auto;
+    padding: 25px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 550px; /* Ajustar si es necesario */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative; /* Para el botón de cerrar */
+}
+
+.modal-content .close-modal-btn { /* Estilo para el botón de cerrar específico del modal */
+    color: var(--text-color);
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.modal-content .close-modal-btn:hover {
+    color: var(--primary-color); /* O un color de acento */
+}
+
+.modal-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--primary-color-ligth);
+    padding-bottom: 10px;
+}
+.modal-content p i, .modal-content label i {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+.form-group input, 
+.form-group textarea,
+.form-group select {
+    background-color: var(--body-color); /* Fondo de inputs */
+    color: var(--text-color); /* Texto de inputs */
+    border: 1px solid var(--toggle-color); /* Borde de inputs */
+}
+
+/* Botón de editar en el modal de visualización */
+.modal-content .btn-edit {
+    background-color: var(--blue-500, #3b82f6); /* Un color azul como ejemplo */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    margin-left: 10px; /* Espacio si está al lado de otro botón */
+    display: inline-flex; /* Para alinear icono y texto */
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s;
+}
+
+.modal-content .btn-edit:hover {
+    background-color: var(--blue-600, #2563eb);
+}
