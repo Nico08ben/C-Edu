@@ -81,12 +81,6 @@ body.dark {
     background-color: var(--sidebar-color);
     /* Usando variable de color de sidebar */
     display: flex;
-    position: relative;
-    top: -35px;
-    left: -30px;
-    /* Ajustar ancho para que sea flexible */
-    width: calc(100% + 60px);
-    height: 80px;
     justify-content: space-between;
     align-items: center;
     /* Establecer margen inferior */
@@ -99,76 +93,13 @@ body.dark {
 
 /* Estilos del título principal en el encabezado */
 #titulo1-header {
-    color: var(--text-color);
-    /* Usando variable de color de texto */
+    color: var(--title-color); /* Ajusta si el color de texto por defecto no funciona */
     font-family: "Rubik", serif;
-    font-weight: normal;
+    font-weight: bold; /* Quizás hacerlo bold? */
+    font-size: 1.5rem; /* Ajusta tamaño */
+    margin: 0; /* Quitar margen por defecto del h1/h2 si es necesario */
 }
 
-/* Estilos del perfil de usuario en el encabezado */
-.profile {
-    position: relative;
-    /* Ajustar posición para que sea flexible */
-    left: 0;
-    /* Eliminar left fijo */
-    width: auto;
-    /* Ancho automático */
-    height: 50px;
-    display: flex;
-    text-align: end;
-    align-items: center;
-    padding: 0 20px;
-    /* Ajustar padding */
-    border-radius: 10px;
-    gap: 20px;
-}
-
-/* Estilos de la información de texto dentro del perfil */
-.profile-info h3 {
-    color: var(--title-color);
-    /* Usando variable de color de título */
-    font-weight: normal;
-}
-
-.profile-info {
-    color: var(--text-color);
-    /* Usando variable de color de texto */
-}
-
-/* Estilos de la imagen del perfil */
-.profile img {
-    /* Establecer ancho y alto */
-    width: 40px;
-    height: 40px;
-    /* Establecer forma circular */
-    border-radius: 50%;
-}
-
-/* Estilos para el icono de campana en el perfil */
-.profile .fa-regular.fa-bell {
-    background-color: var(--primary-color);
-    /* Usando variable de color primario */
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    text-align: center;
-    padding: 9px;
-    color: white;
-}
-
-/* Estilos para el icono de usuario en el perfil */
-.profile .fa-solid.fa-user {
-    font-size: 25px;
-    text-align: center;
-    padding: 4px;
-    border-radius: 50%;
-    height: 35px;
-    width: 35px;
-    color: gray;
-    /* Considera usar una variable si este color es parte de la paleta */
-    background-color: white;
-    /* Considera usar una variable si este color es parte de la paleta */
-}
 
 /* Contenedor para los controles del administrador/docente (filtro y botón crear) */
 .admin-controls {
