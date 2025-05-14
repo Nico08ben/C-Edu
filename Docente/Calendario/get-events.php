@@ -1,29 +1,32 @@
 <?php
-session_start();
-include "db.php"; // Tu conexión PDO
+session_start(); // FUNDAMENTAL: Iniciar sesión para acceder a $_SESSION['id_usuario']
+include "db.php"; // Tu conexión a la base de datos (PDO en este ejemplo)
 
 header('Content-Type: application/json');
-$eventos = [];
+$eventos = []; // Inicializar como array vacío
 
+// Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['id_usuario'])) {
-    echo json_encode([]); // Devolver array vacío si no está autenticado para evitar error en FullCalendar
+    // Si no está logueado, no debería poder ver eventos. Devolver un array vacío o un error.
+    echo json_encode($eventos); // Devolver array vacío para que FullCalendar no falle
     exit;
 }
 
 $current_user_id = $_SESSION['id_usuario'];
 
 try {
-    // Seleccionar la nueva columna color_evento
+    // Consulta SQL MODIFICADA para filtrar por id_responsable
+    // También se incluye color_evento si ya lo añadiste a tu tabla
     $stmt = $conn->prepare(
         "SELECT id_evento, tipo_evento, asignacion_evento, fecha_evento, hora_evento, color_evento
          FROM evento
-         WHERE id_responsable = :current_user_id"
+         WHERE id_responsable = :current_user_id" // <<<--- ESTA ES LA LÍNEA CLAVE
     );
     $stmt->bindParam(':current_user_id', $current_user_id, PDO::PARAM_INT);
     $stmt->execute();
 
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $hora_formateada = substr($row["hora_evento"], 0, 5); // Tomar HH:MM
+        $hora_formateada = substr($row["hora_evento"], 0, 5); // Tomar solo HH:MM
         $start_datetime = $row["fecha_evento"] . "T" . $hora_formateada;
 
         $eventos[] = [
@@ -31,15 +34,14 @@ try {
             "title"         => $row["tipo_evento"],
             "start"         => $start_datetime,
             "description"   => $row["asignacion_evento"],
-            "backgroundColor" => $row["color_evento"], // Usar el color de la BD
-            // "borderColor" => $row["color_evento"] // Opcional: para el borde
-            // "allDay" => ($row["hora_evento"] === "00:00:00" || $row["hora_evento"] === "00:00") // Lógica simple para allDay
+            "backgroundColor" => $row["color_evento"], // Se usa el color de la BD
+            // "allDay" => ($hora_formateada === "00:00") // Una lógica simple si tienes eventos de día completo
         ];
     }
     echo json_encode($eventos);
 
 } catch (PDOException $e) {
-    error_log("Error al obtener eventos: " . $e->getMessage());
-    echo json_encode([]); // Devolver array vacío en caso de error
+    error_log("Error al obtener eventos para el usuario " . $current_user_id . ": " . $e->getMessage());
+    echo json_encode($eventos); // Devolver array vacío en caso de error para no romper FullCalendar
 }
 ?>
