@@ -3,7 +3,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-require_once 'conexion.php'; // $conn estará disponible aquí
+require_once __DIR__ . '/../../conexion.php';
 
 header('Content-Type: application/json');
 
@@ -14,9 +14,9 @@ if (!isset($_SESSION['id_usuario'])) {
     exit;
 }
 
-$idUsuario = (int)$_SESSION['id_usuario'];
+$idUsuario = (int) $_SESSION['id_usuario'];
 $soloNoLeidas = isset($_GET['estado']) && $_GET['estado'] === 'no_leida';
-$limite = isset($_GET['limite']) ? (int)$_GET['limite'] : 10;
+$limite = isset($_GET['limite']) ? (int) $_GET['limite'] : 10;
 
 $sql = "SELECT id_notificacion, tipo_notificacion, mensaje, enlace, fecha_notificacion, estado_notificacion
         FROM notificacion
@@ -57,14 +57,14 @@ if ($stmt->execute()) {
 $totalNoLeidas = 0;
 $sqlCount = "SELECT COUNT(*) as total_no_leidas FROM notificacion WHERE id_usuario = ? AND estado_notificacion = 'no leída'";
 $stmtCount = $conn->prepare($sqlCount);
-if($stmtCount) {
+if ($stmtCount) {
     $stmtCount->bind_param('i', $idUsuario);
-    if($stmtCount->execute()){
+    if ($stmtCount->execute()) {
         $resultCount = $stmtCount->get_result();
         $conteo = $resultCount->fetch_assoc();
         $totalNoLeidas = $conteo['total_no_leidas'] ?? 0;
     } else {
-         error_log("Error al ejecutar conteo de notificaciones para usuario $idUsuario: " . $stmtCount->error);
+        error_log("Error al ejecutar conteo de notificaciones para usuario $idUsuario: " . $stmtCount->error);
     }
     $stmtCount->close();
 } else {
@@ -72,6 +72,6 @@ if($stmtCount) {
 }
 
 
-echo json_encode(['notificaciones' => $notificaciones, 'total_no_leidas' => (int)$totalNoLeidas]);
+echo json_encode(['notificaciones' => $notificaciones, 'total_no_leidas' => (int) $totalNoLeidas]);
 $conn->close();
 ?>

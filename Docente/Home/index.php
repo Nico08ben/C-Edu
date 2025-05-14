@@ -18,12 +18,12 @@ if (!isset($_SESSION['id_usuario'])) {
     <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
 
     <section class="home">
-        <main class="main-content">
-            <div class="header">
+    <div class="header">
                 <h1 id="titulo1-header">Bienvenido a C-EDU</h1>
                 <?php include '../../PHP/user_info.php'; ?>
             </div>
-    
+        <main class="main-content">
+        
             <div class="cards-container">
                 <div class="card">
                     <div class="card-header">
