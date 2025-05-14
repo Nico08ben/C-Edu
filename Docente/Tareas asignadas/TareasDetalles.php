@@ -322,11 +322,10 @@ $stmt = null;
 
 <body>
     <?php include "../../SIDEBAR/Docente/sidebar.php"; ?> <section class="home">
-        <div class="main-content">
-            <div class="header">
+    <div class="header">
                 <h1 id="titulo1-header">DOCENTE - DETALLES DE TAREA</h1> <?php include '../../PHP/user_info.php'; // Reutilizando user_info.php ?>
             </div>
-
+        <div class="main-content">
             <div class="task-detail-container">
                  <?php if ($success_message): // Mostrar mensaje de éxito de la actualización de estado ?>
                     <div class="alert alert-success">

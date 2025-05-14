@@ -10,15 +10,10 @@ if (!isset($_SESSION['id_usuario'])) {
 require_once(__DIR__ . '/../../conexion.php');
 
 // 2. INCLUIR LA FUNCIÓN PARA CREAR NOTIFICACIONES
-//    Asegúrate que la ruta a crear_notificacion.php sea correcta.
-//    Si CrearTareaDocente.php está en la raíz y la API en PHP/api/:
-//    require_once(__DIR__ . '/PHP/api/crear_notificacion.php');
-//    Si CrearTareaDocente.php está en una carpeta y PHP/api/ está en otra:
-//    Ajusta los '../' según sea necesario. Por ejemplo, si ambos están dentro de una carpeta "Docente":
-//    Asumiendo que 'PHP/api/crear_notificacion.php' es la ubicación correcta relativa a la raíz del proyecto,
-//    y este script (CrearTareaDocente.php) está en una carpeta, por ejemplo, 'tareas_docente/'
-//    Si 'PHP/' es una carpeta en la raíz del proyecto:
-require_once(__DIR__ . '/../../PHP/api/crear_notificacion.php'); // Ajusta esta ruta cuidadosamente
+// Esta ruta parece ser la correcta según el error anterior que solucionamos.
+// (Significa que desde 'C:\xampp\htdocs\C-Edu\Docente\Tareas asignadas\' sube dos niveles a 'C:\xampp\htdocs\C-Edu\'
+// y luego entra a 'PHP/api/crear_notificacion.php')
+require_once(__DIR__ . '/../../PHP/api/crear_notificacion.php');
 
 $mensaje = ''; // Variable para mostrar mensajes de éxito o error
 $stmt_insert = null; // Inicializar statement de inserción a null
@@ -55,23 +50,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // ----- ¡AQUÍ ES DONDE CREAS LA NOTIFICACIÓN! -----
                     $tipo_notificacion_param = 'nueva_tarea_personal'; // Tipo específico para auto-asignación
                     $mensaje_notif_param = "Has creado una nueva tarea para ti: " . substr($instruccion, 0, 100) . (strlen($instruccion) > 100 ? "..." : "");
-                    // El enlace podría llevar al usuario a una página para ver los detalles de esa tarea.
-                    // Ajusta este enlace según la estructura de tu sitio y cómo visualizas las tareas.
-                    // Si CrearTareaDocente.php está en una carpeta "tareas_docente", y la vista de tareas está en el mismo nivel:
-                    $enlace_notif_param = "ver_tarea.php?id_tarea=" . $id_tarea_creada; // Ejemplo, ajusta la ruta
+
+                    // --- MODIFICACIÓN DEL ENLACE AQUÍ ---
+                    // Asumiendo que TareasDetalles.php está en la misma carpeta que este script (CrearTareaDocente.php)
+                    // que es accesible vía web en /C-Edu/Docente/Tareas asignadas/
+                    $ruta_url_base_para_tareas_docente = "/C-Edu/Docente/Tareas asignadas/"; // VERIFICA ESTA RUTA URL
+                    $enlace_notif_param = $ruta_url_base_para_tareas_docente . "TareasDetalles.php?id_tarea=" . $id_tarea_creada;
+                    // --- FIN DE LA MODIFICACIÓN DEL ENLACE ---
 
                     // Llamar a la función crearNotificacion()
-                    // $conn (conexión mysqli) ya está disponible.
-                    // $id_usuario_asignado_para_tarea es el destinatario (el mismo docente en este caso).
                     if (crearNotificacion($conn, $id_usuario_asignado_para_tarea, $tipo_notificacion_param, $mensaje_notif_param, $enlace_notif_param)) {
-                        // Notificación creada exitosamente (puedes loggear esto si quieres)
-                        error_log("Notificación de auto-asignación creada para docente $id_usuario_asignado_para_tarea por nueva tarea $id_tarea_creada.");
+                        error_log("Notificación de auto-asignación creada para docente $id_usuario_asignado_para_tarea por nueva tarea $id_tarea_creada. Enlace: $enlace_notif_param");
                     } else {
-                        // Hubo un error al crear la notificación (la función crearNotificacion ya loggea el error)
                         error_log("FALLO al crear notificación de auto-asignación para docente $id_usuario_asignado_para_tarea por tarea $id_tarea_creada.");
                     }
                     // ----- FIN DE LA CREACIÓN DE LA NOTIFICACIÓN -----
-
 
                     // Opcional: Redirigir a la lista de tareas del docente después de crear
                     // header('Location: index.php');
@@ -95,8 +88,7 @@ if ($stmt_insert instanceof mysqli_stmt) {
 $stmt_insert = null;
 // --- FIN: Lógica de cierre de statement mejorada ---
 
-// $conn->close(); // No cierres la conexión aquí si la necesitas más abajo en el HTML o en includes.
-// Generalmente se cierra al final de la ejecución del script principal o es manejada por PHP.
+// $conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -107,37 +99,29 @@ $stmt_insert = null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DOCENTE - Crear Tarea</title>
     <?php
-    // Ajustar la ruta para head.php. Si CrearTareaDocente.php está en la raíz:
-    // include __DIR__ . "/SIDEBAR/Docente/head.php";
-    // Si CrearTareaDocente.php está, por ejemplo, en una carpeta "tareas_docente/"
-    // y SIDEBAR está un nivel arriba:
-    include __DIR__ . "/../../SIDEBAR/Docente/head.php"; // Parece que esta es tu estructura actual
+    include __DIR__ . "/../../SIDEBAR/Docente/head.php";
     ?>
     <link rel="stylesheet" href="tareascss.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* Estilos específicos para el formulario de creación de tarea */
+        /* Estilos específicos para el formulario de creación de tarea ... (sin cambios) */
         .create-task-container {
             background-color: var(--sidebar-color);
-            /* Usando color de sidebar para el contenedor */
             padding: 25px;
             margin-top: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             max-width: 600px;
-            /* Limitar ancho máximo para el formulario */
             margin-left: auto;
             margin-right: auto;
         }
 
         .create-task-container h2 {
             color: var(--primary-color);
-            /* Usando color primario para el título */
             margin-bottom: 20px;
             border-bottom: 2px solid var(--primary-color-ligth);
-            /* Usando color primario ligero para el borde */
             padding-bottom: 10px;
         }
 
@@ -150,7 +134,6 @@ $stmt_insert = null;
             margin-bottom: 5px;
             font-weight: bold;
             color: var(--text-color);
-            /* Usando color de texto */
         }
 
         .form-group input[type="text"],
@@ -160,14 +143,10 @@ $stmt_insert = null;
             width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
-            /* Borde gris */
             border-radius: 4px;
             box-sizing: border-box;
-            /* Incluir padding y border en el tamaño total */
             color: var(--text-color);
-            /* Color de texto para inputs */
             background-color: var(--body-color);
-            /* Fondo ligero para inputs */
         }
 
         body.dark .form-group input[type="text"],
@@ -175,29 +154,23 @@ $stmt_insert = null;
         body.dark .form-group select,
         body.dark .form-group textarea {
             background-color: var(--primary-color-ligth);
-            /* Fondo oscuro para inputs en modo oscuro */
             border-color: #555;
-            /* Borde más oscuro en modo oscuro */
             color: var(--text-color);
-            /* Color de texto en modo oscuro */
         }
 
         .form-group textarea {
             resize: vertical;
-            /* Permitir redimensionamiento vertical */
             min-height: 100px;
         }
 
         .form-actions {
             margin-top: 20px;
             text-align: right;
-            /* Alinea los botones a la derecha */
         }
 
         .btn-submit-task {
             padding: 10px 20px;
             background: var(--primary-color);
-            /* Usando color primario */
             color: white;
             border: none;
             font-size: 16px;
@@ -210,15 +183,12 @@ $stmt_insert = null;
 
         .btn-submit-task:hover {
             background-color: #d4a738;
-            /* Tono más oscuro para hover */
         }
 
         .btn-cancel {
             padding: 10px 20px;
             background: #ccc;
-            /* Color gris para cancelar */
             color: var(--title-color);
-            /* Color de título para texto */
             border: none;
             font-size: 16px;
             border-radius: 5px;
@@ -231,7 +201,6 @@ $stmt_insert = null;
 
         .btn-cancel:hover {
             background-color: #bbb;
-            /* Tono más oscuro para hover */
         }
 
         .alert-success {
@@ -258,18 +227,16 @@ $stmt_insert = null;
 
 <body>
     <?php
-    // Ajustar la ruta para sidebar.php
-    include __DIR__ . "/../../SIDEBAR/Docente/sidebar.php"; // Parece que esta es tu estructura actual
+    include __DIR__ . "/../../SIDEBAR/Docente/sidebar.php";
     ?>
     <section class="home">
-        <div class="header">
-            <h1 id="titulo1-header">DOCENTE - CREAR NUEVA TAREA</h1>
-            <?php
-            // Ajustar la ruta para user_info.php
-            include __DIR__ . '/../../PHP/user_info.php'; // Si user_info.php está en la carpeta PHP/
-            ?>
-        </div>
         <div class="main-content">
+            <div class="header">
+                <h1 id="titulo1-header">DOCENTE - CREAR NUEVA TAREA</h1>
+                <?php
+                include __DIR__ . '/../../PHP/user_info.php';
+                ?>
+            </div>
             <div class="create-task-container">
                 <h2>Ingresar Detalles de la Tarea</h2>
                 <?php if ($mensaje): ?>
