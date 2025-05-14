@@ -46,19 +46,18 @@
 
 /* Estilos del encabezado */
 .header {
-    background-color: var(--sidebar-color);
-    display: flex;
-    position: relative;
-    top: -55px;
-    left: -110px;
-    width: 1175px;
     height: 80px;
+    background-color: var(--sidebar-color);
+    /* Usando variable de color de sidebar */
+    display: flex;
     justify-content: space-between;
     align-items: center;
     /* Establecer margen inferior */
     margin-bottom: 30px;
     padding-right: 30px;
     padding-left: 30px;
+    box-sizing: border-box;
+    /* Incluir padding en el cálculo del ancho */
 }
 #titulo1-header{
     color: var(--text-color);

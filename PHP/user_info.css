@@ -110,7 +110,8 @@
     /* text-align: left; */ /* Alineación por defecto a la izquierda */
     line-height: 1.3;
     /* Quitar margen si gap es suficiente */
-    /* margin: 0 10px; */
+    margin: 0 10px;
+    
 }
 
 #user-profile-box .name {
