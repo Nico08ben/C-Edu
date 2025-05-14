@@ -3,7 +3,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-require_once 'conexion.php'; // $conn estará disponible aquí
+require_once __DIR__ . '/../../conexion.php';
 
 header('Content-Type: application/json');
 

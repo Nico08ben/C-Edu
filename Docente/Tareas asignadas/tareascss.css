@@ -78,13 +78,13 @@ body.dark {
 
 /* Estilos del encabezado principal */
 .header {
+    height: 80px;
     background-color: var(--sidebar-color);
     /* Usando variable de color de sidebar */
     display: flex;
     justify-content: space-between;
     align-items: center;
     /* Establecer margen inferior */
-    margin-bottom: 30px;
     padding-right: 30px;
     padding-left: 30px;
     box-sizing: border-box;
