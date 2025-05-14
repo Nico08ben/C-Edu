@@ -48,6 +48,20 @@ document.querySelectorAll('.conversation-back').forEach(function(item) {
 })
 
 document.addEventListener('DOMContentLoaded', function() {
+    const emojiBtn = document.querySelector('.emoji-btn')
+const emojiPicker = document.querySelector('emoji-picker')
+const input = document.querySelector('.conversation-form-input')
+
+// Mostrar/ocultar picker
+emojiBtn.addEventListener('click', () => {
+    emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none'
+})
+
+// Insertar emoji al input
+emojiPicker.addEventListener('emoji-click', event => {
+    input.value += event.detail.unicode
+    input.focus()
+})
     let activeReplyPreview = null
     let replyingToElement = null
 
@@ -86,15 +100,26 @@ document.addEventListener('DOMContentLoaded', function() {
         // Responder mensaje
         else if (target.classList.contains('forward-btn')) {
             const conversationItem = target.closest('.conversation-item')
-            const messageText = conversationItem.querySelector('p').innerText
+            let replyContent = ''
+const textElement = conversationItem.querySelector('p')
+const imgElement = conversationItem.querySelector('.message-image')
+
+if (imgElement) {
+    replyContent = `<img src="${imgElement.src}" style="max-width: 100px; max-height: 100px; border-radius: 4px;">`
+}
+if (textElement) {
+    replyContent += `<p>${textElement.innerText}</p>`
+}
             const replyPreview = document.querySelector('.conversation-reply-preview')
-            
-                if (replyPreview) {
-                    replyPreview.querySelector('.reply-text').innerText = messageText
-                    replyPreview.style.display = 'flex'
-                    activeReplyPreview = replyPreview
-                    replyingToElement = messageText
-                }
+
+// Asegúrate de que siempre actualice el contenedor del input, no el de un mensaje anterior
+if (replyPreview && !replyPreview.closest('.conversation-item')) {
+    replyPreview.querySelector('.reply-text').innerHTML = replyContent
+    replyPreview.style.display = 'flex'
+    activeReplyPreview = replyPreview
+    replyingToElement = messageText
+}
+
            
         }
     })
@@ -113,11 +138,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Enviar mensaje
     document.querySelector('.conversation-form-submit').addEventListener('click', function() {
+        
         const input = document.querySelector('.conversation-form-input')
         const message = input.value.trim()
         const replyPreview = document.querySelector('.conversation-reply-preview')
         
-        const replyText = replyPreview ? replyPreview.querySelector('.reply-text').innerText : ''
+        const replyText = replyPreview ? replyPreview.querySelector('.reply-text').innerHTML : ''
         
         if (message === '') return
 
@@ -134,8 +160,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="conversation-item-wrapper">
                     <div class="conversation-item-box">
                         <!-- Aquí movemos la cita arriba del texto -->
-                        <div class="conversation-reply-preview" style="margin-bottom: 5px;">
-                            <div class="reply-text">${replyText}</div>
+                        <div class="reply-box" style="margin-bottom: 5px;">
+                        <div class="reply-text">${replyText}</div>
                         </div>
                         <div class="conversation-item-text">
                             <p>${message}</p>
@@ -236,7 +262,7 @@ function insertImageMessage(imageUrl) {
             <div class="conversation-item-wrapper">
                 <div class="conversation-item-box">
                     <div class="conversation-item-text">
-                        <img src="${imageUrl}" style="max-width: 200px; border-radius: 8px;" />
+                    <img class="message-image" src="${imageUrl}" style="max-width: 300px; border-radius: 8px; height: 150px;" />
                         <div class="conversation-item-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
                     </div>
                     <div class="conversation-item-dropdown">

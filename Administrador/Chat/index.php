@@ -229,7 +229,7 @@
                     </div>
                     <div class="conversation-form">
                     <input type="file" id="imageInput" accept="image/*" style="display: none;">
-                        <button type="button" class="conversation-form-button"><i class="ri-emotion-line"></i></button>
+                    <button type="button" class="conversation-form-file emoji-btn"><i class="ri-emotion-line"></i></button>
                         <button type="button" class="conversation-form-file" onclick="document.getElementById('imageInput').click()"><i class="ri-image-line"></i></button>
                         <div class="conversation-form-group">
                             <textarea class="conversation-form-input" rows="1" placeholder="Type here..."></textarea>
@@ -247,5 +247,7 @@
     <!-- end: Chat -->
     </section>
     <script src="script.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <emoji-picker style="position: absolute; bottom: 60px; right: 80px; display: none;"></emoji-picker>
 </body>
 </html>
