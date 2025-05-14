@@ -31,7 +31,7 @@
                         </a>
                     </li>
                     <li class="nav-links">
-                        <a href="#">
+                        <a href="/C-Edu/Administrador/Calendario/index.php">
                             <i class='bx bx-notepad icon' ></i>
                             <span class="text nav-text">Calendario</span>
                         </a>

@@ -3,48 +3,22 @@
 
 /* Estilos generales para todos los elementos */
 * {
-    /* Eliminar margenes y rellenos por defecto */
     margin: 0;
     padding: 0;
-    /* Utilizar caja de modelo de caja */
     box-sizing: border-box;
-    /* Establecer fuente por defecto */
     font-family: "Rubik", serif;
 }
 
-/* Estilos de la barra lateral */
-.home {
-    /* Posicionar la barra lateral */
-    position: relative;
-    /* Establecer altura */
-    height: 100vh;
-    /* Establecer posición y ancho */
-    left: 250px;
-    width: calc(100% - 250px);
-    /* Establecer color de fondo */
-    background-color: var(--body-color);
-    /* Transición para cambios de estilo */
-    transition: var(--trans-05);
-}
-
-/* Estilos de la barra lateral cuando está cerrada */
-.sidebar.close ~ .home {
-    /* Establecer posición y ancho cuando está cerrada */
-    left: 88px;
-    width: calc(100% - 88px);
-}
-
-/* Estilos del contenido principal */
+/* Estilos del contenido principal (dentro de .home) */
 .main-content {
-    /* Establecer margen izquierdo */
-    margin-left: 80px;
-    /* Establecer relleno */
-    padding: 30px;
-    /* Establecer ancho */
-    width: calc(100% - 80px);
+    padding: 25px;
+    /* Espacio interno para todo el contenido */
+    /* Se eliminan margin-left y width fijos para que ocupe el espacio de .home */
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Estilos del encabezado */
+/* Estilos del encabezado ("Bienvenido a C-EDU" y user_info) */
 .header {
     height: 80px;
     background-color: var(--sidebar-color);
@@ -59,283 +33,277 @@
     box-sizing: border-box;
     /* Incluir padding en el cálculo del ancho */
 }
-#titulo1-header{
+
+#titulo1-header {
     color: var(--text-color);
+    /* Variable de color de texto (de la sidebar) */
     font-family: "Rubik", serif;
-    font-weight: normal;
+    font-weight: 500;
+    /* Un poco más de énfasis para el título */
+    font-size: 22px;
+    /* Tamaño del título, ajusta si es necesario */
+    margin: 0;
+    /* Quitamos márgenes por defecto del h1 */
 }
 
-/* Estilos del perfil */
-.profile {
-    position: relative;
-    left: 30px;
-    width: 350px;
-    height: 50px;
-    display: flex;
-    text-align: end;
-    align-items: center;
-    padding: 20px;
-    border-radius: 10px;
-    gap: 20px;
-}
-.profile-info h3{
-    color: var(--title-color);
-    font-weight: normal;
-}
-.profile-info{
-    color: var(--text-color);
-}
-
-/* Estilos de la imagen del perfil */
-.profile img {
-    /* Establecer ancho y alto */
-    width: 40px;
-    height: 40px;
-    /* Establecer forma circular */
-    border-radius: 50%;
-}
-.profile .fa-regular.fa-bell{
-    background-color: var(--primary-color);
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    text-align: center;
-    padding: 9px;
-    color: white;
-
-}
-.profile .fa-solid.fa-user{
-    font-size: 25px;
-    text-align: center;
-    padding: 4px;
-    border-radius: 50%;
-    height: 35px;
-    width: 35px;
-    color: gray;
-    background-color: white;
-}
 
 /* Estilos del contenedor de tarjetas */
 .cards-container {
-    /* Utilizar grid para layout */
     display: grid;
-    /* Establecer plantilla de columnas */
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    /* Establecer espacio entre elementos */
-    gap: 20px;
-    position: relative;
-    top: -20px;
-    right: 30px;
-}
-.div-card{
-    background-color: #f9f5f5;
-    width: auto;
-    height: 300px;
-    border-radius: 10px;
-    margin: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-
+    /* Diseño responsive para las tarjetas */
+    gap: 25px;
+    /* Espacio entre tarjetas */
+    /* Se eliminan: position: relative, top, right; para un flujo más natural */
 }
 
-
-/* Estilos de las tarjetas */
 .card {
-    /* Establecer color de fondo */
-    background: white;
-    /* Establecer borde */
-    border: 2px solid rgb(220, 220, 220);
-    /* Establecer forma circular */
-    border-radius: 15px;
-    /* Establecer relleno */
-    padding: 20px;
-    /* Establecer sombra */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: var(--sidebar-color);
+    /* Usar variable de la sidebar para consistencia */
+    border: 1px solid var(--border-color, #e0e0e0);
+    /* Definir --border-color en :root o usar un color directamente */
+    border-radius: 12px;
+    /* Bordes más redondeados */
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* Sombra un poco más pronunciada */
+    display: flex;
+    flex-direction: column;
+    /* Para alinear el botón "INGRESAR" abajo */
 }
 
-/* Estilos del encabezado de la tarjeta */
 .card-header {
-    /* Utilizar flexbox para layout */
     display: flex;
-    /* Alinear elementos */
     align-items: center;
-    /* Establecer espacio entre elementos */
-    gap: 15px;
-    /* Establecer margen inferior */
+    gap: 12px;
     margin-bottom: 20px;
-    /* Establecer tamaño de fuente */
-    font-size: 1.2rem;
-    /* Establecer peso de fuente */
-    font-weight: 400;
+    font-size: 1.15rem;
+    /* Un poco más grande */
+    font-weight: 500;
+    /* Consistente con #titulo1-header */
+    color: var(--title-color);
+    /* Usar variable de la sidebar */
 }
 
-/* Estilos del elemento de tarea */
+.card-header i {
+    color: var(--primary-color);
+    /* Iconos con el color primario de la sección */
+    font-size: 1.3em;
+}
+
+.div-card {
+    background-color: var(--body-color);
+    /* Fondo más claro que la tarjeta, o un gris muy suave */
+    /* Si --body-color es el fondo general, considera un --primary-color-light o similar */
+    /* background-color: var(--primary-color-ligth, #fdf6e3); /* Ejemplo si fuera admin con amarillo claro */
+    flex-grow: 1;
+    /* Permite que este div ocupe el espacio disponible para empujar el botón hacia abajo */
+    border-radius: 8px;
+    margin-bottom: 20px;
+    /* Espacio antes del botón "INGRESAR" */
+    padding: 15px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    /* Sombra interna sutil */
+}
+
+.task-item,
+.event-item,
+.chat-item {
+    background: var(--sidebar-color);
+    /* Fondo blanco para los items internos, contrastando con div-card */
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+    font-size: 0.9rem;
+}
+
+.task-item:last-child,
+.event-item:last-child,
+.chat-item:last-child {
+    margin-bottom: 0;
+}
+
 .task-item {
-    /* Establecer color de fondo */
-    background: #ffffff;
-    /* Establecer forma circular */
-    border-radius: 10px;
-    /* Establecer relleno */
-    padding: 10px;
-    /* Establecer margen inferior */
-    margin-bottom: 10px;
-    /* Establecer posición relativa */
     position: relative;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* Estilos del punto rojo en el elemento de tarea */
+/* Para el red-dot */
+
 .task-item .red-dot {
-    /* Establecer posición absoluta */
     position: absolute;
-    /* Establecer posición derecha */
     right: 15px;
-    /* Est ablecer posición vertical */
     top: 50%;
-    /* Centrar verticalmente */
     transform: translateY(-50%);
-    /* Establecer tamaño */
-    width: 8px;
-    height: 8px;
-    /* Establecer forma circular */
-    background: red;
+    width: 10px;
+    height: 10px;
+    background: #e74c3c;
+    /* Un rojo más vivo, considera una variable CSS */
     border-radius: 50%;
+    border: 1px solid white;
+    /* Para mejor visibilidad */
 }
 
-/* Estilos de los detalles de la tarea */
 .task-details {
-    /* Establecer color del texto */
-    color: #666;
-    /* Establecer tamaño de fuente */
-    font-size: 0.9em;
+    color: var(--text-color);
+    font-size: 0.8em;
+    margin-top: 4px;
 }
 
-/* Estilos del elemento de evento */
 .event-item {
-    
-    /* Utilizar flexbox para layout */
     display: flex;
-    /* Alinear elementos */
     align-items: center;
     justify-content: space-between;
-    /* Establecer relleno */
-    padding: 15px;
-    /* Establecer margen */
-    margin: 5px;
-    /* Establecer forma circular */
-    border-radius: 10px;
-    /* Establecer borde inferior */
-    border-bottom: 1px solid #eee;
-    /* Establecer color de fondo */
-    background-color: #ffffff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-
+    color: var(--text-color);
 }
-/* Estilos del elemento de chat */
+
+.event-item span i {
+    color: var(--primary-color);
+    transition: transform 0.2s ease-in-out;
+}
+
+.event-item:hover span i {
+    transform: translateX(3px);
+}
+
+
 .chat-item {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 10px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    margin-bottom: 10px;
+    gap: 12px;
 }
 
-
-/* Estilos de la imagen del chat */
-.chat-item img {
-    /* Establecer ancho y alto */
-    width: 50px;
-    height: 50px;
-    /* Establecer forma circular */
+/* Icono de usuario en chat-item (si es un <i> de FontAwesome) */
+.chat-item>.fa-user {
+    font-size: 20px;
+    /* Tamaño del icono */
+    color: var(--sidebar-color);
+    /* Color del icono mismo */
+    background-color: var(--primary-color);
+    /* Fondo del círculo */
     border-radius: 50%;
+    width: 40px;
+    /* Tamaño del círculo */
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Estilos del contenido del chat */
 .chat-content {
-    /* Permitir que el contenido ocupe el espacio restante */
     flex: 1;
 }
 
-/* Estilos del nombre en el chat */
 .chat-name {
-    /* Establecer peso de fuente */
-    font-weight: bold;
-    /* Establecer margen inferior */
-    margin-bottom: -1px;
-    padding: 2px;
+    font-weight: 600;
+    margin-bottom: 3px;
+    color: var(--title-color);
 }
 
-/* Estilos del rol en el chat */
-.chat-role {
-    /* Establecer color del texto */
-    color: #666;
-    /* Establecer tamaño de fuente */
-    font-size: 0.9em;
-    /* Establecer margen inferior */
-    margin-bottom: 1px;
-}
-
-/* Estilos del mensaje en el chat */
+.chat-role,
 .chat-message {
-    /* Establecer color del texto */
-    color: #666;
+    font-size: 0.8em;
+    color: var(--text-color);
 }
-/* Estilos del punto de estado */
+
+.chat-message {
+    font-style: italic;
+}
+
 .status-dot {
-    /* Establecer tamaño */
-    width: 8px;
-    height: 8px;
-    /* Establecer forma circular */
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
-    /* Establecer margen derecho */
-    margin-right: 5px;
+    margin-left: auto;
+    /* Para empujar el punto al final si está en un flex container */
 }
 
-/* Estilos del punto de estado verde */
-.status-dot.green { background-color: #00b300; }
-.status-dot.orange { background-color: #f0a500; }
-.status-dot.red { background-color: #d11a2a; }
+.status-dot.green {
+    background: #2ecc71;
+}
 
-/* Estilos del botón de ingreso */
+/* Verde más vivo */
+.status-dot.orange {
+    background: #f39c12;
+}
+
+/* Naranja más vivo */
+.status-dot.gray {
+    background: #95a5a6;
+}
+
+/* Gris */
+
+
 .btn-ingresar {
-    background-color: #ffffff;
-    color: #333;
-    border: 1px solid #ddd;
-    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 20px;
     font-weight: 500;
     font-size: 0.95em;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.25s ease, transform 0.2s ease;
+    text-align: center;
+    margin-top: auto;
+    /* Empuja el botón al final del .card (que es flex column) */
+    display: block;
+    /* Para que ocupe el ancho disponible si no hay otros elementos */
+    width: 100%;
+    /* Hacer que el botón ocupe todo el ancho de la tarjeta */
 }
+
 .btn-ingresar:hover {
-    background-color: #f0f0f0;
+    background-color: #d4a738;
+    /* Asumiendo que --primary-color es el amarillo de Admin, este es un tono más oscuro */
+    /* Si es para Docente (verde #40C3A5), un tono más oscuro sería por ej. #35a88d */
+    transform: translateY(-2px);
+    /* Ligero efecto al pasar el mouse */
+}
+
+.btn-ingresar:active {
+    transform: translateY(0px);
 }
 
 /* Estilos para pantallas pequeñas */
 @media (max-width: 768px) {
-    /* Estilos de la barra lateral */
-    .sidebar {
-        /* Establecer ancho */
-        width: 60px;
-    }
-    
-    /* Estilos del contenido principal */
     .main-content {
-        /* Establecer margen izquierdo */
-        margin-left:  60px;
-        /* Establecer ancho */
-        width: calc(100% - 60px);
-        /* Establecer relleno */
+        padding: 15px;
+    }
+
+    .header {
+        flex-direction: column;
+        /* Apilar título y user_info en móvil */
+        align-items: flex-start;
+        /* Alinear al inicio */
+        gap: 10px;
+        /* Espacio entre título y user_info */
+        padding: 15px;
+    }
+
+    /* En móvil, user_info (si es position:absolute) podría necesitar ajustes
+       o cambiar su posicionamiento para que fluya normalmente en el header. */
+    /* Si user_info.php debe quedar fijo arriba a la derecha de la PANTALLA
+       y no del header, entonces debe sacarse del div.header en el HTML. */
+
+
+    #titulo1-header {
+        font-size: 20px;
+    }
+
+    .cards-container {
+        grid-template-columns: 1fr;
+        /* Una tarjeta por fila */
+        gap: 20px;
+    }
+
+    .card {
         padding: 20px;
     }
 
-    /* Estilos del contenedor de tarjetas */
-    .cards-container {
-        /* Establecer una sola columna */
-        grid-template-columns: 1fr;
+    .btn-ingresar {
+        padding: 10px 15px;
+        font-size: 0.9em;
     }
 }
