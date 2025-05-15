@@ -6,53 +6,81 @@ if (session_status() === PHP_SESSION_NONE) {
 include '../../conexion.php';
 
 $id_usuario = $_SESSION['id_usuario'] ?? null;
+$user_profile_data = []; // Array para almacenar todos los datos del perfil
 
 if ($id_usuario) {
+    // Consulta para obtener todos los datos del perfil, incluyendo la foto_perfil_url
     $stmt = $conn->prepare("SELECT u.nombre_usuario, u.email_usuario, u.telefono_usuario, u.grupo_cargo_usuario,
-                                r.tipo_rol AS nombre_rol, m.nombre_materia AS nombre_materia, i.nombre_institucion
+                                u.foto_perfil_url, /* <-- AÑADIR ESTO */
+                                r.tipo_rol AS nombre_rol, 
+                                m.nombre_materia AS nombre_materia, 
+                                i.nombre_institucion
                                 FROM usuario u
                                 INNER JOIN rol r ON u.id_rol = r.id_rol 
                                 LEFT JOIN materia m ON u.id_materia = m.id_materia 
                                 LEFT JOIN institucion i ON u.id_institucion = i.id_institucion
-                                WHERE u.id_usuario = ?
-                                            ");
+                                WHERE u.id_usuario = ?");
     $stmt->bind_param("i", $id_usuario);
     $stmt->execute();
     $result = $stmt->get_result();
-    $fila = $result->fetch_assoc();
+    $user_profile_data = $result->fetch_assoc(); // Guardar todos los datos
     $stmt->close();
 }
+
+// Determinar la URL de la imagen de perfil
+$profile_image_url = '../../assets/avatar_default.png'; // Imagen por defecto
+if (!empty($user_profile_data['foto_perfil_url'])) {
+    // Construir la ruta completa a la imagen.
+    // Asumimos que foto_perfil_url guarda algo como "uploads/profile_pictures/image.jpg"
+    // y que index.php está dos niveles arriba de esa carpeta.
+    $profile_image_url = '../../' . htmlspecialchars($user_profile_data['foto_perfil_url']);
+} else if (isset($_SESSION['foto_perfil_url']) && !empty($_SESSION['foto_perfil_url'])) {
+    // Fallback a la imagen de sesión si existe (podría ser útil si la BD tarda en actualizarse para la vista)
+    $profile_image_url = '../../' . htmlspecialchars($_SESSION['foto_perfil_url']);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <?php include "../../SIDEBAR/Admin/head.php" ?>
+    <?php 
+    // Determinar la ruta correcta para el head.php basado en el directorio actual
+    if (strpos(__DIR__, 'Administrador') !== false) {
+        include "../../SIDEBAR/Admin/head.php";
+    } elseif (strpos(__DIR__, 'Docente') !== false) {
+        include "../../SIDEBAR/Docente/head.php";
+    }
+    ?>
     <link rel="stylesheet" href="profile.css">
     <title>Perfil de Usuario</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <script src="index.js" defer></script>
 </head>
-
 <body>
-    <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
+    <?php 
+    // Determinar la ruta correcta para el sidebar.php basado en el directorio actual
+    if (strpos(__DIR__, 'Administrador') !== false) {
+        include "../../SIDEBAR/Admin/sidebar.php";
+    } elseif (strpos(__DIR__, 'Docente') !== false) {
+        include "../../SIDEBAR/Docente/sidebar.php";
+    }
+    ?>
 
     <section class="home">
         <div class="main-content">
             <div class="card-profile">
                 <div class="profile-header">
-                    <span class="profile-option" id="edit-profile" style="font-weight: bold; cursor: pointer;">Editar
-                        Perfil</span>
+                    <span class="profile-option" id="edit-profile" style="font-weight: bold; cursor: pointer;">Editar Perfil</span>
                     <span class="profile-option" id="help">Ayuda</span>
                 </div>
 
                 <div class="profile-container">
                     <div class="profile-left">
                         <div class="user-avatar">
+                            <img src="<?= $profile_image_url ?>?t=<?= time() ?>" alt="Foto de perfil">
                         </div>
                         <form id="upload-form" enctype="multipart/form-data">
-                            <input type="file" id="profile-image-input" name="profile_image" accept="image/*"
-                                style="display: none;">
+                            <input type="file" id="profile-image-input" name="profile_image" accept="image/*" style="display: none;">
                             <button type="button" class="edit-btn">EDITAR</button>
                             <div id="upload-status"></div>
                         </form>
@@ -62,66 +90,42 @@ if ($id_usuario) {
                         <div class="container">
                             <div class="columna">
                                 <label>Nombre</label>
-                                <input type="text" name="nombre_completo"
-                                    value="<?= htmlspecialchars($fila['nombre_usuario'] ?? '') ?>" readonly>
+                                <input type="text" name="nombre_completo" value="<?= htmlspecialchars($user_profile_data['nombre_usuario'] ?? '') ?>" readonly>
 
                                 <label>Email</label>
-                                <input type="text" name="correo"
-                                    value="<?= htmlspecialchars($fila['email_usuario'] ?? '') ?>" readonly>
-
+                                <input type="text" name="correo" value="<?= htmlspecialchars($user_profile_data['email_usuario'] ?? '') ?>" readonly>
 
                                 <label>Materia</label>
-                                <input type="text" name="materia"
-                                    value="<?= htmlspecialchars($fila['nombre_materia'] ?? '') ?>" readonly>
+                                <input type="text" name="materia" value="<?= htmlspecialchars($user_profile_data['nombre_materia'] ?? 'No asignada') ?>" readonly>
 
                                 <label>Colegio</label>
-                                <input type="text" name="colegio"
-                                    value="<?= htmlspecialchars($fila['nombre_institucion'] ?? '') ?>" readonly>
+                                <input type="text" name="colegio" value="<?= htmlspecialchars($user_profile_data['nombre_institucion'] ?? 'No asignada') ?>" readonly>
                             </div>
 
                             <div class="columna">
-                                <label>Nombre de Usuario</label>
-                                <input type="text" name="usuario"
-                                    value="<?= htmlspecialchars($fila['nombre_usuario'] ?? '') ?>" readonly>
+                                <label>Rol</label> <input type="text" name="rol_usuario" value="<?= htmlspecialchars($user_profile_data['nombre_rol'] ?? '') ?>" readonly>
 
                                 <label>Contraseña</label>
                                 <input type="password" name="password" value="************" readonly>
 
                                 <label>Teléfono</label>
-                                <input type="text" name="telefono"
-                                    value="<?= htmlspecialchars($fila['telefono_usuario'] ?? '') ?>" readonly>
+                                <input type="text" name="telefono" value="<?= htmlspecialchars($user_profile_data['telefono_usuario'] ?? '') ?>" readonly>
 
                                 <label>Grupo a Cargo</label>
-                                <input type="text" name="grupo_cargo"
-                                    value="<?= htmlspecialchars($fila['grupo_cargo_usuario'] ?? '') ?>" readonly>
+                                <input type="text" name="grupo_cargo" value="<?= htmlspecialchars($user_profile_data['grupo_cargo_usuario'] ?? 'No asignado') ?>" readonly>
                             </div>
                         </div>
                     </div>
-
                 </div>
-                <div class="ayuda">
+                <div class="ayuda" style="display: none;">
                     <h3>CONTACTANOS</h3>
-                    <p>Contacta con un asesor técnico si presentas algún problema. Puedes escribirnos por correo
-                        electrónico, WhatsApp o teléfono.</p>
-                    <div class="correo">
-                        <i class="fa-regular fa-envelope"></i>
-                        <span>CORREO ELECTRÓNICO</span>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
-                    <div class="whatsapp">
-                        <i class="fa-brands fa-whatsapp"></i>
-                        <span>WHATSAPP</span>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
-                    <div class="correo">
-                        <i class="fa-solid fa-phone"></i>
-                        <span>TELÉFONO</span>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div>
+                    <p>Contacta con un asesor técnico si presentas algún problema. Puedes escribirnos por correo electrónico, WhatsApp o teléfono.</p>
+                    <div class="correo"><i class="fa-regular fa-envelope"></i><span>CORREO ELECTRÓNICO</span><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="whatsapp"><i class="fa-brands fa-whatsapp"></i><span>WHATSAPP</span><i class="fa-solid fa-chevron-right"></i></div>
+                    <div class="telefono-ayuda"><i class="fa-solid fa-phone"></i><span>TELÉFONO</span><i class="fa-solid fa-chevron-right"></i></div>
                 </div>
             </div>
         </div>
     </section>
 </body>
-
 </html>
