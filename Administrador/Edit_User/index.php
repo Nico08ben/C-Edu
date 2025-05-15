@@ -50,9 +50,8 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
 <html lang="es">
 
 <head>
-    <?php include "../../SIDEBAR/Admin/head.php" ?>
+    <?php include "../../SIDEBAR/Admin/head.php" ?> 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="editcss.css">
     <title>Gestión de Usuarios</title>
@@ -73,7 +72,6 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
     <table>
         <thead>
             <tr>
-                <!-- Tus columnas actuales sin cambios -->
                 <th>Foto Perfil</th>
                 <th>Nombre Completo</th>
                 <th>Materia</th>
@@ -122,7 +120,6 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
             </div>
         </div>
 
-        <!-- Modal Nuevo Usuario -->
         <div id="userModal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
@@ -149,7 +146,9 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                         <label for="id_materia">Materia</label>
                         <select id="id_materia" name="id_materia">
                             <option value="">Seleccionar materia</option>
-                            <?php while ($materia = $materias->fetch_assoc()): ?>
+                            <?php 
+                            $materias->data_seek(0); // Reiniciar puntero para el bucle
+                            while ($materia = $materias->fetch_assoc()): ?>
                                 <option value="<?= $materia['id_materia'] ?>">
                                     <?= htmlspecialchars($materia['nombre_materia']) ?>
                                 </option>
@@ -159,7 +158,9 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                     <div class="form-group">
                         <label for="id_institucion">Institución</label>
                         <select id="id_institucion" name="id_institucion">
-                            <?php while ($inst = $instituciones->fetch_assoc()): ?>
+                            <?php 
+                            $instituciones->data_seek(0); // Reiniciar puntero
+                            while ($inst = $instituciones->fetch_assoc()): ?>
                                 <option value="<?= $inst['id_institucion'] ?>">
                                     <?= htmlspecialchars($inst['nombre_institucion']) ?>
                                 </option>
@@ -178,7 +179,6 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
             </div>
         </div>
 
-        <!-- Modal Editar Usuario -->
         <div id="editUserModal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
@@ -203,7 +203,7 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                         <select id="edit_id_materia" name="id_materia">
                             <option value="">Sin materia</option>
                             <?php
-                            $materias->data_seek(0);
+                            $materias->data_seek(0); // Reiniciar puntero
                             while ($materia = $materias->fetch_assoc()): ?>
                                 <option value="<?= $materia['id_materia'] ?>">
                                     <?= htmlspecialchars($materia['nombre_materia']) ?>
@@ -215,7 +215,7 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                         <label for="edit_id_institucion">Institución</label>
                         <select id="edit_id_institucion" name="id_institucion">
                             <?php
-                            $instituciones->data_seek(0);
+                            $instituciones->data_seek(0); // Reiniciar puntero
                             while ($inst = $instituciones->fetch_assoc()): ?>
                                 <option value="<?= $inst['id_institucion'] ?>">
                                     <?= htmlspecialchars($inst['nombre_institucion']) ?>
@@ -230,7 +230,6 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                             <option value="1">Maestro</option>
                         </select>
                     </div>
-                    <!-- Agrega este botón antes del botón de submit -->
                     <div class="form-group">
                         <button type="button" id="openPasswordChange" class="password-change-btn">
                             Cambiar Contraseña
@@ -240,7 +239,6 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                 </form>
             </div>
         </div>
-        <!-- Modal Cambiar Contraseña -->
         <div id="changePasswordModal" class="modal">
             <div class="modal-content">
                 <span class="close-password">&times;</span>
@@ -263,8 +261,7 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                 </form>
             </div>
         </div>
-        <script src="script.js"></script>
-    </section>
+        <script src="script.js"></script> </section>
 </body>
 
 </html>

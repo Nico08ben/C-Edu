@@ -1,3 +1,16 @@
+<?php
+// Tu código PHP existente en sidebar.php si lo tienes al inicio
+?>
+    <script>
+        (function() {
+            const theme = localStorage.getItem('themeMode');
+            if (theme === 'dark') {
+                // Aplicar la clase 'dark' al elemento <html>
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+
     <nav class="sidebar close">
         <header>
             <div class="image-text">

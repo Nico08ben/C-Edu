@@ -1,20 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-* {
-    font-family: "Poppins", serif;
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-
 :root {
-    --body-color: #E4E9F7;
-    --sidebar-color: #FFF;
-    --primary-color: #40C3A5;
-    --primary-color-ligth: #cdfff2;
-    --toggle-color: #DDD;
-    --text-color: #707070;
-    --title-color: #333;
+    /* MODO CLARO (por defecto) */
+    --body-bg-color: #E4E9F7;
+    --sidebar-bg-color: #FFF;
+    --content-bg-color: #FFF;       /* Para .container, .modal-content, .table-scroll-container */
+    --primary-accent-color: #40C3A5;
+    --primary-accent-light-color: #cdfff2;
+    --toggle-switch-bg-color: #DDD;
+    --text-primary-color: #333;     /* Títulos, texto importante */
+    --text-secondary-color: #707070; /* Texto normal, subtítulos */
+    --text-on-accent-color: #FFF;
+    --border-color: #DDD;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --table-header-bg-color: #f5f5f5;
+    --table-row-bg-color: #FFF;
+    --table-row-hover-bg-color: #f0f0f0;
+    --modal-bg-color: #FFF;          /* Redundante con content-bg-color pero específico */
+    --input-bg-color: #FFF;
+    --input-border-color: #ddd;
+    --input-text-color: #333;
+    --input-placeholder-color: #999;
+    --button-primary-bg-color: #f0c14b;
+    --button-primary-text-color: #333;
+    --button-secondary-bg-color: #e5d28a;
+    --button-action-text-color: #FFF; /* Para botones de acción como "Submit" en modal */
+    --button-edit-bg-color: #ffd700;
+    --button-edit-icon-color: #333;
+    --button-delete-bg-color: #ff6b6b;
+    --button-delete-text-color: white;
+    --scrollbar-thumb-color: #ccc;
+    --scrollbar-track-color: #f1f1f1;
+    --select-arrow-color: '%23555'; /* Flecha de select (codificada para URL) */
 
     --trans-02: all 0.2s ease;
     --trans-03: all 0.3s ease;
@@ -22,43 +39,73 @@
     --trans-05: all 0.5s ease;
 }
 
+html.dark {
+    /* MODO OSCURO */
+    --body-bg-color: #18191A;
+    --sidebar-bg-color: #242526;
+    --content-bg-color: #2D2D30;
+    --primary-accent-color: #40C3A5; /* El acento puede ser el mismo o diferente */
+    --primary-accent-light-color: #3a8c78;
+    --toggle-switch-bg-color: #555;
+    --text-primary-color: #EAEAEA;
+    --text-secondary-color: #B0B0B0;
+    --text-on-accent-color: #EAEAEA; /* O #121212 si el acento es claro */
+    --border-color: #4a4a4f;
+    --shadow-color: rgba(0, 0, 0, 0.4); /* Sombra más oscura en modo oscuro, o más sutil clara */
+    --table-header-bg-color: #33373A;
+    --table-row-bg-color: #2D2D30;
+    --table-row-hover-bg-color: #383c3f;
+    --modal-bg-color: #2D2D30;
+    --input-bg-color: #33373A;
+    --input-border-color: #55595c;
+    --input-text-color: #EAEAEA;
+    --input-placeholder-color: #888;
+    --button-primary-bg-color: #d3a127;
+    --button-primary-text-color: #1a1a1a;
+    --button-secondary-bg-color: #bba06a;
+    --button-action-text-color: #EAEAEA;
+    --button-edit-bg-color: #cca700;
+    --button-edit-icon-color: #1f1f1f;
+    --button-delete-bg-color: #d44c4c;
+    --button-delete-text-color: white; /* Se mantiene blanco */
+    --scrollbar-thumb-color: #555;
+    --scrollbar-track-color: #333;
+    --select-arrow-color: '%23A0A0A0';
+}
+
+/* --- ESTILOS GLOBALES Y DE BODY --- */
+* {
+    font-family: "Poppins", serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 body {
-    height: 100vh;
-    background: var(--body-color);
-    transition: var(--trans-05);
+    min-height: 100vh;
+    background: var(--body-bg-color);
+    color: var(--text-secondary-color);
+    transition: background var(--trans-05), color var(--trans-05);
 }
 
-body.dark {
-    --body-color: #18191A;
-    --sidebar-color: #242526;
-    --primary-color: #3A3B3C;
-    --primary-color-ligth: #3A3B3C;
-    --toggle-color: #FFF;
-    --text-color: #CCC;
-    --title-color: #ffffff;
+/* Scrollbars personalizados */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-color);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    filter: brightness(90%);
 }
 
-.sidebar .text {
-    font-size: 16px;
-    font-weight: 500;
-    transition: var(--trans-03);
-    white-space: nowrap;
-    opacity: 1;
-    display: block;
-}
-
-.sidebar.close .text {
-    opacity: 0;
-    display: none;
-}
-
-.sidebar .image {
-    min-width: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
+/* --- ESTILOS DEL SIDEBAR (COMO LOS TENÍAS) --- */
 .sidebar {
     position: fixed;
     top: 0;
@@ -66,15 +113,33 @@ body.dark {
     padding: 10px 14px;
     height: 100%;
     width: 250px;
-    background: var(--sidebar-color);
+    background: var(--sidebar-bg-color);
     transition: var(--trans-05);
     z-index: 100;
+    border-right: 1px solid var(--border-color);
 }
-
 .sidebar.close {
     width: 88px;
 }
-
+.sidebar .text {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary-color);
+    transition: var(--trans-03), opacity var(--trans-03);
+    white-space: nowrap;
+    opacity: 1;
+    display: block;
+}
+.sidebar.close .text {
+    opacity: 0;
+    pointer-events: none;
+}
+.sidebar .image {
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .sidebar li {
     height: 50px;
     margin-top: 10px;
@@ -82,53 +147,40 @@ body.dark {
     display: flex;
     align-items: center;
 }
-
 .sidebar li .icon {
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 60px;
     font-size: 20px;
-}
-
-.sidebar li .icon,
-.sidebar li .text {
-    color: var(--text-color);
+    color: var(--text-secondary-color); /* Asegurar que los iconos usen la variable */
     transition: var(--trans-03);
 }
-
+/* .sidebar li .text ya está cubierto por .sidebar .text */
 .sidebar header {
     position: relative;
 }
-
 .sidebar .image-text img {
     width: 40px;
     border-radius: 6px;
 }
-
 .sidebar header .image-text {
     display: flex;
     align-items: center;
 }
-
 header .image-text .header-text {
     display: flex;
     flex-direction: column;
-    color: var(--text-color)
 }
-
-body.dark header .image-text .header-text {
-    color: var(--text-color)
-}
-
 .header-text .name {
     font-weight: 600;
+    color: var(--text-primary-color);
 }
-
 .header-text .profession {
     margin-top: -2px;
+    font-size: 0.9em;
+    color: var(--text-secondary-color);
 }
-
 .sidebar header .toggle {
     position: absolute;
     top: 50%;
@@ -136,25 +188,19 @@ body.dark header .image-text .header-text {
     transform: translateY(-50%) rotate(180deg);
     height: 25px;
     width: 25px;
-    background: var(--primary-color);
+    background: var(--primary-accent-color);
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    color: var(--sidebar-color);
+    color: var(--text-on-accent-color);
     font-size: 22px;
     transition: var(--trans-03);
+    border: 2px solid var(--body-bg-color);
 }
-
 .sidebar.close header .toggle {
     transform: translateY(-50%);
 }
-
-
-body.dark .sidebar header .toggle {
-    color: var(--text-color);
-}
-
 .sidebar li a {
     text-decoration: none;
     height: 100%;
@@ -164,17 +210,16 @@ body.dark .sidebar header .toggle {
     border-radius: 6px;
     transition: var(--trans-04);
 }
-
 .sidebar .menu {
     margin-top: 35px;
 }
-
 .sidebar .search-box {
-    background: var(--primary-color-ligth);
+    background: var(--primary-accent-light-color);
     border-radius: 6px;
     transition: var(--trans-05);
+    display: flex; /* Para alinear icono y input */
+    align-items: center;
 }
-
 .search-box input {
     height: 100%;
     width: 100%;
@@ -183,118 +228,531 @@ body.dark .sidebar header .toggle {
     border-radius: 6px;
     font-size: 16px;
     font-weight: 500;
-    background: var(--primary-color-ligth);
-    transition: var(--trans-05);
+    background: transparent;
+    color: var(--text-primary-color);
+    /* padding-left: 10px; No es necesario si el icono tiene su propio padding/min-width */
+}
+.search-box input::placeholder {
+    color: var(--text-secondary-color);
+    opacity: 0.8;
+}
+.sidebar .search-box .icon { /* Estilo para el icono de búsqueda dentro del search-box */
+    min-width: 50px; /* Ajustar para que no sea tan ancho como otros iconos */
+    font-size: 20px;
+    color: var(--text-secondary-color);
 }
 
 .sidebar li a:hover {
-    background: var(--primary-color);
+    background: var(--primary-accent-color);
 }
-
 .sidebar li a:hover .icon,
 .sidebar li a:hover .text {
-    color: var(--sidebar-color);
+    color: var(--text-on-accent-color);
 }
-
-body.dark.sidebar li a:hover .icon,
-body.dark.sidebar li a:hover .text {
-    color: var(--text-color);
-}
-
 .sidebar .menu-bar {
-    height: calc(90%);
+    height: calc(100% - 70px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
-
 .menu-bar .mode {
     position: relative;
     border-radius: 6px;
-    background: var(--primary-color-ligth);
+    background: var(--primary-accent-light-color);
+    margin-top: 10px;
 }
-
 .menu-bar .mode .moon-sun {
     height: 50px;
     width: 60px;
     display: flex;
     align-items: center;
 }
-
-.menu-bar .mode i {
-    position: absolute;
+.menu-bar .mode i { /* Iconos de luna/sol */
+    position: absolute; /* Dentro de .moon-sun */
     transition: var(--trans-03);
+    color: var(--text-secondary-color);
+    font-size: 20px; /* Tamaño consistente con otros iconos */
+    left: 20px; /* Para centrarlos en su espacio de 60px */
 }
-
 .menu-bar .mode i.sun {
     opacity: 0;
 }
-
-body.dark .menu-bar .mode i.sun {
+html.dark .menu-bar .mode i.sun {
     opacity: 1;
 }
-
-body.dark .menu-bar .mode i.moon {
+html.dark .menu-bar .mode i.moon {
     opacity: 0;
 }
-
 .menu-bar .mode .toggle-switch {
     position: absolute;
     right: 0;
-    align-items: center;
-    justify-content: center;
     display: flex;
     height: 100%;
     min-width: 60px;
     cursor: pointer;
     border-radius: 6px;
-    background: var(--primary-color-ligth);
     transition: var(--trans-05);
 }
-
 .toggle-switch .switch {
     border-radius: 25px;
     position: relative;
     height: 22px;
     width: 44px;
-    background: var(--toggle-color);
+    background: var(--toggle-switch-bg-color);
     transition: var(--trans-03);
+    margin: auto;
 }
-
 .switch::before {
     height: 15px;
     width: 15px;
-    background: var(--sidebar-color);
+    background: var(--sidebar-bg-color);
     content: '';
     position: absolute;
     border-radius: 50%;
     top: 50%;
-    left: 5px;
+    left: 4px;
     transform: translateY(-50%);
-    transition: var(--trans-03);
+    transition: var(--trans-03), background-color var(--trans-03);
+}
+html.dark .switch::before {
+    left: 25px;
+    background: var(--sidebar-bg-color);
 }
 
-body.dark .switch::before {
-    left: 24px;
-}
-
-.home {
+/* --- ESTILOS DEL CONTENIDO PRINCIPAL (antes en editcss.css) --- */
+/* El .home de la página de contenido principal */
+section.home { /* Usar section.home para diferenciar del .home del sidebar si existe tal clase */
     position: relative;
-    height: 100vh;
-    left: 250px;
+    left: 250px; /* Ancho del sidebar abierto */
     width: calc(100% - 250px);
-    background-color: var(--body-color);
-    transition: var(--trans-05);
+    min-height: 100vh;
+    padding: 20px;
+    background-color: var(--body-bg-color); /* Fondo de la sección principal */
+    transition: var(--trans-05); /* Misma transición que el sidebar para left/width */
 }
-
-.home .text {
-    font-size: 30px;
-    font-weight: 500;
-    color: var(--text-color);
-    padding: 8px 40px;
-}
-
-.sidebar.close~.home {
-    left: 88px;
+.sidebar.close ~ section.home { /* Cuando el sidebar está cerrado */
+    left: 88px; /* Ancho del sidebar cerrado */
     width: calc(100% - 88px);
 }
+
+.container { /* Contenedor principal del contenido (tabla, etc.) */
+    background: var(--content-bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    width: 100%; /* Ocupa el ancho de section.home menos paddings */
+    max-width: 1200px; /* O el max-width que prefieras para el contenido */
+    margin: 0 auto; /* Centrar el .container si section.home es más ancho */
+    border: 1px solid var(--border-color);
+    transition: background-color var(--trans-05), box-shadow var(--trans-05), border-color var(--trans-05);
+}
+
+.container .header { /* Header dentro de .container */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.container h1 { /* Título principal dentro de .container */
+    color: var(--text-primary-color);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    transition: color var(--trans-03);
+}
+
+/* --- TABLA --- */
+.table-scroll-container {
+    max-height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    background: var(--content-bg-color);
+    border-radius: 8px;
+    box-shadow: 0 1px 5px var(--shadow-color);
+    width: 100%;
+    border: 1px solid var(--border-color);
+    transition: background-color var(--trans-05), box-shadow var(--trans-05), border-color var(--trans-05);
+}
+.table-scroll-container table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: transparent;
+    table-layout: fixed;
+}
+.table-scroll-container thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.table-scroll-container thead th {
+    background-color: var(--table-header-bg-color);
+    color: var(--text-primary-color);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+    transition: background-color var(--trans-03), color var(--trans-03), border-color var(--trans-03);
+}
+.table-scroll-container tbody tr {
+    background-color: var(--table-row-bg-color);
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease, border-color var(--trans-03);
+}
+.table-scroll-container tbody tr:last-child {
+    border-bottom: none;
+}
+.table-scroll-container tbody tr:hover {
+    background-color: var(--table-row-hover-bg-color);
+}
+.table-scroll-container td {
+    padding: 12px 15px;
+    font-size: 14px;
+    color: var(--text-secondary-color);
+    vertical-align: middle;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    min-width: 100px;
+    transition: color var(--trans-03);
+}
+td img.avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    /* margin-right: 10px; Si está en su propia celda, no es necesario */
+}
+.action-buttons {
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: center; /* Centrar botones de acción */
+}
+.edit, .delete {
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    margin: 0 3px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.edit:hover, .delete:hover {
+    transform: scale(1.1);
+}
+.edit {
+    background-color: var(--button-edit-bg-color);
+}
+.edit i {
+    color: var(--button-edit-icon-color);
+    font-size: 1em;
+}
+.delete {
+    background-color: var(--button-delete-bg-color);
+}
+.delete i {
+    color: var(--button-delete-text-color);
+    font-size: 1em;
+}
+
+/* --- BOTONES DE PÁGINA (Ej: Crear Usuario) --- */
+.page-actions { /* Contenedor para botones a nivel de página */
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px; /* Espacio antes de la tabla o siguiente sección */
+    flex-wrap: wrap;
+    /* justify-content: flex-end;  Por defecto o según necesidad */
+}
+#newUser, #save { /* IDs específicos de tus botones */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease, filter 0.2s ease;
+}
+#newUser {
+    background-color: var(--button-primary-bg-color);
+    color: var(--button-primary-text-color);
+}
+#newUser:hover, #save:hover {
+    filter: brightness(90%);
+}
+#save {
+    background-color: var(--button-secondary-bg-color);
+    color: var(--button-primary-text-color);
+}
+
+/* --- MODALES --- */
+.modal {
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    position: fixed;
+    z-index: 1000; /* Debe ser mayor que el sidebar si el sidebar es fixed */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    justify-content: center;
+    align-items: center;
+    overflow: auto; /* Permite scroll en el overlay si el modal es más alto que la ventana */
+}
+html.dark .modal {
+    background-color: rgba(0,0,0,0.7);
+}
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+    display: flex;
+}
+.modal-content {
+    background-color: var(--modal-bg-color);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 480px;
+    max-height: 90vh; /* Limita la altura del modal */
+    padding: 25px 30px;
+    box-shadow: 0 5px 20px var(--shadow-color);
+    position: relative;
+    overflow-y: auto; /* Scroll DENTRO del contenido del modal */
+    border: 1px solid var(--border-color);
+    transform: scale(0.95);
+    opacity: 0;
+    transition: background-color var(--trans-05), box-shadow var(--trans-05), border-color var(--trans-05), transform 0.3s ease, opacity 0.3s ease;
+}
+.modal.show .modal-content {
+    transform: scale(1);
+    opacity: 1;
+}
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    transition: color var(--trans-03), border-color var(--trans-03);
+}
+.close-button, .close-password { /* Para los botones de cerrar modal (X) */
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    color: var(--text-secondary-color);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+}
+.close-button:hover, .close-password:hover {
+    color: var(--text-primary-color);
+}
+
+/* --- FORMULARIOS --- */
+.form-group {
+    margin-bottom: 18px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-primary-color);
+    font-weight: 500;
+    font-size: 14px;
+    transition: color var(--trans-03);
+}
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background-color: var(--input-bg-color);
+    color: var(--input-text-color);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.form-group input::placeholder {
+    color: var(--input-placeholder-color);
+    opacity: 1;
+}
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--primary-accent-color);
+    box-shadow: 0 0 0 3px var(--primary-accent-light-color);
+    outline: none;
+}
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="var(--select-arrow-color)" d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
+    padding-right: 35px !important;
+}
+/* La variable --select-arrow-color cambia en html.dark, así que no se necesita regla específica aquí */
+
+.submit-btn {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: var(--primary-accent-color);
+    color: var(--text-on-accent-color);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, filter 0.2s ease;
+}
+.submit-btn:hover {
+    filter: brightness(90%);
+}
+.password-change-btn {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: var(--button-secondary-bg-color);
+    color: var(--button-primary-text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
+}
+.password-change-btn:hover {
+    filter: brightness(95%);
+    border-color: var(--primary-accent-color);
+}
+
+/* --- MEDIA QUERIES PARA EL CONTENIDO PRINCIPAL --- */
+@media (max-width: 768px) {
+    section.home {
+        left: 88px; /* Ancho del sidebar cerrado por defecto en pantallas más pequeñas */
+        width: calc(100% - 88px);
+    }
+    .sidebar:not(.close) ~ section.home { /* Solo si el sidebar está abierto explícitamente */
+         left: 250px;
+         width: calc(100% - 250px);
+    }
+
+    .container {
+        width: calc(100% - 20px); /* Ajustar ancho del container */
+        padding: 15px;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+     .container h1 {
+        font-size: 20px;
+    }
+    .table-scroll-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .table-scroll-container table {
+        min-width: 700px;
+    }
+    .table-scroll-container th,
+    .table-scroll-container td {
+        font-size: 13px;
+        padding: 10px;
+        white-space: normal !important;
+        min-width: 90px;
+    }
+    td img.avatar-img {
+        width: 35px;
+        height: 35px;
+    }
+    .edit, .delete {
+        width: 32px;
+        height: 32px;
+    }
+    .edit i, .delete i {
+        font-size: 0.9em;
+    }
+    #newUser, #save {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+    .page-actions {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    section.home {
+        padding: 10px;
+        left: 0; /* Sidebar podría estar siempre cerrado u overlay en móviles */
+        width: 100%;
+    }
+    /* Si el sidebar es overlay en móviles, no necesitas ajustar left/width de section.home
+       Si el sidebar se esconde completamente y se abre como overlay, section.home puede ser 100% width.
+       Este ejemplo asume que el sidebar se colapsa a 0 o es un overlay,
+       o que el usuario se encarga de su visibilidad/estado en móvil.
+       Si `.sidebar.close ~ section.home` aún aplica, el `left` se ajustará a 88px. */
+
+    .container {
+        width: 100%;
+        border-radius: 0;
+        padding: 10px;
+        margin-left: 0;
+        margin-right: 0;
+        border-left: none;
+        border-right: none;
+    }
+    .container .header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        text-align: center;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+    .page-actions, .form-group {
+        flex-direction: column;
+    }
+    #newUser, #save, .submit-btn, .password-change-btn {
+        width: 100%;
+        text-align: center;
+    }
+    .modal-content {
+        width: calc(100% - 20px); /* Un poco de espacio a los lados */
+        margin: 10px;
+        padding: 20px 15px;
+    }
+    .modal-title {
+        font-size: 18px;
+    }
+    .table-scroll-container table {
+        min-width: 550px;
+    }
+    .table-scroll-container th,
+    .table-scroll-container td {
+        font-size: 12px;
+        padding: 8px;
+        min-width: 80px;
+    }
+}
+
+/* Puedes añadir aquí los estilos para .user-profile-box y .task-controls
+   de la respuesta anterior, asegurándote que usen las variables CSS. */
