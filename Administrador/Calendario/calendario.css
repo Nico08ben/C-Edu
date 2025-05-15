@@ -463,3 +463,83 @@ body.dark .form-group select {
 body.dark #event-color {
     color: var(--text-color); /* Para modo oscuro */
 }
+/* Estilos para el header del MINI-CALENDARIO */
+#mini-calendar .fc-header-toolbar {
+    display: flex;
+    justify-content: space-between; /* Intenta distribuir mejor los elementos */
+    align-items: center;
+    padding: 5px 0; /* Añade un poco de padding vertical si es necesario */
+    margin-bottom: 10px; /* Ajusta el margen inferior que ya tienes si es necesario */
+}
+
+/* Ajustar el título del mes en el mini-calendario si es necesario */
+#mini-calendar .fc-toolbar-title {
+    font-size: 1em; /* Puede que quieras hacerlo un poco más pequeño que el del calendario principal */
+    white-space: nowrap; /* Evitar que el título se parta en dos líneas si es muy largo */
+}
+
+/* Contenedor de los botones (Hoy, prev, next) en el mini-calendario */
+#mini-calendar .fc-toolbar-chunk:nth-child(3) { /* Generalmente el chunk de la derecha tiene los botones */
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Espacio entre el grupo de prev/next y el botón "Hoy" */
+}
+
+/* Estilos para TODOS los botones dentro del mini-calendario */
+#mini-calendar .fc-button {
+    background-color: var(--primary-color-light, #f0f0f0); /* Un color de fondo claro, usa una variable si la tienes */
+    color: var(--primary-color, #333); /* Color de texto, contrastante con el fondo */
+    border: 1px solid var(--primary-color, #ccc);
+    padding: 6px 10px; /* Ajusta el padding para cambiar el tamaño */
+    border-radius: 4px;
+    font-size: 0.85em; /* Ajusta el tamaño de la fuente dentro del botón */
+    line-height: 1.2; /* Ajusta la altura de línea para centrar mejor el texto/iconos */
+    box-shadow: none; /* Quitar sombras por defecto si no te gustan */
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    height: auto; /* Permitir que el padding defina la altura */
+}
+
+/* Botón "Hoy" específico en el mini-calendario */
+#mini-calendar .fc-today-button { /* Clase específica de FullCalendar para el botón "Hoy" */
+    background-color: var(--primary-color); /* Color primario de la sección (Docente o Admin) */
+    color: white; /* Texto blanco para contraste */
+    border-color: var(--primary-color);
+    order: 1; /* Mover el botón "Hoy" a la izquierda si se desea (dentro de su chunk) */
+    margin-right: 5px; /* Espacio entre "Hoy" y los de navegación si están en el mismo chunk */
+}
+
+#mini-calendar .fc-today-button:hover {
+    background-color: var(--hover-color); /* Un hover que oscurezca/aclare el color primario */
+    border-color: var(--hover-color);
+    color: white; /* Mantener o ajustar color de texto en hover */
+}
+
+
+/* Botones de navegación (prev, next) en el mini-calendario */
+#mini-calendar .fc-prev-button,
+#mini-calendar .fc-next-button {
+    padding: 6px 8px; /* Pueden necesitar un padding ligeramente diferente si solo tienen iconos */
+}
+
+#mini-calendar .fc-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* Iconos dentro de los botones de navegación del mini-calendario */
+#mini-calendar .fc-icon {
+    font-size: 0.9em; /* Ajustar tamaño de los iconos de flecha */
+    vertical-align: middle; /* Intentar alinear mejor los iconos */
+}
+
+/* Si los botones prev/next están agrupados por FullCalendar (fc-button-group) */
+#mini-calendar .fc-button-group {
+    display: flex;
+    gap: 1px; /* Pequeño espacio entre prev y next si están agrupados */
+    order: 2; /* Mover el grupo prev/next a la derecha del botón "Hoy" */
+}
+
+#mini-calendar .fc-button-group > .fc-button {
+    margin: 0; /* Quitar márgenes individuales si están en un grupo */
+}
