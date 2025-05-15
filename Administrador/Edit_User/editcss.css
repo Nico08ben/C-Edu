@@ -410,20 +410,7 @@ img {
     overflow-wrap: break-word; 
     min-width: 120px; 
 }
-.table-scroll-container td:first-child { 
-    /* border-top-left-radius: solo si la primera fila no tiene cabecera sticky y quieres redondearla */
-}
-.table-scroll-container td:last-child {
-    /* border-top-right-radius: solo si la primera fila no tiene cabecera sticky y quieres redondearla */
-}
 
-/* Ajustes para el tbody-wrapper si se mantiene la estructura de dos tablas */
-.tbody-wrapper {
-    /* Si .table-scroll-container ya tiene overflow-y: auto, este wrapper podría no necesitarlo
-       a menos que quieras un comportamiento de scroll independiente del contenedor principal de la tabla */
-    /* max-height: calc(65vh - 45px); /* Ejemplo: altura del contenedor menos altura de cabecera */
-    /* overflow-y: auto; */ /* Esto crearía doble scrollbar si .table-scroll-container ya tiene uno */
-}
 .tbody-wrapper table { /* La tabla dentro del tbody-wrapper */
     width: 100%;
     border-collapse: collapse;
