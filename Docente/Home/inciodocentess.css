@@ -255,7 +255,7 @@
 }
 
 .btn-ingresar:hover {
-    background-color: #d4a738;
+    background-color: #35a88d;
     /* Asumiendo que --primary-color es el amarillo de Admin, este es un tono más oscuro */
     /* Si es para Docente (verde #40C3A5), un tono más oscuro sería por ej. #35a88d */
     transform: translateY(-2px);
@@ -272,15 +272,18 @@
         padding: 15px;
     }
 
-    .header {
-        flex-direction: column;
-        /* Apilar título y user_info en móvil */
-        align-items: flex-start;
-        /* Alinear al inicio */
-        gap: 10px;
-        /* Espacio entre título y user_info */
-        padding: 15px;
-    }
+.header {
+    /* height: 80px; */ /* Eliminada o comentada */
+    background-color: var(--sidebar-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 18px 25px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
 
     /* En móvil, user_info (si es position:absolute) podría necesitar ajustes
        o cambiar su posicionamiento para que fluya normalmente en el header. */
