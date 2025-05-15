@@ -51,33 +51,51 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Función para subir la imagen seleccionada
-    function uploadImage() {
+     // Función para subir la imagen seleccionada
+     function uploadImage() {
         const formData = new FormData(uploadForm);
         
-        // Mostrar mensaje de carga
         uploadStatus.textContent = "Subiendo imagen...";
         uploadStatus.style.color = "blue";
-        uploadStatus.style.display = "block"; // Asegurar que sea visible
+        uploadStatus.style.display = "block";
         
-        fetch("upload_image.php", {
+        // Ajusta esta URL para que apunte a tu script PHP de subida de fotos de perfil
+        fetch("../../PHP/upload_profile_image.php", { // Ruta relativa desde UserProfile/index.js
             method: "POST",
             body: formData
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor: ' + response.status);
+                // Intentar obtener más detalles del error si es posible
+                return response.json().then(errData => {
+                    throw new Error(errData.message || 'Error en la respuesta del servidor: ' + response.status);
+                }).catch(() => {
+                     throw new Error('Error en la respuesta del servidor: ' + response.status);
+                });
             }
             return response.json();
         })
         .then(data => {
             if (data.success) {
-                uploadStatus.textContent = "¡Imagen actualizada!";
+                uploadStatus.textContent = data.message || "¡Imagen actualizada!";
                 uploadStatus.style.color = "green";
                 
-                // Ocultar el mensaje después de 3 segundos
+                // Actualizar la imagen de perfil en la barra lateral (user_info.php) si existe
+                const sidebarProfileImage = document.querySelector('#user-profile-box .profile-image-link img');
+                if (sidebarProfileImage && data.imageUrl) {
+                    // Asumimos que data.imageUrl es la ruta relativa desde la raíz del proyecto.
+                    // Necesitamos construir la URL completa o la ruta correcta para el src.
+                    // Si imageUrlForDb es 'uploads/profile_pictures/user_1_xxxx.jpg'
+                    // y la página está en /C-Edu/Administrador/UserProfile/,
+                    // la ruta relativa correcta al archivo de imagen sería '../../uploads/profile_pictures/user_1_xxxx.jpg'
+                    // O si tienes una URL base configurada: `urlBase + data.imageUrl`
+                    sidebarProfileImage.src = '../../' + data.imageUrl + '?t=' + new Date().getTime(); // Añadir timestamp para evitar caché
+                }
+
+
                 setTimeout(() => {
                     uploadStatus.textContent = "";
+                    uploadStatus.style.display = "none";
                 }, 3000);
             } else {
                 uploadStatus.textContent = "Error: " + data.message;
@@ -85,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
         .catch(error => {
-            uploadStatus.textContent = "Error de conexión: " + error.message;
+            uploadStatus.textContent = "Error: " .concat(error.message);
             uploadStatus.style.color = "red";
             console.error("Error:", error);
         });

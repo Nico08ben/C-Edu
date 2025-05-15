@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-05-2025 a las 18:08:32
+-- Tiempo de generación: 15-05-2025 a las 22:22:44
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -140,6 +140,14 @@ CREATE TABLE `notificacion` (
   `estado_notificacion` enum('leída','no leída') NOT NULL DEFAULT 'no leída'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `notificacion`
+--
+
+INSERT INTO `notificacion` (`id_notificacion`, `id_usuario`, `tipo_notificacion`, `mensaje`, `enlace`, `fecha_notificacion`, `estado_notificacion`) VALUES
+(1, 4, 'nueva_tarea_personal', 'Has creado una nueva tarea para ti: PruebaFinal', '/C-Edu/Docente/Tareas asignadas/TareasDetalles.php?id_tarea=7', '2025-05-14 15:55:34', 'leída'),
+(2, 6, 'nueva_tarea_asignada', 'Un administrador te ha asignado una nueva tarea: Prueba Definitiva', '/C-Edu/Docente/Tareas asignadas/TareasDetalles.php?id_tarea=8', '2025-05-14 16:00:39', 'leída');
+
 -- --------------------------------------------------------
 
 --
@@ -187,7 +195,9 @@ INSERT INTO `tarea` (`id_tarea`, `fecha_inicio_tarea`, `fecha_fin_tarea`, `instr
 (3, '2025-05-06', '2025-05-07', 'Revisar horario 9-2', 'Completada', 4, 'Media', 0, 3),
 (4, '2025-05-06', '2025-05-15', 'Tengo que Trabajar', 'Pendiente', 4, 'Baja', 0, 4),
 (5, '2025-05-06', '2025-05-14', 'Subir notas finales de alumnos', 'Pendiente', 6, 'Alta', 0, 4),
-(6, '2025-05-06', '2025-05-17', 'XD', 'Pendiente', 4, 'Alta', 0, 6);
+(6, '2025-05-06', '2025-05-17', 'XD', 'Pendiente', 4, 'Alta', 0, 6),
+(7, '2025-05-14', '2025-05-15', 'PruebaFinal', 'Completada', 4, 'Media', 0, 4),
+(8, '2025-05-14', '2025-05-17', 'Prueba Definitiva', 'Completada', 6, 'Alta', 0, 3);
 
 -- --------------------------------------------------------
 
@@ -204,17 +214,18 @@ CREATE TABLE `usuario` (
   `id_institucion` int(11) DEFAULT NULL,
   `id_rol` int(11) NOT NULL,
   `id_materia` int(11) DEFAULT NULL,
-  `grupo_cargo_usuario` varchar(11) DEFAULT NULL
+  `grupo_cargo_usuario` varchar(11) DEFAULT NULL,
+  `foto_perfil_url` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contrasena_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`) VALUES
-(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL),
-(4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL),
-(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL);
+INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contrasena_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`, `foto_perfil_url`) VALUES
+(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL, NULL),
+(4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL, 'uploads/profile_pictures/user_4_68264a90e9889.png'),
+(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL, 'uploads/profile_pictures/user_6_68263f95ab9ac.jpg');
 
 -- --------------------------------------------------------
 
@@ -341,13 +352,13 @@ ALTER TABLE `mensaje`
 -- AUTO_INCREMENT de la tabla `notificacion`
 --
 ALTER TABLE `notificacion`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tarea`
 --
 ALTER TABLE `tarea`
-  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
