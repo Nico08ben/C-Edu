@@ -1,10 +1,11 @@
 :root {
-    --primary-color: #3eb489;
+    --primary-color: #e7bb41; /* Color primario Administrador */
+    --primary-color-light: #fff3d2; /* Color primario claro Administrador */
     --light-gray: #f5f5f5;
     --dark-gray: #333;
     --border-color: #e0e0e0;
-    --selected-color: #3eb489;
-    --hover-color: #e0f5ee;
+    --selected-color: #e7bb41; /* Color seleccionado Administrador */
+    --hover-color: #fff9e6; /* Un tono más claro de --primary-color-light para hover */
 }
 
 * {
@@ -24,7 +25,24 @@ body {
     color: #333;
 }
 
-.container {
+/* Contenedor principal de la página del calendario del administrador */
+.home {
+    position: relative;
+    /* min-height: 100vh; Asegúrate que tu layout principal maneje esto si es necesario */
+    /* left: 250px;  Estos valores dependen de tu sidebar de Admin */
+    /* width: calc(100% - 250px); Transición para cambios de estilo */
+    /* background-color: var(--body-color);  Heredado del body de Admin */
+    /* transition: var(--trans-05); */
+}
+
+/* Ajuste si la sidebar del admin se cierra */
+/* .sidebar.close ~ .home {
+    left: 88px;
+    width: calc(100% - 88px);
+} */
+
+
+.container { /* Este es el contenedor dentro de la sección .home */
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
@@ -35,7 +53,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    background-color: #fff;
+    background-color: #fff; /* O var(--sidebar-color) si usas el de Admin */
     border-bottom: 1px solid var(--border-color);
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
@@ -61,7 +79,7 @@ body {
 }
 
 .today-btn:hover {
-    background-color: #2d9b74;
+    background-color: #d4a738; /* Tono más oscuro de --primary-color */
 }
 
 .navigation-buttons {
@@ -90,65 +108,12 @@ body {
     color: var(--dark-gray);
 }
 
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.profile-info h3 {
-    font-weight: 600;
-    margin-bottom: 2px;
-}
-
-.profile-info p {
-    font-size: 13px;
-    color: #666;
-}
-
-.profile img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
-.profile .fa-regular.fa-bell {
-    background-color: var(--primary-color);
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    text-align: center;
-    padding: 9px;
-    color: white;
-    cursor: pointer;
-}
-
-.profile .fa-solid.fa-user {
-    font-size: 25px;
-    text-align: center;
-    padding: 4px;
-    border-radius: 50%;
-    height: 35px;
-    width: 35px;
-    color: gray;
-    background-color: white;
-    cursor: pointer;
-}
-
-/* Añade esto debajo de los estilos existentes de .profile */
+/* Se asume que user_info.php y su CSS se encargan del estilo del perfil */
 .header-right {
     display: flex;
     align-items: center;
     gap: 20px;
 }
-
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px 30px;
-}
-
 
 .action-bar {
     display: flex;
@@ -172,7 +137,7 @@ body {
 }
 
 .new-event-btn:hover {
-    background-color: #2d9b74;
+    background-color: #d4a738; /* Tono más oscuro */
 }
 
 .view-options {
@@ -207,7 +172,7 @@ body {
 }
 
 .mini-calendar {
-    background-color: white;
+    background-color: white; /* O var(--sidebar-color) del Admin */
     border-radius: 8px;
     padding: 15px;
     width: 280px;
@@ -216,7 +181,7 @@ body {
 
 .main-calendar {
     flex: 1;
-    background-color: white;
+    background-color: white; /* O var(--sidebar-color) del Admin */
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -229,7 +194,7 @@ body {
 }
 
 .fc {
-    background-color: white;
+    background-color: white; /* O var(--sidebar-color) del Admin */
     border-radius: 8px;
 }
 
@@ -246,12 +211,17 @@ body {
 .fc-event {
     cursor: pointer;
     border: none;
-    color: #333;
+    /* color: #333; El color del texto del evento se puede definir en JS o aquí si es constante */
     padding: 2px 4px;
     border-radius: 3px;
     font-size: 13px;
     margin-bottom: 2px;
+    /* El backgroundColor se establece en JS, pero puedes poner un default */
+    background-color: var(--primary-color); /* Color por defecto para eventos */
+    color: white; /* Texto blanco para mejor contraste con el primario Admin */
+    border-left: 4px solid var(--primary-color) !important; /* Para consistencia con eventDidMount */
 }
+
 
 .fc-event:hover {
     opacity: 0.9;
@@ -280,7 +250,7 @@ body {
 }
 
 .modal-content {
-    background-color: white;
+    background-color: white; /* O var(--sidebar-color) del Admin */
     margin: 10% auto;
     padding: 25px;
     border-radius: 8px;
@@ -308,7 +278,7 @@ body {
     color: #333;
 }
 
-#event-title {
+#event-title { /* Título dentro del modal de visualización */
     color: var(--primary-color);
     margin-bottom: 15px;
 }
@@ -333,7 +303,7 @@ body {
     gap: 8px;
 }
 
-.form-group input, 
+.form-group input,
 .form-group textarea,
 .form-group select {
     width: 100%;
@@ -341,13 +311,25 @@ body {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
+    background-color: var(--light-gray); /* Fondo claro para inputs */
+    color: var(--dark-gray);
 }
+
+body.dark .form-group input,
+body.dark .form-group textarea,
+body.dark .form-group select {
+    background-color: var(--primary-color-light); /* Ajuste para modo oscuro si es necesario */
+    border-color: #555;
+    color: var(--text-color); /* Heredado del body.dark */
+}
+
 
 .form-group textarea {
     min-height: 80px;
     resize: vertical;
 }
 
+/* Botón primario en modales (Guardar) */
 .btn-primary {
     background-color: var(--primary-color);
     color: white;
@@ -363,10 +345,10 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #2d9b74;
+    background-color: #d4a738; /* Tono más oscuro */
 }
 
-.btn-danger {
+.btn-danger { /* Botón de eliminar */
     background-color: #dc3545;
     color: white;
     border: none;
@@ -384,12 +366,18 @@ body {
     background-color: #c82333;
 }
 
+#new-event-modal .modal-content h2, /* Título del modal de nuevo evento */
+#event-modal .modal-content h2 { /* Título del modal de visualización de evento */
+    color: var(--primary-color);
+}
+
+
 /* Responsive styles */
 @media (max-width: 992px) {
     .calendar-container {
         flex-direction: column;
     }
-    
+
     .mini-calendar {
         width: 100%;
         margin-bottom: 20px;
@@ -403,21 +391,21 @@ body {
         gap: 15px;
         padding: 15px;
     }
-    
+
     .header-left, .header-right {
         width: 100%;
         justify-content: space-between;
     }
-    
+
     .action-bar {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     .view-options {
         width: 100%;
     }
-    
+
     .view-btn {
         flex: 1;
         text-align: center;
@@ -429,12 +417,14 @@ body {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .fc-toolbar-chunk {
         display: flex;
         justify-content: center;
     }
 }
+
+/* Ajustes para modales */
 #new-event-modal,
 #event-modal {
     position: fixed;
@@ -443,20 +433,35 @@ body {
     width: 100vw;
     height: 100vh;
     overflow-y: auto;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: none;
-    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo más oscuro para mejor contraste del modal */
+    display: none; /* Oculto por defecto */
+    z-index: 9999; /* Encima de todo */
 }
 
 #new-event-modal .modal-content,
 #event-modal .modal-content {
-    margin: 50px auto;
-    background: white;
-    padding: 20px;
+    margin: 50px auto; /* Centrado y con margen superior */
+    background: white; /* O var(--sidebar-color) del Admin */
+    padding: 25px; /* Aumentar padding */
     width: 90%;
-    max-width: 800px;
+    max-width: 550px; /* Un poco más ancho si es necesario */
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Sombra más pronunciada */
+}
+
+/* Select de color en el modal de nuevo evento */
+#event-color option[value="#e7bb41"] { background-color: #e7bb41; color: white; }
+#event-color option[value="#2196F3"] { background-color: #2196F3; color: white; }
+#event-color option[value="#9C27B0"] { background-color: #9C27B0; color: white; }
+#event-color option[value="#FF9800"] { background-color: #FF9800; color: white; }
+#event-color option[value="#F44336"] { background-color: #F44336; color: white; }
+
+/* Asegurar que el color del texto en el select sea visible */
+#event-color {
+    color: var(--dark-gray); /* O el color de texto general de inputs */
+}
+body.dark #event-color {
+    color: var(--text-color); /* Para modo oscuro */
 }
 /* Estilos para el header del MINI-CALENDARIO */
 #mini-calendar .fc-header-toolbar {
@@ -538,5 +543,3 @@ body {
 #mini-calendar .fc-button-group > .fc-button {
     margin: 0; /* Quitar márgenes individuales si están en un grupo */
 }
-
-

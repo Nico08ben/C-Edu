@@ -1,41 +1,153 @@
+/* ============================================= */
+/* Estilos para el Bloque de Información de Usuario */
+/* (Diseño según imagen: alineado a la derecha dentro de un header) */
+/* ============================================= */
+
+/* --- Contenedor Principal del Bloque de Usuario --- */
 #user-profile-box {
+    /* Layout Interno: Elementos en horizontal */
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Espacio entre icono, texto y botón */
+
+    /* Apariencia del Bloque (según imagen) */
+    background-color: #ffffff; /* Fondo blanco */
+    border: 1px solid #e0e0e0; /* Borde gris claro */
+    border-radius: 6px; /* Bordes redondeados */
+    padding: 8px 12px; /* Espaciado interno */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Sombra muy sutil */
+
+    /* IMPORTANTE: Quitar posicionamiento absoluto/fijo */
+    /* position: fixed; */
+    /* position: absolute; */
+    /* top: 0; */
+    /* left: 0; */
+    /* width: 100%; */
+    /* z-index: 1000; */
+}
+
+/* --- Contenedor de Notificaciones --- */
+.notificaciones-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Icono de Campana */
+.notificaciones-icono {
+    cursor: pointer;
+    position: relative;
+    padding: 4px; /* Ajusta padding si es necesario */
+    display: flex;
+    align-items: center;
+    color: #555; /* Color del icono */
+}
+
+.notificaciones-icono svg {
+    width: 22px; /* Ligeramente más pequeño? */
+    height: 22px;
+    fill: currentColor;
+}
+
+/* Contador */
+.notificaciones-contador {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-#user-profile-box a {
-    text-decoration: none;
-    color: inherit;
-}
-
-#user-profile-box .profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-#user-profile-box .profile img {
-    width: 40px;
-    height: 40px;
+    top: -3px;
+    right: -4px;
+    background-color: red;
+    color: white;
     border-radius: 50%;
-    object-fit: cover;
+    padding: 1px 4px; /* Ajusta padding */
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 1;
+    min-width: 15px;
+    text-align: center;
+    border: 1px solid white;
+    display: none; /* Mostrar con JS */
+    z-index: 1;
 }
 
-#user-profile-box .profile-text {
+/* Dropdown (Sin cambios mayores, solo asegurar posicionamiento relativo) */
+.notificaciones-dropdown {
+    display: none;
+    position: absolute;
+    /* Se posiciona relativo a .notificaciones-container */
+    top: calc(100% + 8px); /* Debajo del icono */
+    right: 0; /* Alineado a la derecha del icono */
+    left: auto; /* Asegura que no interfiera 'left' */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    width: 320px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1001; /* Sobre otros elementos si es necesario */
+}
+/* (Estilos internos del dropdown: .notificaciones-dropdown-header, .notificaciones-lista, etc. permanecen igual que antes) */
+.notificaciones-dropdown-header { padding: 12px 15px; font-weight: bold; font-size: 0.95em; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; color: #333; }
+.notificaciones-lista { list-style: none; padding: 0; margin: 0; }
+.notificaciones-lista li { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; font-size: 0.9em; line-height: 1.4; transition: background-color 0.2s ease; }
+.notificaciones-lista li:last-child { border-bottom: none; }
+.notificaciones-lista li.no-leida { background-color: #f9f9f9; font-weight: 500; }
+.notificaciones-lista li.no-leida .mensaje { font-weight: 600; color: #222; }
+.notificaciones-lista li:hover { background-color: #eef; }
+.notificaciones-lista .mensaje { display: block; margin-bottom: 4px; color: #444; }
+.notificaciones-lista .tipo { font-size: 0.8em; color: #777; text-transform: capitalize; display: inline-block; margin-right: 8px; }
+.notificaciones-lista .fecha { font-size: 0.8em; color: #999; display: inline-block; }
+.notificaciones-lista .sin-notificaciones { padding: 20px; text-align: center; color: #888; cursor: default; }
+.notificaciones-lista .sin-notificaciones:hover { background-color: white; }
+.notificaciones-dropdown-footer { padding: 8px; text-align: center; border-top: 1px solid #eee; background-color: #fcfcfc; }
+.notificaciones-dropdown-footer button { background: none; border: none; color: #007bff; cursor: pointer; font-size: 0.85em; padding: 5px 10px; border-radius: 3px; transition: background-color 0.2s ease; }
+.notificaciones-dropdown-footer button:hover { text-decoration: underline; background-color: #e7f3ff; }
+
+
+/* --- Texto del Perfil (Nombre y Rol) --- */
+.profile-text {
     display: flex;
     flex-direction: column;
+    /* text-align: left; */ /* Alineación por defecto a la izquierda */
+    line-height: 1.3;
+    /* Quitar margen si gap es suficiente */
+    margin: 0 10px;
+    
 }
 
 #user-profile-box .name {
-    font-weight: bold;
+    font-weight: 600;
     font-size: 14px;
+    color: #333;
+    white-space: nowrap; /* Evita que el nombre se parta */
 }
 
 #user-profile-box .role {
     font-size: 12px;
-    color: #888;
+    color: #666;
+    white-space: nowrap; /* Evita que el rol se parta */
 }
+
+/* --- Botón/Enlace de Perfil --- */
+.profile-button {
+    display: inline-block; /* Comportamiento de bloque pero en línea */
+    text-decoration: none; /* Quitar subrayado de enlace */
+    background-color: #f0f0f0; /* Fondo grisáceo claro */
+    color: #333; /* Color de texto */
+    padding: 6px 12px; /* Espaciado interno */
+    border: 1px solid #ccc; /* Borde */
+    border-radius: 4px; /* Bordes redondeados */
+    font-size: 13px; /* Tamaño de fuente */
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap; /* Evita que el texto se parta */
+}
+    
+.profile-button:hover {
+    background-color: #e0e0e0; /* Oscurecer un poco al pasar el mouse */
+    border-color: #bbb;
+}
+
+/* Si todavía usaras la imagen, sus estilos serían estos (opcional) */
+.profile-image-link { display: block; line-height: 0; }
+.profile-image { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: block; border: 1px solid #ccc; }

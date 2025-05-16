@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-04-2025 a las 18:04:30
+-- Tiempo de generación: 15-05-2025 a las 22:22:44
 -- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -132,11 +132,21 @@ CREATE TABLE `mensaje` (
 
 CREATE TABLE `notificacion` (
   `id_notificacion` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
   `tipo_notificacion` varchar(100) DEFAULT NULL,
+  `mensaje` text DEFAULT NULL,
+  `enlace` varchar(255) DEFAULT NULL,
   `fecha_notificacion` timestamp NOT NULL DEFAULT current_timestamp(),
-  `estado_notificacion` enum('leída','no leída') NOT NULL,
-  `id_usuario` int(11) DEFAULT NULL
+  `estado_notificacion` enum('leída','no leída') NOT NULL DEFAULT 'no leída'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `notificacion`
+--
+
+INSERT INTO `notificacion` (`id_notificacion`, `id_usuario`, `tipo_notificacion`, `mensaje`, `enlace`, `fecha_notificacion`, `estado_notificacion`) VALUES
+(1, 4, 'nueva_tarea_personal', 'Has creado una nueva tarea para ti: PruebaFinal', '/C-Edu/Docente/Tareas asignadas/TareasDetalles.php?id_tarea=7', '2025-05-14 15:55:34', 'leída'),
+(2, 6, 'nueva_tarea_asignada', 'Un administrador te ha asignado una nueva tarea: Prueba Definitiva', '/C-Edu/Docente/Tareas asignadas/TareasDetalles.php?id_tarea=8', '2025-05-14 16:00:39', 'leída');
 
 -- --------------------------------------------------------
 
@@ -169,12 +179,25 @@ CREATE TABLE `tarea` (
   `fecha_inicio_tarea` date DEFAULT NULL,
   `fecha_fin_tarea` date DEFAULT NULL,
   `instruccion_tarea` text DEFAULT NULL,
-  `estado_tarea` enum('pendiente','completada','cancelada') NOT NULL,
+  `estado_tarea` enum('Pendiente','Completada','Cancelada') NOT NULL,
   `id_usuario` int(11) DEFAULT NULL,
   `prioridad` enum('Alta','Media','Baja') DEFAULT 'Media',
   `porcentaje_avance` int(11) DEFAULT 0,
   `id_asignador` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tarea`
+--
+
+INSERT INTO `tarea` (`id_tarea`, `fecha_inicio_tarea`, `fecha_fin_tarea`, `instruccion_tarea`, `estado_tarea`, `id_usuario`, `prioridad`, `porcentaje_avance`, `id_asignador`) VALUES
+(2, '2025-05-06', '2025-05-08', 'Tienes que jugar', 'Cancelada', 4, 'Alta', 0, 3),
+(3, '2025-05-06', '2025-05-07', 'Revisar horario 9-2', 'Completada', 4, 'Media', 0, 3),
+(4, '2025-05-06', '2025-05-15', 'Tengo que Trabajar', 'Pendiente', 4, 'Baja', 0, 4),
+(5, '2025-05-06', '2025-05-14', 'Subir notas finales de alumnos', 'Pendiente', 6, 'Alta', 0, 4),
+(6, '2025-05-06', '2025-05-17', 'XD', 'Pendiente', 4, 'Alta', 0, 6),
+(7, '2025-05-14', '2025-05-15', 'PruebaFinal', 'Completada', 4, 'Media', 0, 4),
+(8, '2025-05-14', '2025-05-17', 'Prueba Definitiva', 'Completada', 6, 'Alta', 0, 3);
 
 -- --------------------------------------------------------
 
@@ -191,17 +214,18 @@ CREATE TABLE `usuario` (
   `id_institucion` int(11) DEFAULT NULL,
   `id_rol` int(11) NOT NULL,
   `id_materia` int(11) DEFAULT NULL,
-  `grupo_cargo_usuario` varchar(11) DEFAULT NULL
+  `grupo_cargo_usuario` varchar(11) DEFAULT NULL,
+  `foto_perfil_url` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contrasena_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`) VALUES
-(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL),
-(4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL),
-(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL);
+INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contrasena_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`, `foto_perfil_url`) VALUES
+(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL, NULL),
+(4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL, 'uploads/profile_pictures/user_4_68264a90e9889.png'),
+(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL, 'uploads/profile_pictures/user_6_68263f95ab9ac.jpg');
 
 -- --------------------------------------------------------
 
@@ -257,7 +281,7 @@ ALTER TABLE `mensaje`
 --
 ALTER TABLE `notificacion`
   ADD PRIMARY KEY (`id_notificacion`),
-  ADD KEY `id_usuario` (`id_usuario`);
+  ADD KEY `idx_id_usuario_estado` (`id_usuario`,`estado_notificacion`);
 
 --
 -- Indices de la tabla `rol`
@@ -328,13 +352,13 @@ ALTER TABLE `mensaje`
 -- AUTO_INCREMENT de la tabla `notificacion`
 --
 ALTER TABLE `notificacion`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tarea`
 --
 ALTER TABLE `tarea`
-  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -369,7 +393,7 @@ ALTER TABLE `mensaje`
 -- Filtros para la tabla `notificacion`
 --
 ALTER TABLE `notificacion`
-  ADD CONSTRAINT `notificacion_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`);
+  ADD CONSTRAINT `notificacion_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `tarea`
