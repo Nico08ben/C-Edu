@@ -26,4 +26,4 @@ require_once(__DIR__ . '/../config/database.php');
                         <button id="marcarTodasLeidasBtn">Marcar todas como leídas</button>
                     </div>
                 </div>
-    <script src="/C-Edu/PHP/js/notificaciones.js"></script>
+    <script src="/C-Edu/public/assets/js/notificaciones.js"></script>

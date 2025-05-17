@@ -25,7 +25,7 @@ if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) 
             $newName = 'user_' . $id_usuario . '_' . uniqid() . '.' . $ext;
             
             // Ruta relativa desde la raíz del proyecto para guardar la imagen
-            $uploadDir = 'uploads/profile_pictures/'; // Asegúrate que esta carpeta exista y tenga permisos de escritura
+            $uploadDir = '../../../public/assets/images/uploads/'; // Asegúrate que esta carpeta exista y tenga permisos de escritura
             
             // Comprobar si el directorio existe, si no, intentar crearlo
             if (!file_exists(__DIR__ . '/../' . $uploadDir)) {
@@ -36,8 +36,8 @@ if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === 0) 
                 }
             }
             
-            $uploadPathOnServer = __DIR__ . '/../' . $uploadDir . $newName; // Ruta física en el servidor
-            $imageUrlForDb = $uploadDir . $newName; // Ruta que se guardará en la BD
+            $uploadPathOnServer = __DIR__ . '/' . $uploadDir . $newName; // Ruta física en el servidor
+            $imageUrlForDb = '/assets/images/uploads/' . $newName; // Ruta que se guardará en la BD
 
             if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $uploadPathOnServer)) {
                 // Imagen guardada en el servidor, ahora actualizamos la BD
