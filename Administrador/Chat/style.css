@@ -817,5 +817,102 @@ body {
     0% { background-color: #ffeaa7; }
     100% { background-color: transparent; }
 }
+.message-image {
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+    .message-image:hover {
+        transform: scale(1.03);
+        opacity: 0.9;
+    }
+.image-modal {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-modal-content {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #000;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.conversation-form-sticker {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: none;
+    background-color: transparent;
+    outline: transparent;
+    font-size: 20px;
+    color: var(--white);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+    .conversation-form-sticker:hover {
+        background-color: var(--slate-100);
+        color: var(--slate-600);
+    }
+
+    .conversation-form-sticker:active {
+        background-color: var(--slate-200);
+        color: var(--slate-600);
+    }
+.sticker-panel {
+    display: none;
+    position: absolute;
+    bottom: 65px;
+    right: 110px;
+    width: 480px;
+    max-height: 320px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    overflow-y: auto;
+    z-index: 9999;
+    transition: all 0.2s ease-in-out;
+}
+
+    .sticker-panel img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin: 5px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+        .sticker-panel img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
 
 

@@ -48,6 +48,68 @@ document.querySelectorAll('.conversation-back').forEach(function (item) {
 })
 
 document.addEventListener('DOMContentLoaded', function () {
+    const stickers = [
+        "https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif",
+        "https://media.giphy.com/media/3o7abB06u9bNzA8lu8/giphy.gif",
+        "https://media.giphy.com/media/l0Exk8EUzSLsrErEQ/giphy.gif",
+        "https://media.giphy.com/media/KziKCpvrGngHbYjaUF/giphy.gif",
+        "https://media.giphy.com/media/YTbZzCkRQCEJa/giphy.gif",
+        "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHM1ZzRrNDZjMzJyMjJqdTVwY3A3NXVqamVhMWVleXVrOGxzaDI2biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1ViLp0GBYhTcA/giphy.gif"
+    ]
+    const stickerBtn = document.querySelector('.conversation-form-sticker')
+    const stickerPanel = document.getElementById('stickerPanel')
+
+    stickerBtn.addEventListener('click', () => {
+        if (stickerPanel.style.display === 'none') {
+            stickerPanel.innerHTML = ''
+            stickers.forEach(url => {
+                const img = document.createElement('img')
+                img.src = url
+                img.style.width = '60px'
+                img.style.margin = '4px'
+                img.style.cursor = 'pointer'
+                img.addEventListener('click', () => {
+                    insertStickerMessage(url)
+                    stickerPanel.style.display = 'none'
+                })
+                stickerPanel.appendChild(img)
+            })
+            stickerPanel.style.display = 'block'
+        } else {
+            stickerPanel.style.display = 'none'
+        }
+    })
+
+    document.querySelector('.conversation-wrapper').addEventListener('click', function (e) {
+        const image = e.target.closest('.message-image')
+        if (!image) return
+
+        const modal = document.getElementById('imageModal')
+        const modalImg = document.getElementById('modalImage')
+
+        modal.style.display = 'flex'
+        modalImg.src = image.src
+    })
+
+    // Cerrar modal al hacer clic en la "X"
+    document.querySelector('.image-modal-close').addEventListener('click', function () {
+        document.getElementById('imageModal').style.display = 'none'
+    })
+
+    // Cerrar modal al presionar ESC
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            document.getElementById('imageModal').style.display = 'none'
+        }
+    })
+
+    // Cerrar modal al hacer clic fuera de la imagen
+    document.getElementById('imageModal').addEventListener('click', function (e) {
+        if (e.target === this) {
+            this.style.display = 'none'
+        }
+    })
+
     const recordBtn = document.querySelector('.conversation-form-record')
     let mediaRecorder
     let audioChunks = []
@@ -337,7 +399,9 @@ document.getElementById('imageInput').addEventListener('change', function () {
 function insertImageMessage(imageUrl) {
     const messageList = document.querySelector('#conversation-1 .conversation-wrapper');
     const li = document.createElement('li');
-    li.className = 'conversation-item';
+    const messageId = 'msg-' + Date.now()
+    li.className = 'conversation-item'
+    li.id = messageId
     li.innerHTML = `
         <div class="conversation-item-side">
             <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?..." alt="">
@@ -370,7 +434,9 @@ function insertAudioMessage(audioUrl) {
     const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
     const li = document.createElement('li')
+    const messageId = 'msg-' + Date.now()
     li.className = 'conversation-item'
+    li.id = messageId
     li.innerHTML = `
         <div class="conversation-item-side">
             <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?..." alt="">
@@ -422,5 +488,43 @@ document.querySelector('.conversation-wrapper').addEventListener('click', functi
         targetMessage.classList.remove('highlighted-reply')
     }, 1500)
 })
+function insertStickerMessage(stickerUrl) {
+    const messageList = document.querySelector('.conversation-wrapper')
+    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    const messageId = 'msg-' + Date.now()
+
+    const li = document.createElement('li')
+    li.className = 'conversation-item'
+    li.id = messageId
+    li.innerHTML = `
+    <div class="conversation-item-side">
+        <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?..." alt="">
+    </div>
+    <div class="conversation-item-content">
+        <div class="conversation-item-wrapper">
+            <div class="conversation-item-box">
+                <div class="conversation-item-text">
+                    <img class="message-image" src="${stickerUrl}" style="max-width: 180px; height: auto; border-radius: 8px;" />
+                    <div class="conversation-item-time">${currentTime}</div>
+                </div>
+                <div class="conversation-item-dropdown">
+                    <button type="button" class="conversation-item-dropdown-toggle"><i class="ri-more-2-line"></i></button>
+                    <ul class="conversation-item-dropdown-list">
+                        <li><a href="#" class="edit-btn"><i class="ri-pencil-fill"></i>Edit</a></li>
+                        <li><a href="#" class="forward-btn"><i class="ri-share-forward-line"></i>Forward</a></li>
+                        <li><a href="#" class="Delete-btn"><i class="ri-delete-bin-line"></i>Delete</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+  `
+
+    messageList.appendChild(li)
+    const conversationMain = document.querySelector('.conversation-main')
+    conversationMain.scrollTop = conversationMain.scrollHeight
+}
+
+
 
 
