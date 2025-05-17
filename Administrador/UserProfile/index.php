@@ -5,6 +5,14 @@ if (session_status() === PHP_SESSION_NONE) {
 
 include '../../conexion.php';
 
+$theme_class = '';
+if (isset($_SESSION['rol'])) {
+    if ($_SESSION['rol'] == 0) { // 0 para Admin
+        $theme_class = 'theme-admin';
+    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
+        $theme_class = 'theme-docente';
+    }
+}
 $id_usuario = $_SESSION['id_usuario'] ?? null;
 $user_profile_data = []; // Array para almacenar todos los datos del perfil
 
@@ -41,7 +49,7 @@ if (!empty($user_profile_data['foto_perfil_url'])) {
 
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="<?php echo $theme_class;?>">
 <head>
     <?php 
     // Determinar la ruta correcta para el head.php basado en el directorio actual

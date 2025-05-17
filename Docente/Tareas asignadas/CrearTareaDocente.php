@@ -8,7 +8,14 @@ if (!isset($_SESSION['id_usuario'])) {
 
 // 1. INCLUIR CONEXIÓN (YA LO TIENES)
 require_once(__DIR__ . '/../../conexion.php');
-
+$theme_class = '';
+if (isset($_SESSION['rol'])) {
+    if ($_SESSION['rol'] == 0) { // 0 para Admin
+        $theme_class = 'theme-admin';
+    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
+        $theme_class = 'theme-docente';
+    }
+}
 // 2. INCLUIR LA FUNCIÓN PARA CREAR NOTIFICACIONES
 // Esta ruta parece ser la correcta según el error anterior que solucionamos.
 // (Significa que desde 'C:\xampp\htdocs\C-Edu\Docente\Tareas asignadas\' sube dos niveles a 'C:\xampp\htdocs\C-Edu\'
@@ -91,7 +98,7 @@ $stmt_insert = null;
 // $conn->close();
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="<?php echo $theme_class;?>">
 
 <head>
     <meta charset="UTF-8">

@@ -1,5 +1,5 @@
 // Seleccionar elementos del DOM
-const body = document.querySelector("body");
+const body = document.querySelector("html");
 const sidebar = document.querySelector(".sidebar");
 const toggle = document.querySelector(".sidebar .toggle");
 const searchBtn = document.querySelector(".sidebar .search-box");

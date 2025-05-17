@@ -1,9 +1,17 @@
 <?php
 session_start(); // Must be at the VERY TOP
 include "../../conexion.php";
+$theme_class = '';
+if (isset($_SESSION['rol'])) {
+    if ($_SESSION['rol'] == 0) { // 0 para Admin
+        $theme_class = 'theme-admin';
+    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
+        $theme_class = 'theme-docente';
+    }
+}
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="<?php echo $theme_class;?>">
 <head>
     <?php include "../../SIDEBAR/Docente/head.php" ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">

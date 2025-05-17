@@ -1,37 +1,5 @@
 /* Importar fuente de Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-
-/* Definición de variables CSS para la paleta de colores */
-:root {
-    --body-color: #E4E9F7;
-    --sidebar-color: #FFF;
-    --primary-color: #40C3A5;
-    /* Nuevo color primario: un tono verde azulado */
-    --primary-color-ligth: #cdfff2;
-    /* Tono claro del nuevo color primario */
-    --toggle-color: #DDD;
-    --text-color: #707070;
-    --title-color: #333;
-
-    --trans-02: all 0.2s ease;
-    --trans-03: all 0.3s ease;
-    --trans-04: all 0.4s ease;
-    --trans-05: all 0.5s ease;
-}
-
-/* Estilos para el modo oscuro */
-body.dark {
-    --body-color: #18191A;
-    --sidebar-color: #242526;
-    --primary-color: #3A3B3C;
-    /* Color primario en modo oscuro (puede que quieras ajustarlo) */
-    --primary-color-ligth: #3A3B3C;
-    /* Tono claro en modo oscuro (puede que quieras ajustarlo) */
-    --toggle-color: #FFF;
-    --text-color: #CCC;
-    --title-color: #ffffff;
-}
-
 /* Estilos generales para todos los elementos */
 * {
     /* Eliminar margenes y rellenos por defecto */

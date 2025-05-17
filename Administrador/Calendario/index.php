@@ -2,6 +2,15 @@
 session_start(); // Debe estar AL INICIO del archivo
 // include "../../conexion.php"; // Si es necesario para lógica PHP en esta página (user_info.php ya lo incluye)
 
+$theme_class = '';
+if (isset($_SESSION['rol'])) {
+    if ($_SESSION['rol'] == 0) { // 0 para Admin
+        $theme_class = 'theme-admin';
+    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
+        $theme_class = 'theme-docente';
+    }
+}
+
 // Redirigir si no es admin o no ha iniciado sesión (ejemplo)
 if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que el rol 0 es Administrador
     // header('Location: ../../index.php'); // Ajusta la ruta a tu login si es necesario
@@ -9,7 +18,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
 }
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="<?php echo $theme_class;?>">
 <head>
     <?php include "../../SIDEBAR/Admin/head.php"; // Ruta al head de Admin ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">

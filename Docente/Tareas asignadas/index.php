@@ -10,7 +10,14 @@ if (!isset($_SESSION['id_usuario'])) {
 // Incluir el archivo de conexión a la base de datos
 // Ajusta la ruta según la estructura de tu proyecto
 require_once(__DIR__ . '/../../conexion.php');
-
+$theme_class = '';
+if (isset($_SESSION['rol'])) {
+    if ($_SESSION['rol'] == 0) { // 0 para Admin
+        $theme_class = 'theme-admin';
+    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
+        $theme_class = 'theme-docente';
+    }
+}
 // Obtener el filtro de la URL si existe
 // Los filtros para el docente serán 'current' (Pendiente/En Proceso) o 'finished' (Terminada/Cancelada/Completada)
 $filter = $_GET['filter'] ?? 'current'; // Valor por defecto: 'current'
@@ -22,7 +29,7 @@ $query_successful = false; // Bandera para rastrear si la consulta fue exitosa
 
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="<?php echo $theme_class;?>">
 
 <head>
     <?php include "../../SIDEBAR/Docente/head.php"; ?>

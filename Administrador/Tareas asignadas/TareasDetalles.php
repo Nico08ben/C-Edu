@@ -6,6 +6,14 @@ if (!isset($_SESSION['id_usuario'])) {
     exit();
 }
 
+$theme_class = '';
+if (isset($_SESSION['rol'])) {
+    if ($_SESSION['rol'] == 0) { // 0 para Admin
+        $theme_class = 'theme-admin';
+    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
+        $theme_class = 'theme-docente';
+    }
+}
 // Incluir el archivo de conexión a la base de datos
 require_once(__DIR__ . '/../../conexion.php');
 
@@ -158,7 +166,7 @@ $stmt = null;
 
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="<?php echo $theme_class;?>">
 
 <head>
     <meta charset="UTF-8">

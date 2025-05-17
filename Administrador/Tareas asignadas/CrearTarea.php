@@ -10,6 +10,14 @@ require_once(__DIR__ . '/../../conexion.php'); // Sube dos niveles desde Adminis
 // Subir dos niveles (desde Administrador/Tareas asignadas/ a C-Edu/) y luego entrar a PHP/api/
 require_once(__DIR__ . '/../../PHP/api/crear_notificacion.php');
 
+$theme_class = '';
+if (isset($_SESSION['rol'])) {
+    if ($_SESSION['rol'] == 0) { // 0 para Admin
+        $theme_class = 'theme-admin';
+    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
+        $theme_class = 'theme-docente';
+    }
+}
 $mensaje = ''; // Variable para mostrar mensajes de éxito o error
 $stmt_insert = null; // Inicializar statement de inserción a null
 $result_users = null; // Inicializar resultado de usuarios a null
@@ -103,7 +111,7 @@ $stmt_insert = null;
 
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="<?php echo $theme_class;?>">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

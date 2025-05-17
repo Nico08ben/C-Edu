@@ -7,35 +7,10 @@
     box-sizing: border-box;
 }
 
-:root {
-    --body-color: #e4e9f7;
-    --sidebar-color: #fff;
-    --primary-color: #e7bb41;
-    --primary-color-ligth: #fff3d2;
-    --toggle-color: #ddd;
-    --text-color: #707070;
-    --title-color: #333;
-
-    --trans-02: all 0.2s ease;
-    --trans-03: all 0.3s ease;
-    --trans-04: all 0.4s ease;
-    --trans-05: all 0.5s ease;
-}
-
 body {
     height: 100vh;
     background: var(--body-color);
     transition: var(--trans-05);
-}
-
-body.dark {
-    --body-color: #18191a;
-    --sidebar-color: #242526;
-    --primary-color: #3a3b3c;
-    --primary-color-ligth: #3a3b3c;
-    --toggle-color: #fff;
-    --text-color: #ccc;
-    --title-color: #ffffff;
 }
 
 .sidebar .text {
