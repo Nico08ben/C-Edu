@@ -5,56 +5,11 @@
     /* PALETA GENERAL Y DE TEXTO */
     /* ------------------------- */
 
-    /* Modo Claro (Por defecto) */
-    --text-primary-light: #333333;         /* Títulos, texto importante */
-    --text-secondary-light: #707070;       /* Texto normal, subtítulos */
-    --text-disabled-light: #aaaaaa;        /* Texto deshabilitado o placeholders */
-    --text-on-accent-light: #ffffff;       /* Texto sobre fondos de acento (botones primarios, etc.) */
-
-    --bg-body-light: #E4E9F7;              /* Fondo principal del body */
-    --bg-sidebar-light: #FFFFFF;           /* Fondo de la barra lateral */
-    --bg-content-light: #FFFFFF;           /* Fondo del área de contenido principal (tarjetas, modales) */
-    --bg-input-light: #FFFFFF;             /* Fondo de campos de entrada */
-    --bg-disabled-light: #f0f0f0;          /* Fondo para elementos deshabilitados */
-
-    --border-color-light: #DDDDDD;         /* Bordes generales, separadores */
-    --border-input-light: #DDDDDD;         /* Borde de campos de entrada */
-    --border-focus-light: #80bdff;         /* Borde de input al enfocar (ejemplo azul bootstrap) */
-
-    --shadow-color-light: rgba(0, 0, 0, 0.1); /* Sombra suave para elementos elevados */
-
-    --scrollbar-thumb-light: #cccccc;
-    --scrollbar-track-light: #f1f1f1;
-    --select-arrow-light: '%23555555';     /* Flecha de select (codificada para URL, gris oscuro) */
-
     /* Transiciones (pueden ser globales) */
     --trans-02: all 0.2s ease;
     --trans-03: all 0.3s ease;
     --trans-04: all 0.4s ease;
     --trans-05: all 0.5s ease;
-
-
-    /* Modo Oscuro */
-    --text-primary-dark: #EAEAEA;
-    --text-secondary-dark: #B0B0B0;
-    --text-disabled-dark: #555555;
-    --text-on-accent-dark: #FFFFFF; /* Puede variar según el color de acento del rol en modo oscuro */
-
-    --bg-body-dark: #18191A;
-    --bg-sidebar-dark: #242526;
-    --bg-content-dark: #2D2D30;
-    --bg-input-dark: #33373A;
-    --bg-disabled-dark: #3a3b3c;
-
-    --border-color-dark: #4a4a4f;
-    --border-input-dark: #55595c;
-    --border-focus-dark: #5a99d2; /* Un azul más apagado para dark mode */
-
-    --shadow-color-dark: rgba(0, 0, 0, 0.4);
-
-    --scrollbar-thumb-dark: #555555;
-    --scrollbar-track-dark: #333333;
-    --select-arrow-dark: '%23A0A0A0';      /* Flecha de select (codificada para URL, gris claro) */
 }
 
 /* ------------------------- */
@@ -62,6 +17,28 @@
 /* ------------------------- */
 .theme-docente { /* Aplicar esta clase al <body> o <html> */
     /* Modo Claro - Docente */
+    /* Modo Claro (Por defecto) */
+    --text-primary: #333333;         /* Títulos, texto importante */
+    --text-secondary: #707070;       /* Texto normal, subtítulos */
+    --text-disabled: #aaaaaa;        /* Texto deshabilitado o placeholders */
+    --text-on-accent: #ffffff;       /* Texto sobre fondos de acento (botones primarios, etc.) */
+
+    --bg-body: #E4E9F7;              /* Fondo principal del body */
+    --bg-sidebar: #FFFFFF;           /* Fondo de la barra lateral */
+    --bg-content: #FFFFFF;           /* Fondo del área de contenido principal (tarjetas, modales) */
+    --bg-input: #FFFFFF;             /* Fondo de campos de entrada */
+    --bg-disabled: #f0f0f0;          /* Fondo para elementos deshabilitados */
+
+    --border-color: #DDDDDD;         /* Bordes generales, separadores */
+    --border-input: #DDDDDD;         /* Borde de campos de entrada */
+    --border-focus: #80bdff;         /* Borde de input al enfocar (ejemplo azul bootstrap) */
+
+    --shadow-color: rgba(0, 0, 0, 0.1); /* Sombra suave para elementos elevados */
+
+    --scrollbar-thumb: #cccccc;
+    --scrollbar-track: #f1f1f1;
+    --select-arrow: '%23555555';     /* Flecha de select (codificada para URL, gris oscuro) */
+
     --role-primary-color: #40C3A5;            /* Verde característico */
     --role-primary-light-color: #cdfff2;      /* Verde claro para fondos de acento sutil */
     --role-primary-dark-color: #35a88d;       /* Verde más oscuro para hovers o bordes */
@@ -82,6 +59,29 @@
 
     /* Modo Oscuro - Docente */
     &.dark { /* Se combina con .theme-docente.dark-mode */
+
+        /* Modo Oscuro */
+    --text-primary: #EAEAEA;
+    --text-secondary: #B0B0B0;
+    --text-disabled: #555555;
+    --text-on-accent: #FFFFFF; /* Puede variar según el color de acento del rol en modo oscuro */
+
+    --bg-body: #18191A;
+    --bg-sidebar: #242526;
+    --bg-content: #2D2D30;
+    --bg-input: #33373A;
+    --bg-disabled: #3a3b3c;
+
+    --border-color: #4a4a4f;
+    --border-input: #55595c;
+    --border-focus: #5a99d2; /* Un azul más apagado para dark mode */
+
+    --shadow-color: rgba(0, 0, 0, 0.4);
+
+    --scrollbar-thumb: #555555;
+    --scrollbar-track: #333333;
+    --select-arrow: '%23A0A0A0';      /* Flecha de select (codificada para URL, gris claro) */
+
         --role-primary-color: #40C3A5;            /* Mantenemos el mismo verde o lo ajustamos */
         --role-primary-light-color: #3a8c78;      /* Verde oscuro para fondos sutiles en dark */
         --role-primary-dark-color: #2a7a67;       /* Verde aún más oscuro para hovers en dark */
@@ -107,6 +107,28 @@
 /* ------------------------- */
 .theme-admin { /* Aplicar esta clase al <body> o <html> */
     /* Modo Claro - Admin */
+    /* Modo Claro (Por defecto) */
+    --text-primary: #333333;         /* Títulos, texto importante */
+    --text-secondary: #707070;       /* Texto normal, subtítulos */
+    --text-disabled: #aaaaaa;        /* Texto deshabilitado o placeholders */
+    --text-on-accent: #ffffff;       /* Texto sobre fondos de acento (botones primarios, etc.) */
+
+    --bg-body: #E4E9F7;              /* Fondo principal del body */
+    --bg-sidebar: #FFFFFF;           /* Fondo de la barra lateral */
+    --bg-content: #FFFFFF;           /* Fondo del área de contenido principal (tarjetas, modales) */
+    --bg-input: #FFFFFF;             /* Fondo de campos de entrada */
+    --bg-disabled: #f0f0f0;          /* Fondo para elementos deshabilitados */
+
+    --border-color: #DDDDDD;         /* Bordes generales, separadores */
+    --border-input: #DDDDDD;         /* Borde de campos de entrada */
+    --border-focus: #80bdff;         /* Borde de input al enfocar (ejemplo azul bootstrap) */
+
+    --shadow-color: rgba(0, 0, 0, 0.1); /* Sombra suave para elementos elevados */
+
+    --scrollbar-thumb: #cccccc;
+    --scrollbar-track: #f1f1f1;
+    --select-arrow: '%23555555';     /* Flecha de select (codificada para URL, gris oscuro) */
+
     --role-primary-color: #e7bb41;            /* Amarillo característico */
     --role-primary-light-color: #fff3d2;      /* Amarillo claro */
     --role-primary-dark-color: #d4a738;       /* Amarillo más oscuro */
@@ -127,6 +149,29 @@
 
     /* Modo Oscuro - Admin */
     &.dark { /* Se combina con .theme-admin.dark-mode */
+
+        /* Modo Oscuro */
+    --text-primary: #EAEAEA;
+    --text-secondary: #B0B0B0;
+    --text-disabled: #555555;
+    --text-on-accent: #FFFFFF; /* Puede variar según el color de acento del rol en modo oscuro */
+
+    --bg-body: #18191A;
+    --bg-sidebar: #242526;
+    --bg-content: #2D2D30;
+    --bg-input: #33373A;
+    --bg-disabled: #3a3b3c;
+
+    --border-color: #4a4a4f;
+    --border-input: #55595c;
+    --border-focus: #5a99d2; /* Un azul más apagado para dark mode */
+
+    --shadow-color: rgba(0, 0, 0, 0.4);
+
+    --scrollbar-thumb: #555555;
+    --scrollbar-track: #333333;
+    --select-arrow: '%23A0A0A0';      /* Flecha de select (codificada para URL, gris claro) */
+
         --role-primary-color: #e7bb41;            /* Mantenemos el mismo amarillo o lo ajustamos */
         --role-primary-light-color: #3a3b3c;      /* Usando el gris de la sidebar original para fondo sutil */
         --role-primary-dark-color: #c99a2e;       /* Amarillo más oscuro para hovers en dark */

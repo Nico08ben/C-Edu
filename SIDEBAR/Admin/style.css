@@ -9,7 +9,7 @@
 
 body {
     height: 100vh;
-    background: var(--body-color);
+    background: var(--bg-body);
     transition: var(--trans-05);
 }
 
@@ -41,7 +41,7 @@ body {
     padding: 10px 14px;
     height: 100%;
     width: 250px;
-    background: var(--sidebar-color);
+    background: var(--bg-sidebar);
     transition: var(--trans-05);
     z-index: 100;
 }
@@ -68,7 +68,7 @@ body {
 
 .sidebar li .icon,
 .sidebar li .text {
-    color: var(--text-color);
+    color: var(--text-primary);
     transition: var(--trans-03);
 }
 
@@ -89,11 +89,11 @@ body {
 header .image-text .header-text {
     display: flex;
     flex-direction: column;
-    color: var(--text-color);
+    color: var(--text-primary);
 }
 
 body.dark header .image-text .header-text {
-    color: var(--text-color);
+    color: var(--text-primary);
 }
 
 .header-text .name {
@@ -111,12 +111,12 @@ body.dark header .image-text .header-text {
     transform: translateY(-50%) rotate(180deg);
     height: 25px;
     width: 25px;
-    background: var(--primary-color);
+    background: var(--role-primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    color: var(--sidebar-color);
+    color: var(--bg-sidebar);
     font-size: 22px;
     transition: var(--trans-03);
 }
@@ -126,7 +126,7 @@ body.dark header .image-text .header-text {
 }
 
 body.dark .sidebar header .toggle {
-    color: var(--text-color);
+    color: var(--text-primary);
 }
 
 .sidebar li a {
@@ -144,7 +144,7 @@ body.dark .sidebar header .toggle {
 }
 
 .sidebar .search-box {
-    background: var(--primary-color-ligth);
+    background: var(--role-primary-light-color);
     border-radius: 6px;
     transition: var(--trans-05);
 }
@@ -157,22 +157,22 @@ body.dark .sidebar header .toggle {
     border-radius: 6px;
     font-size: 16px;
     font-weight: 500;
-    background: var(--primary-color-ligth);
+    background: var(--role-primary-light-color);
     transition: var(--trans-05);
 }
 
 .sidebar li a:hover {
-    background: var(--primary-color);
+    background: var(--role-primary-color);
 }
 
 .sidebar li a:hover .icon,
 .sidebar li a:hover .text {
-    color: var(--sidebar-color);
+    color: var(--bg-sidebar);
 }
 
 body.dark.sidebar li a:hover .icon,
 body.dark.sidebar li a:hover .text {
-    color: var(--text-color);
+    color: var(--text-primary);
 }
 
 .sidebar .menu-bar {
@@ -185,7 +185,7 @@ body.dark.sidebar li a:hover .text {
 .menu-bar .mode {
     position: relative;
     border-radius: 6px;
-    background: var(--primary-color-ligth);
+    background: var(--role-primary-light-color);
 }
 
 .menu-bar .mode .moon-sun {
@@ -222,7 +222,7 @@ body.dark .menu-bar .mode i.moon {
     min-width: 60px;
     cursor: pointer;
     border-radius: 6px;
-    background: var(--primary-color-ligth);
+    background: var(--role-primary-light-color);
     transition: var(--trans-05);
 }
 
@@ -231,14 +231,14 @@ body.dark .menu-bar .mode i.moon {
     position: relative;
     height: 22px;
     width: 44px;
-    background: var(--toggle-color);
+    background: var(--border-color);
     transition: var(--trans-03);
 }
 
 .switch::before {
     height: 15px;
     width: 15px;
-    background: var(--sidebar-color);
+    background: var(--bg-sidebar);
     content: "";
     position: absolute;
     border-radius: 50%;
@@ -257,14 +257,14 @@ body.dark .switch::before {
     height: 100vh;
     left: 250px;
     width: calc(100% - 250px);
-    background-color: var(--body-color);
+    background-color: var(--bg-body);
     transition: var(--trans-05);
 }
 
 .home .text {
     font-size: 30px;
     font-weight: 500;
-    color: var(--text-color);
+    color: var(--text-primary);
     padding: 8px 40px;
 }
 
