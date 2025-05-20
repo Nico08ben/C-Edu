@@ -363,7 +363,7 @@ body {
     display: block;
 }
 .conversation-item-content {
-    width: 100%;
+    width: auto;
 }
 .conversation-item-wrapper:not(:last-child) {
     margin-bottom: 8px;
@@ -384,6 +384,7 @@ body {
     border-radius: 6px;
     line-height: 1.5;
     margin-left: 32px;
+    text-align: left;
 }
 .conversation-item.me .conversation-item-text {
     margin-left: unset;
@@ -705,6 +706,13 @@ body {
     border-radius: 4px;
     font-size: 14px;
 }
+.conversation-reply-preview img,
+.reply-box img {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
 
 .cancel-reply {
     background: none;
@@ -723,3 +731,305 @@ body {
     border-radius: 4px;
     color: #555;
 }
+.conversation-form-file {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: none;
+    background-color: transparent;
+    outline: transparent;
+    font-size: 20px;
+    color: var(--white);
+    cursor: pointer;
+    flex-shrink: 0;
+    
+}
+.conversation-form-file:hover {
+    background-color: var(--slate-100);
+    color: var(--slate-600);
+}
+.conversation-form-file:active {
+    background-color: var(--slate-200);
+    color: var(--slate-600);
+}
+.reply-box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--sidebar-color);
+    padding: 8px 12px;
+    border-left: 4px solid #e7bb41;
+    margin: 10px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.conversation-main {
+    overflow-y: auto;
+    height: 100%;
+    padding: 16px;
+}
+.recording-indicator {
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    animation: pulse 1s infinite;
+    margin-left: 8px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.audio-message-wrapper audio {
+    width: 100%;
+    max-width: 250px;
+}
+.stop-recording-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.highlighted-reply {
+    animation: highlightBlink 1.5s;
+    background-color: #ffeaa7;
+    border-radius: 6px;
+}
+
+@keyframes highlightBlink {
+    0% { background-color: #ffeaa7; }
+    100% { background-color: transparent; }
+}
+.message-image {
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+    .message-image:hover {
+        transform: scale(1.03);
+        opacity: 0.9;
+    }
+.image-modal {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-modal-content {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #000;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.conversation-form-sticker {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: none;
+    background-color: transparent;
+    outline: transparent;
+    font-size: 20px;
+    color: var(--white);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+    .conversation-form-sticker:hover {
+        background-color: var(--slate-100);
+        color: var(--slate-600);
+    }
+
+    .conversation-form-sticker:active {
+        background-color: var(--slate-200);
+        color: var(--slate-600);
+    }
+.sticker-panel {
+    display: none;
+    position: absolute;
+    bottom: 65px;
+    right: 110px;
+    width: 480px;
+    max-height: 320px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    overflow-y: auto;
+    z-index: 9999;
+    transition: all 0.2s ease-in-out;
+}
+
+    .sticker-panel img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin: 5px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+        .sticker-panel img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+.voice-message {
+    background-color: var(--sidebar-color);
+    
+    padding: 10px 12px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 220px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.voice-bar-wrapper {
+    background: #ccc;
+    height: 4px;
+    width: 100%;
+    flex: 1;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.voice-bar {
+    background: #00bcd4;
+    height: 100%;
+    width: 0%;
+    transition: width 0.2s ease;
+}
+
+.voice-time {
+    font-size: 12px;
+    color: #333;
+    min-width: 40px;
+}
+/* style.css - A�adir al final */
+
+/* Clase principal para el bot�n de grabar cuando est� activo (grabando) */
+.conversation-form-record.is-recording {
+    background-color: var(--red-500, #ef4444); /* Un rojo m�s agradable de tu paleta Tailwind o un fallback */
+    color: var(--white, #fff); /* Texto/�cono blanco, usando tu variable --white */
+    min-width: 130px; /* Permitir que el bot�n se ensanche para el texto */
+    padding: 8px 12px; /* Un padding similar al que ten�as inline */
+    transition: background-color var(--trans-03), color var(--trans-03), width var(--trans-03); /* Transiciones suaves */
+    /* Mantiene otros estilos de .conversation-form-button si es posible */
+}
+
+    .conversation-form-record.is-recording:hover {
+        background-color: var(--red-600, #dc2626); /* Un rojo un poco m�s oscuro al pasar el mouse */
+    }
+
+/* Contenido dentro del bot�n de grabaci�n activo */
+.recording-indicator-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px; /* Tama�o de fuente que ten�as */
+    font-weight: 500; /* Hacerlo un poco m�s notable */
+    /* El color del texto es heredado de .conversation-form-record.is-recording */
+}
+
+    .recording-indicator-content .ri-stop-circle-line { /* �cono de detener */
+        margin-right: 8px; /* Espacio entre el �cono y el texto */
+        font-size: 18px; /* Tama�o del �cono */
+    }
+
+    .recording-indicator-content .recording-text { /* El texto "Grabando..." */
+        animation: pulseText 1.5s infinite ease-in-out; /* Animaci�n de pulso sutil */
+    }
+
+/* Animaci�n de pulso para el texto (puedes reusar la que ten�as o esta) */
+@keyframes pulseText {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+/* En tu style.css */
+#sound-visualizer-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 24px;
+    width: 80px;
+    position: absolute;
+    bottom: 8px;
+    /* right: 50px; */ /* Comenta o elimina la l�nea original */
+    right: 150px; /* <--- NUEVO VALOR: Mueve el visualizador m�s a la izquierda */
+    /* Ajusta este valor (150px) seg�n necesites para que se vea bien al lado del bot�n expandido */
+    gap: 2px;
+    pointer-events: none;
+    /* z-index: 1; */ /* Opcional, si el bot�n tuviera un z-index mayor, podr�as necesitar esto */
+}
+
+    #sound-visualizer-container div {
+        background-color: var(--primary-color); /* Prueba con lime si sigues sin verlo para descartar contraste */
+        /* background-color: lime !important; */
+        width: 3px;
+        min-height: 1px;
+        transition: height 0.05s ease-out;
+    }
+
+/* Tambi�n aseg�rate de que el bot�n de grabaci�n no tenga un z-index innecesariamente alto */
+.conversation-form-record.is-recording {
+    background-color: var(--red-500, #ef4444);
+    color: var(--white, #fff);
+    min-width: 130px;
+    padding: 8px 12px;
+    transition: background-color var(--trans-03), color var(--trans-03), width var(--trans-03);
+    /* z-index: 2; */ /* A�ade z-index si es necesario, pero el posicionamiento es la clave aqu� */
+}
+
+
