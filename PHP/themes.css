@@ -13,54 +13,54 @@
 }
 
 /* ------------------------- */
-/* PALETA ROL: DOCENTE    */
+/* PALETA ROL: DOCENTE      */
 /* ------------------------- */
 .theme-docente { /* Aplicar esta clase al <body> o <html> */
     /* Modo Claro - Docente */
     /* Modo Claro (Por defecto) */
-    --text-primary: #333333;         /* Títulos, texto importante */
-    --text-secondary: #707070;       /* Texto normal, subtítulos */
-    --text-disabled: #aaaaaa;        /* Texto deshabilitado o placeholders */
-    --text-on-accent: #ffffff;       /* Texto sobre fondos de acento (botones primarios, etc.) */
+    --text-primary: #333333;        /* Títulos, texto importante */
+    --text-secondary: #707070;      /* Texto normal, subtítulos */
+    --text-disabled: #aaaaaa;       /* Texto deshabilitado o placeholders */
+    --text-on-accent: #ffffff;      /* Texto sobre fondos de acento (botones primarios, etc.) */
 
-    --bg-body: #E4E9F7;              /* Fondo principal del body */
-    --bg-sidebar: #FFFFFF;           /* Fondo de la barra lateral */
-    --bg-content: #FFFFFF;           /* Fondo del área de contenido principal (tarjetas, modales) */
-    --bg-input: #FFFFFF;             /* Fondo de campos de entrada */
-    --bg-disabled: #f0f0f0;          /* Fondo para elementos deshabilitados */
+    --bg-body: #E4E9F7;             /* Fondo principal del body */
+    --bg-sidebar: #FFFFFF;          /* Fondo de la barra lateral */
+    --bg-content: #FFFFFF;          /* Fondo del área de contenido principal (tarjetas, modales) */
+    --bg-input: #FFFFFF;            /* Fondo de campos de entrada */
+    --bg-disabled: #f0f0f0;         /* Fondo para elementos deshabilitados */
 
-    --border-color: #DDDDDD;         /* Bordes generales, separadores */
-    --border-input: #DDDDDD;         /* Borde de campos de entrada */
-    --border-focus: #80bdff;         /* Borde de input al enfocar (ejemplo azul bootstrap) */
+    --border-color: #DDDDDD;        /* Bordes generales, separadores */
+    --border-input: #DDDDDD;        /* Borde de campos de entrada */
+    --border-focus: #80bdff;        /* Borde de input al enfocar (ejemplo azul bootstrap) */
 
     --shadow-color: rgba(0, 0, 0, 0.1); /* Sombra suave para elementos elevados */
 
     --scrollbar-thumb: #cccccc;
     --scrollbar-track: #f1f1f1;
-    --select-arrow: '%23555555';     /* Flecha de select (codificada para URL, gris oscuro) */
+    --select-arrow: '%23555555';    /* Flecha de select (codificada para URL, gris oscuro) */
 
-    --role-primary-color: #40C3A5;            /* Verde característico */
-    --role-primary-light-color: #cdfff2;      /* Verde claro para fondos de acento sutil */
-    --role-primary-dark-color: #35a88d;       /* Verde más oscuro para hovers o bordes */
-    --role-text-on-primary-color: var(--text-on-accent-light); /* Texto sobre el primario (generalmente blanco) */
+    --role-primary-color: #40C3A5;          /* Verde característico */
+    --role-primary-light-color: #cdfff2;    /* Verde claro para fondos de acento sutil */
+    --role-primary-dark-color: #35a88d;     /* Verde más oscuro para hovers o bordes */
+    --role-text-on-primary-color: var(--text-on-accent); /* Texto sobre el primario (generalmente blanco) */
 
     --role-button-primary-bg: var(--role-primary-color);
     --role-button-primary-text: var(--role-text-on-primary-color);
     --role-button-secondary-bg: #f0f0f0; /* Ejemplo: gris claro */
-    --role-button-secondary-text: var(--text-primary-light);
+    --role-button-secondary-text: var(--text-primary);
     /* Otros colores específicos de botones para docente (edit, delete, etc.) */
     --role-button-edit-bg: #ffd700; /* Amarillo para editar */
-    --role-button-edit-text: var(--text-primary-light);
+    --role-button-edit-text: var(--text-primary);
     --role-button-delete-bg: #ff6b6b; /* Rojo para eliminar */
-    --role-button-delete-text: var(--text-on-accent-light);
+    --role-button-delete-text: var(--text-on-accent);
 
     --role-table-header-bg: #e6f7f4; /* Cabecera de tabla con tinte verde claro */
     --role-table-row-hover-bg: #dcf2ef; /* Hover de fila de tabla */
+}
 
-    /* Modo Oscuro - Docente */
-    &.dark { /* Se combina con .theme-docente.dark-mode */
-
-        /* Modo Oscuro */
+/* Modo Oscuro - Docente */
+.theme-docente.dark { /* Se combina con .theme-docente.dark */
+    /* Modo Oscuro */
     --text-primary: #EAEAEA;
     --text-secondary: #B0B0B0;
     --text-disabled: #555555;
@@ -82,75 +82,74 @@
     --scrollbar-track: #333333;
     --select-arrow: '%23A0A0A0';      /* Flecha de select (codificada para URL, gris claro) */
 
-        --role-primary-color: #40C3A5;            /* Mantenemos el mismo verde o lo ajustamos */
-        --role-primary-light-color: #3a8c78;      /* Verde oscuro para fondos sutiles en dark */
-        --role-primary-dark-color: #2a7a67;       /* Verde aún más oscuro para hovers en dark */
-        --role-text-on-primary-color: var(--text-on-accent-dark);
+    --role-primary-color: #40C3A5;          /* Mantenemos el mismo verde o lo ajustamos */
+    --role-primary-light-color: #3a8c78;    /* Verde oscuro para fondos sutiles en dark */
+    --role-primary-dark-color: #2a7a67;     /* Verde aún más oscuro para hovers en dark */
+    --role-text-on-primary-color: var(--text-on-accent);
 
-        --role-button-primary-bg: var(--role-primary-color);
-        --role-button-primary-text: var(--role-text-on-primary-color);
-        --role-button-secondary-bg: #383c3f; /* Ejemplo: gris oscuro */
-        --role-button-secondary-text: var(--text-primary-dark);
+    --role-button-primary-bg: var(--role-primary-color);
+    --role-button-primary-text: var(--role-text-on-primary-color);
+    --role-button-secondary-bg: #383c3f; /* Ejemplo: gris oscuro */
+    --role-button-secondary-text: var(--text-primary);
 
-        --role-button-edit-bg: #cca700;
-        --role-button-edit-text: var(--text-primary-dark);
-        --role-button-delete-bg: #d44c4c;
-        --role-button-delete-text: var(--text-on-accent-dark);
+    --role-button-edit-bg: #cca700;
+    --role-button-edit-text: var(--text-primary);
+    --role-button-delete-bg: #d44c4c;
+    --role-button-delete-text: var(--text-on-accent);
 
-        --role-table-header-bg: #2f6b5f; /* Cabecera de tabla verde oscuro */
-        --role-table-row-hover-bg: #385a53; /* Hover de fila de tabla oscuro */
-    }
+    --role-table-header-bg: #2f6b5f; /* Cabecera de tabla verde oscuro */
+    --role-table-row-hover-bg: #385a53; /* Hover de fila de tabla oscuro */
 }
 
 /* ------------------------- */
-/* PALETA ROL: ADMIN     */
+/* PALETA ROL: ADMIN         */
 /* ------------------------- */
 .theme-admin { /* Aplicar esta clase al <body> o <html> */
     /* Modo Claro - Admin */
     /* Modo Claro (Por defecto) */
-    --text-primary: #333333;         /* Títulos, texto importante */
-    --text-secondary: #707070;       /* Texto normal, subtítulos */
-    --text-disabled: #aaaaaa;        /* Texto deshabilitado o placeholders */
-    --text-on-accent: #ffffff;       /* Texto sobre fondos de acento (botones primarios, etc.) */
+    --text-primary: #333333;        /* Títulos, texto importante */
+    --text-secondary: #707070;      /* Texto normal, subtítulos */
+    --text-disabled: #aaaaaa;       /* Texto deshabilitado o placeholders */
+    --text-on-accent: #ffffff;      /* Texto sobre fondos de acento (botones primarios, etc.) */
 
-    --bg-body: #E4E9F7;              /* Fondo principal del body */
-    --bg-sidebar: #FFFFFF;           /* Fondo de la barra lateral */
-    --bg-content: #FFFFFF;           /* Fondo del área de contenido principal (tarjetas, modales) */
-    --bg-input: #FFFFFF;             /* Fondo de campos de entrada */
-    --bg-disabled: #f0f0f0;          /* Fondo para elementos deshabilitados */
+    --bg-body: #E4E9F7;             /* Fondo principal del body */
+    --bg-sidebar: #FFFFFF;          /* Fondo de la barra lateral */
+    --bg-content: #FFFFFF;          /* Fondo del área de contenido principal (tarjetas, modales) */
+    --bg-input: #FFFFFF;            /* Fondo de campos de entrada */
+    --bg-disabled: #f0f0f0;         /* Fondo para elementos deshabilitados */
 
-    --border-color: #DDDDDD;         /* Bordes generales, separadores */
-    --border-input: #DDDDDD;         /* Borde de campos de entrada */
-    --border-focus: #80bdff;         /* Borde de input al enfocar (ejemplo azul bootstrap) */
+    --border-color: #DDDDDD;        /* Bordes generales, separadores */
+    --border-input: #DDDDDD;        /* Borde de campos de entrada */
+    --border-focus: #80bdff;        /* Borde de input al enfocar (ejemplo azul bootstrap) */
 
     --shadow-color: rgba(0, 0, 0, 0.1); /* Sombra suave para elementos elevados */
 
     --scrollbar-thumb: #cccccc;
     --scrollbar-track: #f1f1f1;
-    --select-arrow: '%23555555';     /* Flecha de select (codificada para URL, gris oscuro) */
+    --select-arrow: '%23555555';    /* Flecha de select (codificada para URL, gris oscuro) */
 
-    --role-primary-color: #e7bb41;            /* Amarillo característico */
-    --role-primary-light-color: #fff3d2;      /* Amarillo claro */
-    --role-primary-dark-color: #d4a738;       /* Amarillo más oscuro */
-    --role-text-on-primary-color: #333333;    /* Texto oscuro sobre amarillo claro */
+    --role-primary-color: #e7bb41;          /* Amarillo característico */
+    --role-primary-light-color: #fff3d2;    /* Amarillo claro */
+    --role-primary-dark-color: #d4a738;     /* Amarillo más oscuro */
+    --role-text-on-primary-color: #333333;  /* Texto oscuro sobre amarillo claro */
 
     --role-button-primary-bg: var(--role-primary-color);
     --role-button-primary-text: var(--role-text-on-primary-color);
     --role-button-secondary-bg: #f8f0d8; /* Amarillo muy pálido */
-    --role-button-secondary-text: var(--text-primary-light);
+    --role-button-secondary-text: var(--text-primary);
 
     --role-button-edit-bg: #40C3A5; /* Verde para editar (contraste) */
-    --role-button-edit-text: var(--text-on-accent-light);
+    --role-button-edit-text: var(--text-on-accent);
     --role-button-delete-bg: #ff6b6b; /* Rojo para eliminar */
-    --role-button-delete-text: var(--text-on-accent-light);
+    --role-button-delete-text: var(--text-on-accent);
 
     --role-table-header-bg: #fdf6e3; /* Cabecera de tabla con tinte amarillo claro */
     --role-table-row-hover-bg: #fcf0c6; /* Hover de fila de tabla */
+}
 
-    /* Modo Oscuro - Admin */
-    &.dark { /* Se combina con .theme-admin.dark-mode */
-
-        /* Modo Oscuro */
+/* Modo Oscuro - Admin */
+.theme-admin.dark { /* Se combina con .theme-admin.dark */
+    /* Modo Oscuro */
     --text-primary: #EAEAEA;
     --text-secondary: #B0B0B0;
     --text-disabled: #555555;
@@ -172,22 +171,26 @@
     --scrollbar-track: #333333;
     --select-arrow: '%23A0A0A0';      /* Flecha de select (codificada para URL, gris claro) */
 
-        --role-primary-color: #e7bb41;            /* Mantenemos el mismo amarillo o lo ajustamos */
-        --role-primary-light-color: #3a3b3c;      /* Usando el gris de la sidebar original para fondo sutil */
-        --role-primary-dark-color: #c99a2e;       /* Amarillo más oscuro para hovers en dark */
-        --role-text-on-primary-color: var(--text-primary-dark); /* Texto claro sobre amarillo oscuro */
+    --role-primary-color: #e7bb41;          /* Mantenemos el mismo amarillo o lo ajustamos */
+    --role-primary-light-color: #3a3b3c;    /* Usando el gris de la sidebar original para fondo sutil */
+    --role-primary-dark-color: #c99a2e;     /* Amarillo más oscuro para hovers en dark */
+    --role-text-on-primary-color: var(--text-primary); /* Texto claro sobre amarillo oscuro */
 
-        --role-button-primary-bg: var(--role-primary-color);
-        --role-button-primary-text: var(--text-on-primary-color); /* puede necesitar ser oscuro #1a1a1a si --role-primary-color se mantiene claro */
-        --role-button-secondary-bg: #4d4630; /* Ejemplo: amarillo/marrón oscuro */
-        --role-button-secondary-text: var(--text-primary-dark);
+    --role-button-primary-bg: var(--role-primary-color);
+    /* El comentario original era: "puede necesitar ser oscuro #1a1a1a si --role-primary-color se mantiene claro"
+       Con --role-primary-color: #e7bb41 (amarillo) y --role-text-on-primary-color siendo #EAEAEA (var(--text-primary) del modo oscuro),
+       el texto claro sobre amarillo debería funcionar bien. Si se prefiere texto oscuro, se podría cambiar a #1a1a1a o var(--text-secondary) del modo claro.
+       Por ahora, se mantiene la consistencia con var(--role-text-on-primary-color) que ahora es var(--text-primary) del modo oscuro.
+    */
+    --role-button-primary-text: var(--role-text-on-primary-color);
+    --role-button-secondary-bg: #4d4630; /* Ejemplo: amarillo/marrón oscuro */
+    --role-button-secondary-text: var(--text-primary);
 
-        --role-button-edit-bg: #3a8c78; /* Verde oscuro para editar */
-        --role-button-edit-text: var(--text-on-accent-dark);
-        --role-button-delete-bg: #d44c4c;
-        --role-button-delete-text: var(--text-on-accent-dark);
+    --role-button-edit-bg: #3a8c78; /* Verde oscuro para editar */
+    --role-button-edit-text: var(--text-on-accent);
+    --role-button-delete-bg: #d44c4c;
+    --role-button-delete-text: var(--text-on-accent);
 
-        --role-table-header-bg: #4a412a; /* Cabecera de tabla amarilla oscura */
-        --role-table-row-hover-bg: #5e5030; /* Hover de fila de tabla oscuro */
-    }
+    --role-table-header-bg: #4a412a; /* Cabecera de tabla amarilla oscura */
+    --role-table-row-hover-bg: #5e5030; /* Hover de fila de tabla oscuro */
 }
