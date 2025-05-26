@@ -1,149 +1,117 @@
 /* Importar fuente de Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 /* Estilos generales para todos los elementos */
 * {
-    /* Eliminar margenes y rellenos por defecto */
     margin: 0;
     padding: 0;
-    /* Utilizar caja de modelo de caja */
     box-sizing: border-box;
-    /* Establecer fuente por defecto */
     font-family: "Rubik", serif;
 }
 
 /* Estilos de la sección principal (donde se carga el contenido) */
 .home {
-    /* Posicionar la sección principal */
     position: relative;
-    /* Establecer altura */
     min-height: 100vh;
-    /* Usar min-height en lugar de height */
-    /* Establecer posición y ancho, ajustando por el ancho de la barra lateral */
     left: 250px;
     width: calc(100% - 250px);
-    /* Establecer color de fondo usando variable */
-    background-color: var(--body-color);
-    /* Transición para cambios de estilo */
-    transition: var(--trans-05);
+    background-color: var(--bg-body); /* Usar --bg-body para el fondo principal */
+    transition: var(--trans-05); /* Usar la variable de transición */
     padding-bottom: 30px;
-    /* Añadir padding inferior para espacio */
 }
 
 /* Estilos de la sección principal cuando la barra lateral está cerrada */
 .sidebar.close~.home {
-    /* Ajustar posición y ancho cuando la barra lateral está cerrada */
     left: 88px;
     width: calc(100% - 88px);
 }
 
 /* Estilos del contenido principal dentro de la sección home */
 .main-content {
-    /* Permitir que el contenido principal crezca para ocupar el espacio disponible */
     flex-grow: 1;
-    /* Establecer relleno alrededor del contenido principal */
     padding: 30px;
 }
 
 /* Estilos del encabezado principal */
 .header {
     height: 80px;
-    background-color: var(--sidebar-color);
-    /* Usando variable de color de sidebar */
+    background-color: var(--bg-content); /* Usar --bg-content para el fondo del header */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* Establecer margen inferior */
     padding-right: 30px;
     padding-left: 30px;
     box-sizing: border-box;
-    /* Incluir padding en el cálculo del ancho */
+    box-shadow: 0 4px 12px var(--shadow-color); /* Usar --shadow-color para la sombra */
+    border-radius: 12px; /* Añadido para consistencia */
+    margin-bottom: 30px; /* Añadido para dar espacio, similar a iniciodocentess.css */
 }
 
 /* Estilos del título principal en el encabezado */
 #titulo1-header {
-    color: var(--title-color); /* Ajusta si el color de texto por defecto no funciona */
+    color: var(--text-primary); /* Usar --text-primary para el título principal */
     font-family: "Rubik", serif;
-    font-weight: bold; /* Quizás hacerlo bold? */
-    font-size: 1.5rem; /* Ajusta tamaño */
-    margin: 0; /* Quitar margen por defecto del h1/h2 si es necesario */
+    font-weight: 500; /* Consistente con iniciodocentess.css */
+    font-size: 22px; /* Consistente con iniciodocentess.css */
+    margin: 0;
 }
-
 
 /* Contenedor para los controles del administrador/docente (filtro y botón crear) */
 .admin-controls {
     display: flex;
-    /* Usa flexbox para alinear elementos */
     justify-content: space-between;
-    /* Distribuye el espacio entre los elementos */
     align-items: center;
-    /* Centra verticalmente los elementos */
     margin-bottom: 20px;
-    /* Espacio debajo de los controles */
     padding: 0 10px;
-    /* Añade padding horizontal */
     flex-wrap: wrap;
-    /* Permite que los elementos se envuelvan en pantallas pequeñas */
     gap: 15px;
-    /* Espacio entre los elementos flex */
 }
 
 /* Estilos para el contenedor del desplegable de filtro */
 .filter-dropdown {
     display: flex;
-    /* Usa flexbox para alinear label y select */
     align-items: center;
-    /* Centra verticalmente label y select */
     gap: 10px;
-    /* Espacio entre label y select */
 }
 
 /* Estilos para la etiqueta del filtro */
 .filter-dropdown label {
     font-weight: bold;
-    color: var(--text-color);
-    /* Usando color de texto */
+    color: var(--text-primary); /* Usar --text-primary para el texto de la etiqueta */
 }
 
 /* Estilos para el select del filtro */
 .filter-dropdown select {
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-input); /* Usar --border-input */
     border-radius: 4px;
-    background-color: var(--sidebar-color);
-    /* Usando color de sidebar */
-    color: var(--text-color);
-    /* Usando color de texto */
+    background-color: var(--bg-input); /* Usar --bg-input para el fondo del select */
+    color: var(--text-primary); /* Usar --text-primary para el texto del select */
     cursor: pointer;
     outline: none;
-    /* Elimina el contorno al enfocar */
     transition: border-color 0.3s ease;
     min-width: 150px;
-    /* Ancho mínimo para el select */
 }
 
 .filter-dropdown select:focus {
-    border-color: var(--primary-color);
-    /* Resalta el borde al enfocar */
+    border-color: var(--border-focus); /* Usar --border-focus al enfocar */
 }
 
 /* Estilos para el botón de "Crear Nueva Tarea" */
 .btn-crear-tarea {
     display: inline-block;
     padding: 10px 20px;
-    background-color: var(--primary-color);
-    /* Usando tu variable primary */
-    color: white;
+    background-color: var(--role-button-primary-bg); /* Usar la variable de botón primario */
+    color: var(--role-button-primary-text); /* Usar la variable de texto del botón primario */
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 8px; /* Consistente con otros elementos */
     font-size: 1rem;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* Sombra para el botón */
+    transition: var(--trans-03); /* Usar la variable de transición */
+    box-shadow: 0 2px 5px var(--shadow-color); /* Usar --shadow-color */
 }
 
 .btn-crear-tarea:hover {
-    background-color: #35a88d;
-    /* Un tono ligeramente más oscuro para hover (ajustado al nuevo color) */
+    background-color: var(--role-primary-dark-color); /* Usar un color oscuro para hover */
 }
 
 /* Estilos para el contenedor de la tabla de tareas */
@@ -152,12 +120,9 @@
     padding: 10px;
     border-radius: 10px;
     text-align: center;
-    background-color: var(--sidebar-color);
-    /* Fondo de la tabla usando color de sidebar */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    /* Sombra para la tabla */
+    background-color: var(--bg-content); /* Usar --bg-content para el fondo de la tabla */
+    box-shadow: 0 2px 10px var(--shadow-color); /* Usar --shadow-color para la sombra */
     overflow-x: auto;
-    /* Agrega scroll horizontal si la tabla es demasiado ancha */
 }
 
 /* Estilos para la tabla */
@@ -166,71 +131,64 @@ table {
     border-collapse: collapse;
     border-radius: 10px;
     overflow: hidden;
-    /* Asegura que los bordes redondeados se apliquen */
     min-width: 600px;
-    /* Ancho mínimo para la tabla para evitar que se comprima demasiado */
 }
 
 /* Estilos para las celdas de encabezado y datos */
 th,
 td {
     padding: 12px 10px;
-    /* Aumentar padding para mejor legibilidad */
     text-align: left;
-    border-bottom: 1px solid #eee;
-    /* Línea sutil entre filas */
-    color: var(--text-color);
-    /* Color de texto para celdas */
+    border-bottom: 1px solid var(--border-color); /* Usar --border-color */
+    color: var(--text-secondary); /* Usar --text-secondary para texto de celdas */
 }
 
 /* Estilos específicos para las celdas de encabezado */
 th {
-    color: var(--primary-color);
-    /* Color primario para encabezados */
+    color: var(--text-primary); /* Usar --text-primary para el texto del encabezado */
     font-family: "Rubik", serif;
-    font-weight: normal;
-    background-color: var(--primary-color-ligth);
-    /* Fondo ligero para encabezados */
+    font-weight: 500; /* Normal o 500 si se quiere más énfasis */
+    background-color: var(--role-table-header-bg); /* Usar la variable específica para cabecera de tabla */
+}
+
+/* Estilos para el hover de las filas de la tabla */
+tbody tr:hover {
+    background-color: var(--role-table-row-hover-bg); /* Color de hover para filas de tabla */
 }
 
 /* Estilos para la última celda de datos (para acciones) */
 td:last-child {
     border-right: none;
-    /* Eliminar borde derecho en la última columna */
     text-align: center;
-    /* Centrar contenido en la columna de acciones */
 }
 
 /* Estilos para el botón de detalles */
 .btn-datalles {
     padding: 8px 15px;
-    /* Ajustar padding */
-    background: var(--primary-color);
-    /* Usando variable primary */
-    color: white;
+    background: var(--role-button-primary-bg); /* Usar la variable de botón primario */
+    color: var(--role-button-primary-text); /* Usar la variable de texto del botón primario */
     border: none;
     font-size: 1rem;
-    /* Ajustar tamaño de fuente */
     font-weight: 400;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* Sombra más sutil */
+    box-shadow: 0 2px 5px var(--shadow-color); /* Usar --shadow-color */
     cursor: pointer;
-    transition: transform 0.2s ease;
-    border-radius: 5px;
-    /* Ajustar radio del borde */
+    transition: var(--trans-02); /* Usar la variable de transición */
+    border-radius: 8px; /* Consistente con otros elementos */
     text-decoration: none;
-    /* Asegurar que no tenga subrayado si se usa en <a> */
     display: inline-block;
-    /* Para aplicar padding y margen correctamente si es <a> */
+}
+
+.btn-datalles:hover {
+    background-color: var(--role-primary-dark-color); /* Usar un color oscuro para hover */
+    transform: translateY(-2px);
 }
 
 .btn-datalles:active {
-    transform: scale(0.95);
-    /* Ajustar escala activa */
+    transform: translateY(0px);
 }
 
 /* Animaciones para el botón de detalles */
-/* Se mantienen las animaciones existentes, ajustando el color si es necesario */
+/* Se mantienen las animaciones existentes, ajustando el color */
 .btn-datalles.animate::before,
 .btn-datalles.animate::after {
     content: "";
@@ -240,24 +198,21 @@ td:last-child {
     height: 100%;
     width: 150%;
     background-repeat: no-repeat;
-
 }
 
 .btn-datalles.animate::before {
     top: -70%;
-    background-image: radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, transparent 20%, var(--primary-color) 20%, transparent 30%),
-        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, transparent 10%, var(--primary-color) 15%, transparent 20%),
-        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, var(--primary-color) 20%, transparent 20%);
+    background-image: radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%),
+        radial-gradient(circle, transparent 20%, var(--role-primary-color) 20%, transparent 30%),
+        radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%),
+        radial-gradient(circle, transparent 10%, var(--role-primary-color) 15%, transparent 20%),
+        radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%);
     background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 18% 18%;
     background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
     animation: topBubbles 0.6s ease-in-out forwards;
-
-
 }
 
 @keyframes topBubbles {
@@ -273,13 +228,13 @@ td:last-child {
 
 .btn-datalles.animate::after {
     bottom: -70%;
-    background-image: radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, transparent 10%, var(--primary-color) 15%, transparent 20%),
-        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, var(--primary-color) 20%, transparent 20%),
-        radial-gradient(circle, var(--primary-color) 20%, transparent 20%);
+    background-image: radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%),
+        radial-gradient(circle, transparent 10%, var(--role-primary-color) 15%, transparent 20%),
+        radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%),
+        radial-gradient(circle, var(--role-primary-color) 20%, transparent 20%);
     background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
     background-position: 10% 0%, 30% 10%, 55% 0%, 70% 0%, 85% 0%, 70% 0%, 70% 0%;
     animation: bottomBubbles 0.6s ease-in-out forwards;
@@ -294,28 +249,28 @@ td:last-child {
         background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
         background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
     }
-
 }
 
-
 /* Estilos de las tarjetas de tarea (mantener si aún se usan en alguna parte) */
+/* NOTA: Estas reglas tienen colores fijos. Si se usan, considera definirlos con variables. */
 .task-card {
-    border: 0.5px solid;
-    background-color: #f5f5f5;
+    border: 0.5px solid var(--border-color); /* Usar variable de borde */
+    background-color: var(--bg-content); /* Usar variable de fondo */
     padding: 20px;
     border-radius: 8px;
     margin-bottom: 20px;
+    box-shadow: 0 2px 5px var(--shadow-color); /* Usar sombra */
 }
 
 .task-title {
     font-size: 18px;
     font-weight: bold;
-    color: #333;
+    color: var(--text-primary); /* Usar variable de texto primario */
     margin-bottom: 10px;
 }
 
 .task-description {
-    color: #666;
+    color: var(--text-secondary); /* Usar variable de texto secundario */
     font-size: 14px;
     margin-bottom: 15px;
 }
@@ -325,30 +280,26 @@ td:last-child {
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
-    color: #666;
+    color: var(--text-secondary); /* Usar variable de texto secundario */
 }
 
 
 /* Estilos para el formulario de creación de tarea (Docente) */
 .create-task-container {
-    background-color: var(--sidebar-color);
-    /* Usando color de sidebar para el contenedor */
+    background-color: var(--bg-content); /* Usar --bg-content para el contenedor */
     padding: 25px;
     margin-top: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px var(--shadow-color); /* Usar --shadow-color */
     max-width: 600px;
-    /* Limitar ancho máximo para el formulario */
     margin-left: auto;
     margin-right: auto;
 }
 
 .create-task-container h2 {
-    color: var(--primary-color);
-    /* Usando color primario para el título */
+    color: var(--role-primary-color); /* Usar --role-primary-color para el título */
     margin-bottom: 20px;
-    border-bottom: 2px solid var(--primary-color-ligth);
-    /* Usando color primario ligero para el borde */
+    border-bottom: 2px solid var(--role-primary-light-color); /* Usar --role-primary-light-color para el borde */
     padding-bottom: 10px;
 }
 
@@ -360,8 +311,7 @@ td:last-child {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: var(--text-color);
-    /* Usando color de texto */
+    color: var(--text-primary); /* Usar --text-primary para las etiquetas */
 }
 
 .form-group input[type="text"],
@@ -370,91 +320,75 @@ td:last-child {
 .form-group textarea {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ccc;
-    /* Borde gris */
+    border: 1px solid var(--border-input); /* Usar --border-input */
     border-radius: 4px;
     box-sizing: border-box;
-    /* Incluir padding y border en el tamaño total */
-    color: var(--text-color);
-    /* Color de texto para inputs */
-    background-color: var(--body-color);
-    /* Fondo ligero para inputs */
+    color: var(--text-primary); /* Usar --text-primary para el texto de los inputs */
+    background-color: var(--bg-input); /* Usar --bg-input para el fondo de los inputs */
 }
 
+/* Modo oscuro para inputs del formulario */
 body.dark .form-group input[type="text"],
 body.dark .form-group input[type="date"],
 body.dark .form-group select,
 body.dark .form-group textarea {
-    background-color: var(--primary-color-ligth);
-    /* Fondo oscuro para inputs en modo oscuro */
-    border-color: #555;
-    /* Borde más oscuro en modo oscuro */
-    color: var(--text-color);
-    /* Color de texto en modo oscuro */
+    background-color: var(--bg-input); /* Sigue usando --bg-input, que se ajustará en modo oscuro */
+    border-color: var(--border-input); /* Sigue usando --border-input, que se ajustará en modo oscuro */
+    color: var(--text-primary); /* Sigue usando --text-primary, que se ajustará en modo oscuro */
 }
 
 .form-group textarea {
     resize: vertical;
-    /* Permitir redimensionamiento vertical */
     min-height: 100px;
 }
 
 .form-actions {
     margin-top: 20px;
     text-align: right;
-    /* Alinea los botones a la derecha */
 }
 
 .btn-submit-task {
     padding: 10px 20px;
-    background: var(--primary-color);
-    /* Usando color primario */
-    color: white;
+    background: var(--role-button-primary-bg); /* Usar la variable de botón primario */
+    color: var(--role-button-primary-text); /* Usar la variable de texto del botón primario */
     border: none;
     font-size: 16px;
-    border-radius: 5px;
+    border-radius: 8px; /* Consistente con otros elementos */
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    transition: background-color 0.3s ease;
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .btn-submit-task:hover {
-    background-color: #35a88d;
-    /* Tono más oscuro para hover (ajustado al nuevo color) */
+    background-color: var(--role-primary-dark-color); /* Usar un color oscuro para hover */
 }
 
 .btn-cancel {
     padding: 10px 20px;
-    background: #ccc;
-    /* Color gris para cancelar */
-    color: var(--title-color);
-    /* Color de título para texto */
+    background: var(--role-button-secondary-bg); /* Usar la variable de botón secundario */
+    color: var(--role-button-secondary-text); /* Usar la variable de texto del botón secundario */
     border: none;
     font-size: 16px;
-    border-radius: 5px;
+    border-radius: 8px; /* Consistente con otros elementos */
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
     margin-left: 10px;
-    transition: background-color 0.3s ease;
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .btn-cancel:hover {
-    background-color: #bbb;
-    /* Tono más oscuro para hover */
+    background-color: var(--border-color); /* O un color más oscuro del secundario si se define */
 }
-
 
 /* Estilos responsivos */
 @media (max-width: 768px) {
 
-    /* Estilos para el cuerpo en pantallas pequeñas */
     body {
         flex-direction: column;
     }
 
-    /* Estilos para la barra lateral en pantallas pequeñas */
     .sidebar {
         width: 100%;
         flex-direction: row;
@@ -462,96 +396,66 @@ body.dark .form-group textarea {
         padding: 15px;
     }
 
-    /* Estilos para los iconos de la barra lateral */
     .sidebar-icon {
         margin-bottom: 0;
         margin-right: 20px;
     }
 
-    /* Estilos para el contenido principal en pantallas pequeñas */
     .main-content {
         padding: 20px;
     }
 
-    /* Estilos para la información del usuario en pantallas pequeñas */
     .user-info {
         justify-content: flex-start;
         margin-bottom: 20px;
     }
 
-    /* Ajustes para el header en pantallas pequeñas */
     .header {
         flex-direction: column;
-        /* Apila elementos en pantallas pequeñas */
         height: auto;
-        /* Altura automática */
         padding: 15px;
-        /* Ajustar padding */
         left: 0;
-        /* Eliminar left fijo */
         width: 100%;
-        /* Ancho completo */
     }
 
     #titulo1-header {
         margin-bottom: 10px;
-        /* Espacio debajo del título */
     }
 
     .profile {
         width: 100%;
-        /* Ocupa todo el ancho */
         justify-content: center;
-        /* Centra el contenido del perfil */
         padding: 10px;
-        /* Ajustar padding */
         text-align: center;
-        /* Centrar texto */
     }
 
-
-    /* Estilos responsivos para los controles del administrador/docente */
     .admin-controls {
         flex-direction: column;
-        /* Apila los controles en pantallas pequeñas */
         align-items: stretch;
-        /* Estira los elementos para ocupar el ancho */
         padding: 0;
-        /* Elimina padding horizontal */
         gap: 10px;
-        /* Reducir espacio entre elementos */
     }
 
     .filter-dropdown {
         margin-bottom: 5px;
-        /* Espacio debajo del desplegable */
         justify-content: center;
-        /* Centra el contenido del desplegable */
         width: 100%;
-        /* Ocupa todo el ancho disponible */
     }
 
     .filter-dropdown select {
         width: 100%;
-        /* Asegura que el select ocupe todo el ancho en móvil */
         min-width: unset;
-        /* Elimina el ancho mínimo en móvil */
     }
 
     .admin-actions {
         text-align: center;
-        /* Centra el botón de crear tarea */
         width: 100%;
-        /* Ocupa todo el ancho disponible */
     }
 
     .btn-crear-tarea {
         width: 100%;
-        /* Estira el botón para ocupar todo el ancho */
         text-align: center;
-        /* Centra el texto del botón */
     }
-
 
     .tabla-contenedor {
         padding: 5px;
@@ -560,16 +464,12 @@ body.dark .form-group textarea {
     th,
     td {
         padding: 8px 5px;
-        /* Reducir padding en celdas */
         font-size: 0.9rem;
-        /* Reducir tamaño de fuente en celdas */
     }
 
     .btn-datalles {
         padding: 6px 10px;
-        /* Reducir padding del botón */
         font-size: 0.9rem;
-        /* Reducir tamaño de fuente del botón */
     }
 
     /* Estilos para el formulario de creación de tarea en móvil */
@@ -603,16 +503,12 @@ body.dark .form-group textarea {
 
     .form-actions {
         text-align: center;
-        /* Centra los botones en móvil */
     }
 
     .btn-submit-task,
     .btn-cancel {
         width: auto;
-        /* Ancho automático para los botones */
         margin-left: 5px;
-        /* Espacio entre los botones */
         margin-right: 5px;
     }
-
 }

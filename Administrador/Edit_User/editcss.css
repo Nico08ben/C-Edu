@@ -1,4 +1,6 @@
-* --- MODIFICACIONES CLAVE --- */
+/* editcss.css - Adaptado para .theme-admin */
+
+/* --- MODIFICACIONES CLAVE --- */
 
 /* Centrar el contenedor horizontalmente y alinearlo al inicio verticalmente */
 .home {
@@ -8,30 +10,21 @@
     width: 100%;
     min-height: 100vh;
     padding: 20px; /* Padding general */
-    padding-top: 70px; /* <<< AÑADIDO: Espacio superior para dejar sitio al user-profile-box. AJUSTA ESTE VALOR según la altura de tu user-profile-box + el espacio deseado. */
-    box-sizing: border-box; /* <<< AÑADIDO: Para que el padding-top se incluya dentro del min-height */
+    /* padding-top: 70px;  Espacio superior para user-profile-box. Se recomienda manejar esto en el layout general si es posible. */
+    box-sizing: border-box;
+    background-color: var(--bg-body); /* Fondo para la página entera */
 }
 
 .container {
-    background: white;
+    background: var(--bg-content); /* Anteriormente white */
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px var(--shadow-color); /* Anteriormente rgba(0, 0, 0, 0.1) */
     width: 90%;
     max-width: 1000px;
-    /* Nota sobre proporción: Mantener una proporción estricta del *contenido* interno
-       (texto, tabla, botones juntos) al cambiar el tamaño de la ventana es complejo
-       solo con CSS. El diseño actual con anchos porcentuales (tabla), flexbox (header)
-       y max-width ya proporciona buena responsividad y adaptación.
-       Si necesitas que el *contenedor mismo* tenga una relación de aspecto fija,
-       puedes usar la propiedad `aspect-ratio`, pero podría causar desbordamiento
-       del contenido interno. */
-    /* Ejemplo (descomentar si es necesario y ajustar): */
-    /* aspect-ratio: 16 / 9; */
-    /* overflow: auto; /* Necesario si se usa aspect-ratio para manejar contenido excedente */
 }
 
-/* --- RESTO DEL CSS (sin cambios respecto al original) --- */
+/* --- RESTO DEL CSS --- */
 
 .header {
     display: flex;
@@ -41,7 +34,7 @@
 }
 
 h1 {
-    color: #000;
+    color: var(--text-primary); /* Anteriormente #000 */
     text-align: left;
     margin-bottom: 0;
     font-size: 24px;
@@ -53,79 +46,39 @@ h1 {
     font-size: 20px;
     cursor: pointer;
     padding: 5px;
+    color: var(--text-secondary); /* Color para el icono de notificación */
 }
 
-/* Estilos mejorados para la tabla */
-/* table { // Comentado porque los estilos principales de la tabla están dentro de .table-scroll-container
-    width: 100%; 
+/* Estilos para tabla si no usa .table-scroll-container */
+/* table {
+    width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
     border-radius: 10px;
     overflow: hidden;
-    background-color: #f5f5f5;
+    background-color: var(--bg-disabled); // Anteriormente #f5f5f5
 } */
 
-thead tr { /* Estos estilos podrían aplicarse dentro de .table-scroll-container thead tr si es necesario */
-    background-color: #f5f5f5;
+/* thead tr { // Si se usa fuera de .table-scroll-container
+    background-color: var(--role-table-header-bg); // Anteriormente #f5f5f5
     text-align: left;
-    color: #333;
+    color: var(--text-primary); // Anteriormente #333
     font-weight: normal;
-}
-
-/* th, td { // Estilos base para celdas, la mayoría se definen en .table-scroll-container
-    padding: 15px;
-    border-bottom: none;
-    text-align: left;
-}
-
-th {
-    font-size: 14px;
-    color: #888;
-    font-weight: normal;
-}
-
-td {
-    font-size: 14px;
-    color: #333;
-    vertical-align: top !important; 
-    position: relative; 
 } */
 
-/* tr:hover { // Aplicado en .table-scroll-container tbody tr:hover
-    background-color: rgba(0, 0, 0, 0.02);
-} */
-
-/* tbody tr { // Estilos para filas del body, la mayoría en .table-scroll-container
-    background-color: white;
-    margin: 5px 0; 
-    border-radius: 10px; 
-} */
-
-/* Aplicar border-radius a las celdas de los extremos en tbody */
-/* Estas reglas pueden necesitar ajustarse o eliminarse si .table-scroll-container maneja todos los bordes/radios */
-/* tbody tr td:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-}
-
-tbody tr td:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-} */
-
-
-img {
+img { /* Estilo para avatares o imágenes similares */
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    display: block; /* Para evitar espacios extra y facilitar centrado si es necesario */
+    display: block;
+    border: 2px solid var(--border-color); /* Borde sutil opcional */
 }
 
 .action-buttons {
-    white-space: nowrap; /* Mantiene los botones en una sola línea */
-    vertical-align: top; /* Alineación consistente con otros td */
-    text-align: left; /* Asegurar que los botones se alineen a la izquierda si hay espacio */
+    white-space: nowrap;
+    vertical-align: top;
+    text-align: left;
 }
 
 .edit, .delete {
@@ -133,113 +86,123 @@ img {
     border: none;
     cursor: pointer;
     padding: 8px;
-    border-radius: 50%; /* Para forma circular */
-    width: 40px;        /* Ancho y alto iguales para círculo */
+    border-radius: 50%;
+    width: 40px;
     height: 40px;
-    display: inline-flex; /* Para centrar el icono dentro del botón */
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    vertical-align: middle; 
-    margin: 0 2px; 
+    vertical-align: middle;
+    margin: 0 2px;
+    transition: background-color var(--trans-03);
 }
 
 .edit {
-    background-color: #ffd700; /* Amarillo para editar */
+    background-color: var(--role-button-edit-bg); /* CAMBIO: Admin usa verde (#40C3A5), antes #ffd700 (amarillo) */
 }
 .edit i {
-    color: #333; /* Icono oscuro para contraste */
+    color: var(--role-button-edit-text); /* CAMBIO: Admin usa texto blanco en botón verde, antes #333 */
 }
 
 .delete {
-    background-color: #ff6b6b; /* Rojo para eliminar */
-    color: white; /* Icono blanco para contraste */
+    background-color: var(--role-button-delete-bg); /* Mantiene #ff6b6b */
 }
+.delete i { /* Asumiendo que el icono está dentro, y .delete tiene color: var(--role-button-delete-text) */
+    color: var(--role-button-delete-text); /* Mantiene white */
+}
+/* Si el color del icono no se hereda y .delete solo tiene background-color, añadir explícitamente: */
+/* .delete { color: var(--role-button-delete-text); } */
+
 
 .buttons {
     display: flex;
     gap: 10px;
-    margin-top: 20px; /* Aumentar un poco el margen superior */
-    flex-wrap: wrap; /* Permitir que los botones pasen a la siguiente línea si no caben */
+    margin-top: 20px;
+    flex-wrap: wrap;
 }
 
 #newUser, #save { /* Estilo común para botones principales */
-    background-color: #f0c14b; /* Un color primario (ej. dorado/amarillo) */
-    color: #fff; /* Texto blanco para contraste */
+    background-color: var(--role-button-primary-bg); /* Mapeado a amarillo de Admin (#e7bb41), antes #f0c14b */
+    color: var(--role-button-primary-text);       /* CAMBIO: Texto oscuro (#333333) en Admin, antes #fff */
     padding: 12px 20px;
     border: none;
-    border-radius: 20px; /* Bordes redondeados */
+    border-radius: 20px;
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
-    transition: background-color 0.3s ease; /* Transición suave */
+    transition: background-color var(--trans-03);
 }
 
-#newUser:hover, #save:hover {
-    background-color: #e5a000; /* Color más oscuro al pasar el mouse */
+#newUser:hover, #save:hover { /* Para el hover del botón primario */
+    background-color: var(--role-primary-dark-color); /* Amarillo oscuro de Admin (#d4a738), antes #e5a000 */
 }
 
-#save { /* Si 'Guardar' debe tener un estilo ligeramente diferente */
-    background-color: #e5d28a; /* Un tono más suave o secundario */
+#save { /* Si 'Guardar' es un botón secundario */
+    background-color: var(--role-button-secondary-bg); /* Amarillo muy pálido de Admin (#f8f0d8), antes #e5d28a */
+    color: var(--role-button-secondary-text);       /* Texto primario (#333333) */
 }
 #save:hover {
-    background-color: #d4b95e;
+    /* themes.css no tiene hover para secundario. Usamos un filtro o un color ligeramente más oscuro. */
+    filter: brightness(95%); /* Alternativa: definir --role-button-secondary-hover-bg */
+    /* background-color: #d4b95e; */ /* Color original de hover. Considerar definir variable. */
 }
 
 
 /* Modal Styles modificados */
 .modal {
-    display: none; /* Inicialmente oculto */
+    display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5); /* Fondo semitransparente */
+    background-color: rgba(0,0,0,0.5); /* Considerar var(--overlay-bg) si se define en themes.css */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    justify-content: center; /* Centrado horizontal */
-    align-items: center;     /* Centrado vertical */
-    overflow-y: auto; /* Scroll si el contenido del modal es muy largo */
+    transition: opacity var(--trans-03), visibility var(--trans-03);
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
 }
 
 .modal.show {
     opacity: 1;
     visibility: visible;
-    display: flex; /* Usar flex para centrar .modal-content */
+    display: flex;
 }
 
 .modal-content {
-    background-color: white;
+    background-color: var(--bg-content); /* Anteriormente white */
     border-radius: 10px;
     width: 90%;
-    max-width: 450px; /* Un poco más ancho para formularios */
-    max-height: 90vh; /* Limitar altura máxima */
-    padding: 25px 30px; /* Ajustar padding */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Sombra más pronunciada */
+    max-width: 450px;
+    max-height: 90vh;
+    padding: 25px 30px;
+    box-shadow: 0 5px 15px var(--shadow-color); /* Anteriormente rgba(0,0,0,0.2), el efecto puede ser más sutil */
     position: relative;
-    transform: scale(0.9); /* Efecto de aparición */
+    transform: scale(0.9);
     opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    overflow-y: auto; /* Scroll interno si es necesario */
+    transition: transform var(--trans-03), opacity var(--trans-03);
+    overflow-y: auto;
     
     scrollbar-width: thin; 
-    scrollbar-color: #ddd transparent; 
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); /* Usando variables de scrollbar */
 }
 
 .modal-content::-webkit-scrollbar {
     width: 6px;
 }
 .modal-content::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--scrollbar-track); /* Usando variable */
 }
 .modal-content::-webkit-scrollbar-thumb {
-    background-color: #ddd;
+    background-color: var(--scrollbar-thumb); /* Usando variable, antes #ddd */
     border-radius: 10px;
 }
 .modal-content::-webkit-scrollbar-thumb:hover {
-    background-color: #ccc;
+    background-color: var(--scrollbar-thumb); /* themes.css no tiene hover. Mantener o usar filter:brightness(90%) */
+    filter: brightness(90%);
 }
 
 .modal.show .modal-content {
@@ -247,34 +210,34 @@ img {
     opacity: 1;
 }
 
-.modal-header { /* Simplificado, el título se maneja con .modal-title */
+.modal-header {
     text-align: center;
     margin-bottom: 20px;
 }
 
-.close-button, .close-password { /* Estilo común para botones de cerrar */
+.close-button, .close-password {
     position: absolute;
     top: 15px;
     right: 15px;
-    font-size: 28px; /* Un poco más grande */
+    font-size: 28px;
     font-weight: bold;
-    color: #aaa;
+    color: var(--text-disabled); /* Anteriormente #aaa */
     cursor: pointer;
-    line-height: 1; /* Para mejor alineación vertical */
-    transition: color 0.2s ease;
+    line-height: 1;
+    transition: color var(--trans-02);
 }
 .close-button:hover, .close-password:hover {
-    color: #777;
+    color: var(--text-secondary); /* Anteriormente #777 */
 }
 
 .form-group {
-    margin-bottom: 18px; /* Un poco más de espacio */
+    margin-bottom: 18px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 6px; /* Espacio entre label e input */
-    color: #555; /* Color de label un poco más oscuro */
+    margin-bottom: 6px;
+    color: var(--text-secondary); /* Anteriormente #555 */
     font-weight: bold;
     font-size: 14px;
 }
@@ -282,88 +245,101 @@ img {
 .form-group input, 
 .form-group select {
     width: 100%;
-    padding: 12px; /* Padding más generoso */
-    border: 1px solid #ddd;
+    padding: 12px;
+    border: 1px solid var(--border-input); /* Anteriormente #ddd */
+    background-color: var(--bg-input);   /* Añadido para consistencia */
+    color: var(--text-primary);          /* Añadido para consistencia */
     border-radius: 5px;
     box-sizing: border-box; 
     font-size: 14px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color var(--trans-03), box-shadow var(--trans-03);
 }
 .form-group input:focus, 
 .form-group select:focus {
-    border-color: #f0c14b; /* Color primario al enfocar */
-    box-shadow: 0 0 0 2px rgba(240, 193, 75, 0.3); /* Sombra sutil al enfocar */
+    border-color: var(--border-focus); /* CAMBIO: Admin usa azul (#80bdff), antes #f0c14b (amarillo) */
+    box-shadow: 0 0 0 0.2rem rgba(var(--border-focus-rgb, 128, 189, 255), 0.25); /* Asumiendo que --border-focus es azul. Si fuera amarillo, los RGB cambiarían. themes.css no provee --border-focus-rgb */
+                                     /* Alternativa más simple si no se puede definir --border-focus-rgb: usar var(--role-primary-light-color) si el foco debe ser del color primario del rol */
+                                     /* Por ahora, usando el azul definido en themes.css para Admin: */
+                                     /* box-shadow: 0 0 0 2px var(--border-focus); opacity: 0.3; No es así */
     outline: none;
 }
+/* Para el box-shadow del foco, una opción es: */
+/* .form-group input:focus, .form-group select:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 5px var(--border-focus);
+    outline: none;
+} */
 
-.submit-btn, .password-change-btn { /* Estilo común para botones de formulario */
+
+.submit-btn, .password-change-btn {
     width: 100%;
     padding: 12px;
-    color: white;
+    color: var(--role-button-primary-text); /* CAMBIO: Texto oscuro en Admin para botón primario, antes white */
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    transition: background-color 0.3s ease;
+    transition: background-color var(--trans-03);
 }
 .submit-btn {
-    background-color: #f0c14b; /* Color primario */
+    background-color: var(--role-button-primary-bg); /* Amarillo de Admin, antes #f0c14b */
 }
 .submit-btn:hover {
-    background-color: #e5a000;
+    background-color: var(--role-primary-dark-color); /* Amarillo oscuro de Admin, antes #e5a000 */
 }
 
-.password-change-btn {
-    background-color: #5cb85c; /* Verde para cambio de contraseña */
+.password-change-btn { /* Botón de cambio de contraseña (verde) */
+    background-color: #5cb85c; /* themes.css Admin no tiene un "--role-button-success-bg". Se mantiene este verde. */
+    color: white; /* Texto blanco sobre verde */
     margin-top: 10px;
 }
 .password-change-btn:hover {
-    background-color: #4cae4c;
+    background-color: #4cae4c; /* Verde más oscuro. Considerar definir variables para estos. */
 }
 
 .modal-title {
-    font-size: 22px; /* Título más grande */
+    font-size: 22px;
     font-weight: bold;
-    color: #333;
+    color: var(--text-primary); /* Anteriormente #333 */
     margin-bottom: 25px;
     text-align: center;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color); /* Anteriormente #eee */
     padding-bottom: 15px;
 }
 
 
 /* --- ESTILOS DE TABLA CON SCROLL --- */
 .table-scroll-container {
-    max-height: 65vh; /* Ajustar altura según necesidad */
+    max-height: 65vh;
     overflow-y: auto; 
-    overflow-x: hidden; /* Scroll horizontal se maneja en media query */
+    overflow-x: hidden;
     position: relative;
-    background: white; 
+    background: var(--bg-content); /* Anteriormente white */
     border-radius: 8px; 
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08); 
+    box-shadow: 0 1px 3px var(--shadow-color); /* Anteriormente rgba(0,0,0,0.08) */
     width: 100%; 
-    border: 1px solid #e0e0e0; /* Borde sutil para el contenedor */
+    border: 1px solid var(--border-color); /* Anteriormente #e0e0e0 */
 }
-/* Estilos para la barra de desplazamiento del contenedor de tabla */
 .table-scroll-container::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 .table-scroll-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--scrollbar-track); /* Anteriormente #f1f1f1 */
     border-radius: 10px;
 }
 .table-scroll-container::-webkit-scrollbar-thumb {
-    background-color: #ccc;
+    background-color: var(--scrollbar-thumb); /* Anteriormente #ccc */
     border-radius: 10px;
 }
 .table-scroll-container::-webkit-scrollbar-thumb:hover {
-    background-color: #bbb;
+    background-color: var(--scrollbar-thumb); /* themes.css no tiene hover. Mantener o usar filter:brightness(90%) */
+    filter: brightness(90%); /* Anteriormente #bbb */
 }
 
 
-.table-scroll-container table { /* Estilos para la tabla DENTRO del scroll container */
+.table-scroll-container table {
     width: 100%;
     border-collapse: collapse; 
     margin-bottom: 0; 
@@ -378,221 +354,107 @@ img {
 }
 
 .table-scroll-container thead th {
-    background-color: #f9f9f9; /* Fondo ligeramente diferente para la cabecera */
-    color: #555;
-    font-weight: bold; /* Cabeceras en negrita */
+    background-color: var(--role-table-header-bg); /* CAMBIO: Admin usa amarillo claro (#fdf6e3), antes #f9f9f9 (gris) */
+    color: var(--text-secondary); /* Anteriormente #555 */
+    font-weight: bold;
     font-size: 14px;
-    padding: 12px 15px; /* Ajustar padding */
+    padding: 12px 15px;
     text-align: left;
-    border-bottom: 2px solid #e0e0e0; /* Borde inferior más marcado */
+    border-bottom: 2px solid var(--border-color); /* Anteriormente #e0e0e0 */
 }
 
 
 .table-scroll-container tbody tr {
-    background-color: white;
-    border-bottom: 1px solid #eef0f2; /* Separador de filas más sutil */
-    transition: background-color 0.2s ease;
+    background-color: var(--bg-content); /* Fondo de fila, antes white */
+    border-bottom: 1px solid var(--border-color); /* Anteriormente #eef0f2 (más sutil) */
+    transition: background-color var(--trans-02);
 }
 .table-scroll-container tbody tr:last-child {
-    border-bottom: none; /* Sin borde en la última fila del tbody */
+    border-bottom: none;
 }
 .table-scroll-container tbody tr:hover {
-    background-color: #f5f7fa; /* Color de hover más claro */
+    background-color: var(--role-table-row-hover-bg); /* CAMBIO: Admin usa hover amarillo claro (#fcf0c6), antes #f5f7fa (gris azulado) */
 }
 
 .table-scroll-container td {
-    padding: 12px 15px; /* Consistente con th */
+    padding: 12px 15px;
     font-size: 14px;
-    color: #333;
-    vertical-align: middle; /* Alinear verticalmente al medio por defecto */
-    border-bottom: none; /* Quitado, ya que está en tr */
+    color: var(--text-primary); /* Anteriormente #333 */
+    vertical-align: middle;
+    border-bottom: none;
     word-break: break-word; 
     overflow-wrap: break-word; 
     min-width: 120px; 
 }
 
-.tbody-wrapper table { /* La tabla dentro del tbody-wrapper */
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed; /* Importante para alinear con la cabecera */
+/* .tbody-wrapper table { // Si se usa, hereda estilos. No necesita cambios directos de color aquí } */
+
+
+/* --- MEDIA QUERIES PARA RESPONSIVE (Sin cambios de color directos, heredan variables) --- */
+@media (max-width: 992px) {
+    .container { width: 95%; padding: 15px; }
+    h1 { font-size: 22px; }
+    .table-scroll-container td, .table-scroll-container th { padding: 10px 12px; font-size: 13px; }
+    .table-scroll-container td { min-width: 100px; }
 }
 
-
-/* --- MEDIA QUERIES PARA RESPONSIVE --- */
-@media (max-width: 992px) { /* Nuevo breakpoint para tablets grandes o escritorios pequeños */
-    .container {
-        width: 95%;
-        padding: 15px;
-    }
-    h1 {
-        font-size: 22px;
-    }
-    .table-scroll-container td,
-    .table-scroll-container th {
-        padding: 10px 12px;
-        font-size: 13px;
-    }
-     .table-scroll-container td {
-        min-width: 100px;
-    }
+@media (max-width: 768px) {
+    .container { width: 95%; padding: 15px; }
+    h1 { font-size: 20px; }
+    .table-scroll-container { overflow-x: auto; -webkit-overflow-scrolling: touch; border: none; box-shadow: none; }
+    .table-scroll-container table { min-width: 700px; }
+    .table-scroll-container th, .table-scroll-container td { white-space: normal !important; font-size: 13px; padding: 10px; min-width: 90px; }
+    img { width: 40px; height: 40px; }
+    .action-buttons { gap: 5px; white-space: normal; text-align: center; }
+    .edit, .delete { width: 35px; height: 35px; padding: 6px; }
+    .edit i, .delete i { font-size: 0.9em; }
+    #newUser, #save { padding: 10px 15px; font-size: 13px; width: auto; flex-grow: 1; }
+    .buttons { justify-content: space-between; }
 }
 
-
-@media (max-width: 768px) { /* Tabletas y móviles grandes */
-    .container {
-        width: 95%;
-        padding: 15px;
-    }
-
-    h1 {
-        font-size: 20px;
-    }
-
-    .table-scroll-container {
-        overflow-x: auto; /* Activar scroll horizontal para la tabla */
-        -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
-        border: none; /* Quitar borde del contenedor si se prefiere */
-        box-shadow: none; /* Quitar sombra del contenedor si se prefiere */
-    }
-
-    .table-scroll-container table { /* La tabla interna necesita un ancho mínimo para forzar el scroll */
-        min-width: 700px; /* Ajusta este valor según el contenido de tu tabla */
-    }
-    
-    /* En pantallas pequeñas, es mejor que el texto se ajuste */
-    .table-scroll-container th, 
-    .table-scroll-container td {
-        white-space: normal !important; /* Permitir que el texto se ajuste */
-        font-size: 13px;
-        padding: 10px;
-        min-width: 90px; /* Ajustar min-width de celdas para móvil */
-    }
-
-    img { /* Reducir imagen de avatar */
-        width: 40px;
-        height: 40px;
-    }
-
-    .action-buttons {
-        gap: 5px; /* Reducir espacio entre botones de acción */
-        white-space: normal; /* Permitir que los botones se envuelvan si es necesario */
-        text-align: center; /* Centrar botones si se envuelven */
-    }
-    .edit, .delete {
-        width: 35px; /* Botones de acción un poco más pequeños */
-        height: 35px;
-        padding: 6px;
-    }
-    .edit i, .delete i {
-        font-size: 0.9em; /* Iconos un poco más pequeños */
-    }
-
-
-    #newUser, #save {
-        padding: 10px 15px;
-        font-size: 13px;
-        width: auto; /* Permitir que se ajusten a su contenido */
-        flex-grow: 1; /* Distribuir espacio si están en flex container */
-    }
-    .buttons {
-        justify-content: space-between; /* Distribuir botones si hay espacio */
-    }
+@media (max-width: 480px) {
+    .home { padding: 10px; /* padding-top: 60px; */ }
+    .container { width: 100%; border-radius: 0; padding: 10px; box-shadow: none; }
+    .header { flex-direction: column; gap: 10px; align-items: flex-start; margin-bottom: 15px; }
+    h1 { font-size: 18px; }
+    .buttons { flex-direction: column; gap: 10px; }
+    #newUser, #save { width: 100%; text-align: center; }
+    .modal-content { width: 95%; padding: 20px 15px; max-height: 85vh; }
+    .modal-title { font-size: 18px; margin-bottom: 20px; padding-bottom: 10px; }
+    .form-group input, .form-group select, .submit-btn, .password-change-btn { font-size: 14px; padding: 10px; }
+    .table-scroll-container table { min-width: 500px; }
+    .table-scroll-container th, .table-scroll-container td { font-size: 12px; min-width: 70px; padding: 8px; }
+    .action-buttons { min-width: auto; }
 }
 
-@media (max-width: 480px) { /* Móviles pequeños */
-    .home {
-        padding: 10px;
-        padding-top: 60px; 
-    }
-
-    .container {
-        width: 100%;
-        border-radius: 0;
-        padding: 10px;
-        box-shadow: none;
-    }
-
-    .header {
-        flex-direction: column; /* Apilar título y notificaciones */
-        gap: 10px; /* Espacio entre elementos apilados */
-        align-items: flex-start; /* Alinear a la izquierda */
-        margin-bottom: 15px;
-    }
-    h1 {
-        font-size: 18px;
-    }
-
-    .buttons {
-        flex-direction: column; /* Apilar botones principales */
-        gap: 10px;
-    }
-
-    #newUser, #save {
-        width: 100%; /* Botones ocupan todo el ancho */
-        text-align: center;
-    }
-
-    /* Ajustes para modales en móviles */
-    .modal-content {
-        width: 95%;
-        padding: 20px 15px; /* Menos padding horizontal */
-        max-height: 85vh;
-    }
-    .modal-title {
-        font-size: 18px;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-    }
-    .form-group input,
-    .form-group select,
-    .submit-btn,
-    .password-change-btn {
-        font-size: 14px; /* Asegurar buena legibilidad en inputs */
-        padding: 10px;
-    }
-
-    .table-scroll-container table {
-        min-width: 500px; /* Reducir min-width de tabla para móviles muy pequeños */
-    }
-    .table-scroll-container th, 
-    .table-scroll-container td {
-        font-size: 12px; 
-        min-width: 70px; 
-        padding: 8px; 
-    }
-    .action-buttons {
-        min-width: auto; /* Permitir que la columna de acciones sea más estrecha */
-    }
-}
-
-/* Ajustes específicos para pantallas pequeñas en orientación horizontal */
 @media (max-width: 768px) and (max-height: 500px) and (orientation: landscape) {
-    .table-scroll-container {
-        max-height: 55vh; /* Reducir altura de tabla en horizontal si la pantalla es baja */
-    }
-    .modal-content {
-        max-height: 80vh; /* Permitir más altura al modal en horizontal */
-    }
+    .table-scroll-container { max-height: 55vh; }
+    .modal-content { max-height: 80vh; }
 }
 
-/* Mejorar visualización de selects (ya presente, mantener) */
+/* Mejorar visualización de selects */
 select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%23555" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 12px center/10px; /* Icono un poco más oscuro y ajustado */
+    /* Para la flecha, la mejor práctica es usar una máscara SVG y background-color,
+       o un SVG con fill="currentColor" y ajustar la propiedad 'color' del select.
+       La variable --select-arrow en themes.css es solo el color codificado. */
+    /* Opción 1: SVG con currentColor (Recomendado) */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
     padding-right: 35px !important;
-    background-color: #fff; /* Asegurar fondo blanco */
+    /* El color de la flecha ahora se controlará con la propiedad 'color' del select */
+    /* Asegurar que herede el color de texto del input o se defina explícitamente */
+    /* color: var(--text-primary); Ya se define en .form-group input, .form-group select */
+    background-color: var(--bg-input); /* Anteriormente #fff, ahora variable de fondo de input */
 }
 
 
-/* Opcional: Añadir puntos suspensivos para texto muy largo en específico */
-/* Esta clase se puede aplicar a celdas específicas si es necesario */
 .table-scroll-container td.ellipsis {
-    white-space: nowrap; /* Necesario para text-overflow */
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* display: -webkit-box; Ya no es necesario si se usa white-space: nowrap */
-    /* -webkit-line-clamp: 2; */
-    /* -webkit-box-orient: vertical; */
 }

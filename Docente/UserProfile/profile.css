@@ -3,33 +3,24 @@
 
 /* Estilos generales para todos los elementos */
 * {
-    /* Eliminar margenes y rellenos por defecto */
     margin: 0;
     padding: 0;
-    /* Utilizar caja de modelo de caja */
     box-sizing: border-box;
-    /* Establecer fuente por defecto */
     font-family: "Rubik", sans-serif;
 }
 
-/* Estilos de la barra lateral */
+/* Estilos de la barra lateral (Se mantiene aquí aunque se relaciona con el layout general) */
 .home {
-    /* Posicionar la barra lateral */
     position: relative;
-    /* Establecer altura */
     height: 100vh;
-    /* Establecer posición y ancho */
     left: 250px;
     width: calc(100% - 250px);
-    /* Establecer color de fondo */
-    background-color: var(--body-color);
-    /* Transición para cambios de estilo */
-    transition: var(--trans-05);
+    background-color: var(--bg-body); /* Usar --bg-body para el fondo principal */
+    transition: var(--trans-05); /* Usar la variable de transición */
 }
 
 /* Estilos de la barra lateral cuando está cerrada */
 .sidebar.close~.home {
-    /* Establecer posición y ancho cuando está cerrada */
     left: 88px;
     width: calc(100% - 88px);
 }
@@ -48,15 +39,15 @@
 
 /* === Tarjeta de perfil === */
 .card-profile {
-    background: var(--sidebar-color);
+    background: var(--bg-content); /* Usar --bg-content para el fondo de la tarjeta de perfil */
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--shadow-color); /* Usar --shadow-color */
     width: 65%;
     text-align: center;
     margin-top: 10px;
     position: relative;
-    transition: var(--trans-05);
+    transition: var(--trans-05); /* Usar la variable de transición */
 }
 
 /* === Encabezado de perfil (Editar Perfil / Ayuda) === */
@@ -65,11 +56,11 @@
     justify-content: flex-start;
     gap: 20px;
     font-size: 14px;
-    color: #40C3A5;
+    color: var(--role-primary-color); /* Usar --role-primary-color */
     cursor: pointer;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color); /* Usar --border-color */
 }
 
 .profile-option:hover {
@@ -95,10 +86,10 @@
     width: 140px;
     height: 140px;
     border-radius: 50%;
-    background-color: #ccc;
+    background-color: var(--bg-disabled); /* Usar --bg-disabled o un color neutro */
     overflow: hidden;
     margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px var(--shadow-color); /* Usar --shadow-color */
 }
 
 .user-avatar img {
@@ -111,22 +102,23 @@
     margin-top: 10px;
     padding: 8px 20px;
     border: none;
-    background-color: #40C3A5;
-    color: white;
+    background-color: var(--role-button-edit-bg); /* Usar --role-button-edit-bg */
+    color: var(--role-button-edit-text); /* Usar --role-button-edit-text */
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s;
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .edit-btn:hover {
-    background-color: #40C3A5;
+    background-color: var(--role-primary-dark-color); /* Un tono más oscuro del primario para hover */
 }
 
 #upload-status {
     margin-top: 8px;
     font-size: 14px;
     min-height: 20px;
+    color: var(--text-secondary); /* Usar --text-secondary */
 }
 
 /* === Columna derecha (Información) === */
@@ -151,71 +143,78 @@
     font-size: 0.9rem;
     font-weight: bold;
     margin-top: 10px;
-    color: var(--text-color);
+    color: var(--text-primary); /* Usar --text-primary */
     text-align: left;
-    transition: var(--trans-04);
+    transition: var(--trans-04); /* Usar la variable de transición */
 }
 
 .profile-right input {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-input); /* Usar --border-input */
     border-radius: 5px;
     width: 100%;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: var(--bg-input); /* Usar --bg-input */
+    color: var(--text-primary); /* Usar --text-primary */
     margin-bottom: 10px;
 }
 
 .profile-right input:disabled {
-    background-color: #e9ecef;
-    color: #6c757d;
+    background-color: var(--bg-disabled); /* Usar --bg-disabled */
+    color: var(--text-disabled); /* Usar --text-disabled */
+    cursor: not-allowed; /* Añadir cursor deshabilitado */
 }
 
 .ayuda {
     text-align: left;
     padding: 15px 0;
     margin: auto;
-    color: var(--text-color);
+    color: var(--text-primary); /* Usar --text-primary */
 }
 
 .ayuda div {
     margin-top: 15px;
     padding: 12px;
     border-radius: 5px;
-    background-color: #f5f5f5;
+    background-color: var(--bg-input); /* Usar --bg-input o un color sutil para fondo interactivo */
     display: flex;
     align-items: center;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: var(--trans-03); /* Usar la variable de transición */
+    border: 1px solid var(--border-color); /* Añadir borde sutil */
 }
 
 .ayuda div:hover {
-    background-color: #e9e9e9;
+    background-color: var(--bg-disabled); /* Un tono más oscuro o deshabilitado para hover */
 }
 
 .ayuda h3 {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 15px;
+    color: var(--text-primary); /* Usar --text-primary */
 }
 
 .ayuda p {
     margin-bottom: 20px;
     line-height: 1.5;
+    color: var(--text-secondary); /* Usar --text-secondary */
 }
 
 .ayuda i {
     margin-right: 10px;
     font-size: 18px;
+    color: var(--role-primary-color); /* Usar --role-primary-color para iconos */
 }
 
 .ayuda .fa-chevron-right {
     margin-left: auto;
     font-size: 14px;
+    color: var(--text-secondary); /* Un color más sutil para la flecha */
 }
 
 .ayuda span {
     font-weight: bold;
+    color: var(--text-primary); /* Usar --text-primary */
 }
 
 /* Estilos para vista celular */

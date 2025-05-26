@@ -9,14 +9,14 @@
 
 body {
     height: 100vh;
-    background: var(--bg-body);
-    transition: var(--trans-05);
+    background: var(--bg-body); /* Usar --bg-body para el fondo del cuerpo */
+    transition: var(--trans-05); /* Usar la variable de transición */
 }
 
 .sidebar .text {
     font-size: 16px;
     font-weight: 500;
-    transition: var(--trans-03);
+    transition: var(--trans-03); /* Usar la variable de transición */
     white-space: nowrap;
     opacity: 1;
     display: block;
@@ -41,8 +41,8 @@ body {
     padding: 10px 14px;
     height: 100%;
     width: 250px;
-    background: var(--bg-sidebar);
-    transition: var(--trans-05);
+    background: var(--bg-sidebar); /* Usar --bg-sidebar para el fondo de la barra lateral */
+    transition: var(--trans-05); /* Usar la variable de transición */
     z-index: 100;
 }
 
@@ -68,8 +68,8 @@ body {
 
 .sidebar li .icon,
 .sidebar li .text {
-    color: var(--text-primary);
-    transition: var(--trans-03);
+    color: var(--text-secondary); /* Usar --text-secondary para el color de los iconos y texto */
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .sidebar header {
@@ -89,11 +89,11 @@ body {
 header .image-text .header-text {
     display: flex;
     flex-direction: column;
-    color: var(--text-primary);
+    color: var(--text-primary); /* Usar --text-primary para el texto del encabezado */
 }
 
 body.dark header .image-text .header-text {
-    color: var(--text-primary);
+    color: var(--text-primary); /* Se mantiene --text-primary, se ajustará con el modo oscuro */
 }
 
 .header-text .name {
@@ -102,6 +102,7 @@ body.dark header .image-text .header-text {
 
 .header-text .profession {
     margin-top: -2px;
+    color: var(--text-secondary); /* Añadir color secundario para profesión */
 }
 
 .sidebar header .toggle {
@@ -111,14 +112,14 @@ body.dark header .image-text .header-text {
     transform: translateY(-50%) rotate(180deg);
     height: 25px;
     width: 25px;
-    background: var(--role-primary-color);
+    background: var(--role-primary-color); /* Usar --role-primary-color */
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    color: var(--bg-sidebar);
+    color: var(--role-text-on-primary-color); /* Usar el color de texto sobre el primario (blanco) */
     font-size: 22px;
-    transition: var(--trans-03);
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .sidebar.close header .toggle {
@@ -126,7 +127,7 @@ body.dark header .image-text .header-text {
 }
 
 body.dark .sidebar header .toggle {
-    color: var(--text-primary);
+    color: var(--role-text-on-primary-color); /* Se mantiene, se ajustará con el modo oscuro */
 }
 
 .sidebar li a {
@@ -136,7 +137,7 @@ body.dark .sidebar header .toggle {
     display: flex;
     align-items: center;
     border-radius: 6px;
-    transition: var(--trans-04);
+    transition: var(--trans-04); /* Usar la variable de transición */
 }
 
 .sidebar .menu {
@@ -144,9 +145,10 @@ body.dark .sidebar header .toggle {
 }
 
 .sidebar .search-box {
-    background: var(--role-primary-light-color);
+    background: var(--bg-input); /* Usar --bg-input para el fondo de la caja de búsqueda */
     border-radius: 6px;
-    transition: var(--trans-05);
+    transition: var(--trans-05); /* Usar la variable de transición */
+    border: 1px solid var(--border-input); /* Añadir un borde para consistencia */
 }
 
 .search-box input {
@@ -157,22 +159,27 @@ body.dark .sidebar header .toggle {
     border-radius: 6px;
     font-size: 16px;
     font-weight: 500;
-    background: var(--role-primary-light-color);
-    transition: var(--trans-05);
+    background: var(--bg-input); /* Usar --bg-input para el fondo del input */
+    color: var(--text-primary); /* Color del texto del input */
+    transition: var(--trans-05); /* Usar la variable de transición */
+}
+
+.search-box input::placeholder { /* Estilos para el placeholder */
+    color: var(--text-disabled); /* Usar --text-disabled para placeholders */
 }
 
 .sidebar li a:hover {
-    background: var(--role-primary-color);
+    background: var(--role-primary-color); /* Usar --role-primary-color para hover de elementos de menú */
 }
 
 .sidebar li a:hover .icon,
 .sidebar li a:hover .text {
-    color: var(--bg-sidebar);
+    color: var(--role-text-on-primary-color); /* Usar el color de texto sobre el primario (blanco) */
 }
 
-body.dark.sidebar li a:hover .icon,
-body.dark.sidebar li a:hover .text {
-    color: var(--text-primary);
+body.dark .sidebar li a:hover .icon,
+body.dark .sidebar li a:hover .text {
+    color: var(--role-text-on-primary-color); /* Se mantiene, se ajustará con el modo oscuro */
 }
 
 .sidebar .menu-bar {
@@ -185,7 +192,8 @@ body.dark.sidebar li a:hover .text {
 .menu-bar .mode {
     position: relative;
     border-radius: 6px;
-    background: var(--role-primary-light-color);
+    background: var(--bg-input); /* Usar --bg-input para el fondo del selector de modo */
+    border: 1px solid var(--border-color); /* Añadir borde para consistencia */
 }
 
 .menu-bar .mode .moon-sun {
@@ -193,11 +201,12 @@ body.dark.sidebar li a:hover .text {
     width: 60px;
     display: flex;
     align-items: center;
+    color: var(--text-secondary); /* Color de los iconos de luna/sol */
 }
 
 .menu-bar .mode i {
     position: absolute;
-    transition: var(--trans-03);
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .menu-bar .mode i.sun {
@@ -222,8 +231,8 @@ body.dark .menu-bar .mode i.moon {
     min-width: 60px;
     cursor: pointer;
     border-radius: 6px;
-    background: var(--role-primary-light-color);
-    transition: var(--trans-05);
+    background: var(--role-primary-light-color); /* Fondo del switch */
+    transition: var(--trans-05); /* Usar la variable de transición */
 }
 
 .toggle-switch .switch {
@@ -231,21 +240,21 @@ body.dark .menu-bar .mode i.moon {
     position: relative;
     height: 22px;
     width: 44px;
-    background: var(--border-color);
-    transition: var(--trans-03);
+    background: var(--border-color); /* Fondo del switch */
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .switch::before {
     height: 15px;
     width: 15px;
-    background: var(--bg-sidebar);
+    background: var(--text-on-accent); /* Color del círculo del switch (blanco) */
     content: "";
     position: absolute;
     border-radius: 50%;
     top: 50%;
     left: 5px;
     transform: translateY(-50%);
-    transition: var(--trans-03);
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 body.dark .switch::before {
@@ -257,14 +266,14 @@ body.dark .switch::before {
     height: 100vh;
     left: 250px;
     width: calc(100% - 250px);
-    background-color: var(--bg-body);
-    transition: var(--trans-05);
+    background-color: var(--bg-body); /* Usar --bg-body para el fondo principal */
+    transition: var(--trans-05); /* Usar la variable de transición */
 }
 
 .home .text {
     font-size: 30px;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text-primary); /* Usar --text-primary para el texto de bienvenida */
     padding: 8px 40px;
 }
 

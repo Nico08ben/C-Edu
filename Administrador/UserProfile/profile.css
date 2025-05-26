@@ -1,3 +1,5 @@
+/* profile.css - Adaptado para .theme-admin (SOLO COLORES MODIFICADOS) */
+
 /* Importar fuente de Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
@@ -22,9 +24,9 @@
     left: 250px;
     width: calc(100% - 250px);
     /* Establecer color de fondo */
-    background-color: var(--body-color);
+    background-color: var(--bg-body); /* MODIFICADO: Antes var(--body-color) */
     /* Transición para cambios de estilo */
-    transition: var(--trans-05);
+    transition: var(--trans-05); /* Asumiendo --trans-05 está definido y es para transiciones de color también */
 }
 
 /* Estilos de la barra lateral cuando está cerrada */
@@ -48,15 +50,15 @@
 
 /* === Tarjeta de perfil === */
 .card-profile {
-    background: var(--sidebar-color);
+    background: var(--bg-content); /* MODIFICADO: Antes var(--sidebar-color) */
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--shadow-color); /* MODIFICADO: Antes rgba(0, 0, 0, 0.1) */
     width: 65%;
     text-align: center;
     margin-top: 10px;
     position: relative;
-    transition: var(--trans-05);
+    transition: var(--trans-05); /* Asumiendo --trans-05 es para transiciones de color también */
 }
 
 /* === Encabezado de perfil (Editar Perfil / Ayuda) === */
@@ -65,14 +67,14 @@
     justify-content: flex-start;
     gap: 20px;
     font-size: 14px;
-    color: #e7bb41;
+    color: var(--role-primary-color); /* MODIFICADO: Antes #e7bb41 */
     cursor: pointer;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color); /* MODIFICADO: Antes #eee */
 }
 
-.profile-option:hover {
+.profile-option:hover { /* No es un color, es text-decoration, se mantiene */
     text-decoration: underline;
 }
 
@@ -95,10 +97,10 @@
     width: 140px;
     height: 140px;
     border-radius: 50%;
-    background-color: #ccc;
+    background-color: var(--bg-disabled); /* MODIFICADO: Antes #ccc */
     overflow: hidden;
     margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px var(--shadow-color); /* MODIFICADO: Antes rgba(0, 0, 0, 0.1) */
 }
 
 .user-avatar img {
@@ -111,8 +113,8 @@
     margin-top: 10px;
     padding: 8px 20px;
     border: none;
-    background-color: #e7bb41;
-    color: white;
+    background-color: var(--role-button-primary-bg); /* MODIFICADO: Antes #e7bb41 */
+    color: var(--role-button-primary-text); /* MODIFICADO: Antes white, cambiará a texto oscuro para Admin */
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
@@ -120,13 +122,14 @@
 }
 
 .edit-btn:hover {
-    background-color: #e7bb41;
+    background-color: var(--role-primary-dark-color); /* MODIFICADO: Antes #e7bb41 (sin cambio), ahora oscurece */
 }
 
 #upload-status {
     margin-top: 8px;
     font-size: 14px;
     min-height: 20px;
+    /* color: se hereda o se define si es necesario con var(--text-secondary) o similar */
 }
 
 /* === Columna derecha (Información) === */
@@ -135,7 +138,7 @@
 }
 
 /* === Formularios === */
-.container {
+.container { /* Asumo que este .container es el de los formularios dentro de profile-right */
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
@@ -151,74 +154,88 @@
     font-size: 0.9rem;
     font-weight: bold;
     margin-top: 10px;
-    color: var(--text-color);
+    color: var(--text-primary); /* MODIFICADO: Antes var(--text-color) */
     text-align: left;
-    transition: var(--trans-04);
+    transition: var(--trans-04); /* Asumiendo es para color si --text-color cambia */
 }
 
 .profile-right input {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-input); /* MODIFICADO: Antes #ccc */
     border-radius: 5px;
     width: 100%;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: var(--bg-input); /* MODIFICADO: Antes #f9f9f9 */
+    color: var(--text-primary); /* MODIFICADO: Antes #333 */
     margin-bottom: 10px;
 }
+/* Estilos para el foco de input (si se desea con variables de tema) */
+.profile-right input:focus {
+    border-color: var(--border-focus); /* Usando la variable de foco del tema */
+    /* box-shadow: 0 0 0 0.2rem rgba(var(--border-focus-rgb,VALORES_FALLBACK_RGB), 0.25); */ /* Opcional, si defines --border-focus-rgb */
+    outline: none; /* Mantener para quitar el outline por defecto */
+}
+
 
 .profile-right input:disabled {
-    background-color: #e9ecef;
-    color: #6c757d;
+    background-color: var(--bg-disabled); /* MODIFICADO: Antes #e9ecef */
+    color: var(--text-disabled); /* MODIFICADO: Antes #6c757d */
 }
 
 .ayuda {
     text-align: left;
     padding: 15px 0;
     margin: auto;
-    color: var(--text-color);
+    color: var(--text-secondary); /* MODIFICADO: Antes var(--text-color) */
 }
 
-.ayuda div {
+.ayuda div { /* Se refiere a los items clickeables de ayuda */
     margin-top: 15px;
     padding: 12px;
     border-radius: 5px;
-    background-color: #f5f5f5;
+    background-color: var(--bg-disabled); /* MODIFICADO: Antes #f5f5f5 */
     display: flex;
     align-items: center;
     cursor: pointer;
     transition: background-color 0.3s;
+    color: var(--text-primary); /* Color de texto para el item en sí */
 }
 
 .ayuda div:hover {
-    background-color: #e9e9e9;
+    background-color: var(--border-color); /* MODIFICADO: Antes #e9e9e9. Usando --border-color como un gris más claro para hover. */
+                                       /* Considerar filter: brightness(95%) en var(--bg-disabled) si --border-color no es adecuado. */
 }
 
 .ayuda h3 {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 15px;
+    /* color: se hereda de .ayuda o se define explícitamente con var(--text-primary) */
 }
 
 .ayuda p {
     margin-bottom: 20px;
     line-height: 1.5;
+    /* color: se hereda de .ayuda */
 }
 
-.ayuda i {
+.ayuda i { /* Para los iconos dentro de los items de ayuda */
     margin-right: 10px;
     font-size: 18px;
+    color: var(--role-primary-color); /* Iconos principales de ayuda con color del rol */
 }
 
-.ayuda .fa-chevron-right {
+.ayuda .fa-chevron-right { /* Para el chevron específico */
     margin-left: auto;
     font-size: 14px;
+    color: var(--text-disabled); /* Chevron más sutil */
 }
 
-.ayuda span {
+.ayuda span { /* Para texto específicamente resaltado en la sección de ayuda */
     font-weight: bold;
+    color: var(--text-primary); /* Texto resaltado con color primario de texto */
 }
 
-/* Estilos para vista celular */
+/* Estilos para vista celular (solo se modificarán colores si los hubiera explícitos aquí) */
 @media (max-width: 768px) {
     .home {
         left: 0;
@@ -249,7 +266,7 @@
         width: 100%;
     }
 
-    .container {
+    .container { /* Asumo que este .container es el de los formularios dentro de profile-right */
         flex-direction: column;
     }
 

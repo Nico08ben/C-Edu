@@ -1,23 +1,12 @@
-<?php
-$theme_class = '';
-if (isset($_SESSION['rol'])) {
-    if ($_SESSION['rol'] == 0) { // 0 para Admin
-        $theme_class = 'theme-admin';
-    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
-        $theme_class = 'theme-docente';
-    }
-}
-?>
-
 <!DOCTYPE html>
-<html lang="es" class="<?php echo $theme_class;?>">
+<html lang="es">
 <head>
 <?php include "../../SIDEBAR/Admin/head.php" ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="upload.php">
+    
     <title>Chat</title>
 </head>
 <body>
@@ -158,7 +147,7 @@ if (isset($_SESSION['rol'])) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="conversation-item-wrapper">
+                                    <div class="conversation-item-wrapper"> 
                                         <div class="conversation-item-box">
                                             <div class="conversation-item-text">
                                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint, debitis. Iste natus est aliquam ipsum doloremque fugiat, quidem eos autem? Dolor quisquam laboriosam enim cum laborum suscipit perferendis adipisci praesentium.</p>
@@ -245,6 +234,7 @@ if (isset($_SESSION['rol'])) {
                         <button type="button" class="conversation-form-file" onclick="document.getElementById('imageInput').click()"><i class="ri-image-line"></i></button>
                         <div class="conversation-form-group">
                             <textarea class="conversation-form-input" rows="1" placeholder="Type here..."></textarea>
+                            <div id="sound-visualizer-container"></div>
                             <button type="button" class="conversation-form-record"><i class="ri-mic-line"></i></button>
                         </div>
                         <button type="button" class="conversation-form-button conversation-form-submit"><i class="ri-send-plane-2-line"></i></button>
@@ -266,5 +256,7 @@ if (isset($_SESSION['rol'])) {
   <img class="image-modal-content" id="modalImage">
 </div>
 <div class="sticker-panel" id="stickerPanel"></div>
+
+
 </body>
 </html>

@@ -1,9 +1,8 @@
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Rubik', sans-serif; /* Cambiado a Rubik para consistencia con otros archivos */
 }
 
 .fc .fc-button {
@@ -12,8 +11,8 @@
 }
 
 body {
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: var(--bg-body); /* Usar --bg-body para el fondo del cuerpo */
+    color: var(--text-primary); /* Usar --text-primary para el color de texto general */
 }
 
 .container {
@@ -27,9 +26,9 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    background-color: #fff;
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: var(--bg-content); /* Usar --bg-content para el fondo del header */
+    border-bottom: 1px solid var(--border-color); /* Usar --border-color */
+    box-shadow: 0 2px 5px var(--shadow-color); /* Usar --shadow-color */
 }
 
 .header-left {
@@ -39,8 +38,8 @@ body {
 }
 
 .today-btn {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
+    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
     border: none;
     border-radius: 4px;
     padding: 10px 15px;
@@ -49,11 +48,11 @@ body {
     align-items: center;
     gap: 8px;
     font-weight: 500;
-    transition: background-color 0.3s;
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .today-btn:hover {
-    background-color: #2d9b74;
+    background-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
 }
 
 .navigation-buttons {
@@ -63,23 +62,25 @@ body {
 
 .nav-btn {
     background: none;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color); /* Usar --border-color */
+    color: var(--text-primary); /* Usar --text-primary para el texto de los botones de navegación */
     font-size: 14px;
     cursor: pointer;
     padding: 8px 12px;
     border-radius: 4px;
-    transition: all 0.3s;
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .nav-btn:hover {
-    background-color: var(--hover-color);
+    background-color: var(--bg-disabled); /* Usar --bg-disabled para hover */
+    color: var(--text-primary); /* Mantener --text-primary */
 }
 
 .month-year {
     font-size: 20px;
     font-weight: bold;
     margin-left: 10px;
-    color: var(--dark-gray);
+    color: var(--text-primary); /* Usar --text-primary */
 }
 
 .profile {
@@ -91,11 +92,12 @@ body {
 .profile-info h3 {
     font-weight: 600;
     margin-bottom: 2px;
+    color: var(--text-primary); /* Usar --text-primary */
 }
 
 .profile-info p {
     font-size: 13px;
-    color: #666;
+    color: var(--text-secondary); /* Usar --text-secondary */
 }
 
 .profile img {
@@ -105,13 +107,13 @@ body {
 }
 
 .profile .fa-regular.fa-bell {
-    background-color: var(--primary-color);
+    background-color: var(--role-primary-color); /* Usar --role-primary-color */
     width: 35px;
     height: 35px;
     border-radius: 50%;
     text-align: center;
     padding: 9px;
-    color: white;
+    color: var(--role-text-on-primary-color); /* Usar --role-text-on-primary-color */
     cursor: pointer;
 }
 
@@ -122,8 +124,8 @@ body {
     border-radius: 50%;
     height: 35px;
     width: 35px;
-    color: gray;
-    background-color: white;
+    color: var(--text-secondary); /* Usar --text-secondary */
+    background-color: var(--bg-sidebar); /* Usar --bg-sidebar */
     cursor: pointer;
 }
 
@@ -141,7 +143,6 @@ body {
     padding: 15px 30px;
 }
 
-
 .action-bar {
     display: flex;
     justify-content: space-between;
@@ -150,8 +151,8 @@ body {
 }
 
 .new-event-btn {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
+    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
     border: none;
     border-radius: 4px;
     padding: 10px 20px;
@@ -160,16 +161,16 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: background-color 0.3s;
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .new-event-btn:hover {
-    background-color: #2d9b74;
+    background-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
 }
 
 .view-options {
     display: flex;
-    background-color: #eee;
+    background-color: var(--bg-disabled); /* Usar --bg-disabled */
     border-radius: 4px;
     overflow: hidden;
 }
@@ -180,16 +181,17 @@ body {
     background: none;
     cursor: pointer;
     font-size: 14px;
-    transition: all 0.3s;
+    transition: var(--trans-03); /* Usar la variable de transición */
+    color: var(--text-primary); /* Color de texto normal */
 }
 
 .view-btn.active {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
+    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
 }
 
 .view-btn:hover:not(.active) {
-    background-color: #ddd;
+    background-color: var(--border-color); /* Usar --border-color para hover */
 }
 
 .calendar-container {
@@ -199,19 +201,19 @@ body {
 }
 
 .mini-calendar {
-    background-color: white;
+    background-color: var(--bg-content); /* Usar --bg-content */
     border-radius: 8px;
     padding: 15px;
     width: 280px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px var(--shadow-color); /* Usar --shadow-color */
 }
 
 .main-calendar {
     flex: 1;
-    background-color: white;
+    background-color: var(--bg-content); /* Usar --bg-content */
     border-radius: 8px;
     padding: 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px var(--shadow-color); /* Usar --shadow-color */
 }
 
 /* FullCalendar Overrides */
@@ -221,24 +223,24 @@ body {
 }
 
 .fc {
-    background-color: white;
+    background-color: var(--bg-content); /* Usar --bg-content */
     border-radius: 8px;
 }
 
 .fc-toolbar-title {
     font-size: 1.2em;
-    color: var(--dark-gray);
+    color: var(--text-primary); /* Usar --text-primary */
 }
 
 .fc-daygrid-day-number {
-    color: #555;
+    color: var(--text-secondary); /* Usar --text-secondary */
     font-weight: 500;
 }
 
 .fc-event {
     cursor: pointer;
     border: none;
-    color: #333;
+    color: var(--text-primary); /* Usar --text-primary */
     padding: 2px 4px;
     border-radius: 3px;
     font-size: 13px;
@@ -262,7 +264,7 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.5); /* Se mantiene el rgba para la transparencia del overlay */
     animation: fadeIn 0.3s;
 }
 
@@ -272,13 +274,13 @@ body {
 }
 
 .modal-content {
-    background-color: white;
+    background-color: var(--bg-content); /* Usar --bg-content */
     margin: 10% auto;
     padding: 25px;
     border-radius: 8px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px var(--shadow-color); /* Usar --shadow-color */
     animation: slideDown 0.3s;
 }
 
@@ -288,20 +290,20 @@ body {
 }
 
 .close {
-    color: #aaa;
+    color: var(--text-disabled); /* Usar --text-disabled */
     float: right;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-    transition: color 0.3s;
+    transition: color var(--trans-03); /* Usar la variable de transición */
 }
 
 .close:hover {
-    color: #333;
+    color: var(--text-primary); /* Usar --text-primary */
 }
 
 #event-title {
-    color: var(--primary-color);
+    color: var(--role-primary-color); /* Usar --role-primary-color */
     margin-bottom: 15px;
 }
 
@@ -310,6 +312,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    color: var(--text-secondary); /* Usar --text-secondary */
 }
 
 .form-group {
@@ -323,16 +326,19 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    color: var(--text-primary); /* Usar --text-primary */
 }
 
-.form-group input, 
+.form-group input,
 .form-group textarea,
 .form-group select {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-input); /* Usar --border-input */
     border-radius: 4px;
     font-size: 14px;
+    background-color: var(--bg-input); /* Usar --bg-input */
+    color: var(--text-primary); /* Usar --text-primary */
 }
 
 .form-group textarea {
@@ -341,8 +347,8 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
+    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
@@ -351,16 +357,16 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: background-color 0.3s;
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .btn-primary:hover {
-    background-color: #2d9b74;
+    background-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
 }
 
 .btn-danger {
-    background-color: #dc3545;
-    color: white;
+    background-color: var(--role-button-delete-bg); /* Usar --role-button-delete-bg */
+    color: var(--role-button-delete-text); /* Usar --role-button-delete-text */
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
@@ -369,11 +375,11 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: background-color 0.3s;
+    transition: var(--trans-03); /* Usar la variable de transición */
 }
 
 .btn-danger:hover {
-    background-color: #c82333;
+    background-color: #bb2d3b; /* Un rojo más oscuro, si no tienes una variable específica para danger-dark */
 }
 
 /* Responsive styles */
@@ -427,6 +433,7 @@ body {
         justify-content: center;
     }
 }
+
 #new-event-modal,
 #event-modal {
     position: fixed;
@@ -435,7 +442,7 @@ body {
     width: 100vw;
     height: 100vh;
     overflow-y: auto;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.8); /* Se mantiene el rgba para la transparencia del overlay */
     display: none;
     z-index: 9999;
 }
@@ -443,92 +450,97 @@ body {
 #new-event-modal .modal-content,
 #event-modal .modal-content {
     margin: 50px auto;
-    background: white;
+    background: var(--bg-content); /* Usar --bg-content */
     padding: 20px;
     width: 90%;
     max-width: 800px;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px var(--shadow-color); /* Usar --shadow-color */
 }
+
 /* Estilos para el header del MINI-CALENDARIO */
 #mini-calendar .fc-header-toolbar {
     display: flex;
-    justify-content: space-between; /* Intenta distribuir mejor los elementos */
+    justify-content: space-between;
     align-items: center;
-    padding: 5px 0; /* Añade un poco de padding vertical si es necesario */
-    margin-bottom: 10px; /* Ajusta el margen inferior que ya tienes si es necesario */
+    padding: 5px 0;
+    margin-bottom: 10px;
 }
 
 /* Ajustar el título del mes en el mini-calendario si es necesario */
 #mini-calendar .fc-toolbar-title {
-    font-size: 1em; /* Puede que quieras hacerlo un poco más pequeño que el del calendario principal */
-    white-space: nowrap; /* Evitar que el título se parta en dos líneas si es muy largo */
+    font-size: 1em;
+    white-space: nowrap;
+    color: var(--text-primary); /* Usar --text-primary */
 }
 
 /* Contenedor de los botones (Hoy, prev, next) en el mini-calendario */
-#mini-calendar .fc-toolbar-chunk:nth-child(3) { /* Generalmente el chunk de la derecha tiene los botones */
+#mini-calendar .fc-toolbar-chunk:nth-child(3) {
     display: flex;
     align-items: center;
-    gap: 5px; /* Espacio entre el grupo de prev/next y el botón "Hoy" */
+    gap: 5px;
 }
 
 /* Estilos para TODOS los botones dentro del mini-calendario */
 #mini-calendar .fc-button {
-    background-color: var(--primary-color-light, #f0f0f0); /* Un color de fondo claro, usa una variable si la tienes */
-    color: var(--primary-color, #333); /* Color de texto, contrastante con el fondo */
-    border: 1px solid var(--primary-color, #ccc);
-    padding: 6px 10px; /* Ajusta el padding para cambiar el tamaño */
+    background-color: var(--role-primary-light-color); /* Usar --role-primary-light-color */
+    color: var(--role-primary-color); /* Usar --role-primary-color */
+    border: 1px solid var(--role-primary-color); /* Usar --role-primary-color */
+    padding: 6px 10px;
     border-radius: 4px;
-    font-size: 0.85em; /* Ajusta el tamaño de la fuente dentro del botón */
-    line-height: 1.2; /* Ajusta la altura de línea para centrar mejor el texto/iconos */
-    box-shadow: none; /* Quitar sombras por defecto si no te gustan */
-    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
-    height: auto; /* Permitir que el padding defina la altura */
+    font-size: 0.85em;
+    line-height: 1.2;
+    box-shadow: none;
+    transition: var(--trans-02); /* Usar la variable de transición */
+    height: auto;
 }
 
 /* Botón "Hoy" específico en el mini-calendario */
-#mini-calendar .fc-today-button { /* Clase específica de FullCalendar para el botón "Hoy" */
-    background-color: var(--primary-color); /* Color primario de la sección (Docente o Admin) */
-    color: white; /* Texto blanco para contraste */
-    border-color: var(--primary-color);
-    order: 1; /* Mover el botón "Hoy" a la izquierda si se desea (dentro de su chunk) */
-    margin-right: 5px; /* Espacio entre "Hoy" y los de navegación si están en el mismo chunk */
+#mini-calendar .fc-today-button {
+    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
+    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
+    border-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
+    order: 1;
+    margin-right: 5px;
 }
 
 #mini-calendar .fc-today-button:hover {
-    background-color: var(--hover-color); /* Un hover que oscurezca/aclare el color primario */
-    border-color: var(--hover-color);
-    color: white; /* Mantener o ajustar color de texto en hover */
+    background-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
+    border-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
+    color: var(--role-text-on-primary-color); /* Usar --role-text-on-primary-color */
 }
-
 
 /* Botones de navegación (prev, next) en el mini-calendario */
 #mini-calendar .fc-prev-button,
 #mini-calendar .fc-next-button {
-    padding: 6px 8px; /* Pueden necesitar un padding ligeramente diferente si solo tienen iconos */
+    padding: 6px 8px;
 }
 
 #mini-calendar .fc-button:hover {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
+    background-color: var(--role-primary-color); /* Usar --role-primary-color */
+    color: var(--role-text-on-primary-color); /* Usar --role-text-on-primary-color */
+    border-color: var(--role-primary-color); /* Usar --role-primary-color */
 }
 
 /* Iconos dentro de los botones de navegación del mini-calendario */
 #mini-calendar .fc-icon {
-    font-size: 0.9em; /* Ajustar tamaño de los iconos de flecha */
-    vertical-align: middle; /* Intentar alinear mejor los iconos */
+    font-size: 0.9em;
+    vertical-align: middle;
+    color: var(--text-primary); /* Asegurar que los iconos tengan el color del texto primario */
 }
+
+#mini-calendar .fc-button:hover .fc-icon {
+    color: var(--role-text-on-primary-color); /* Color de texto sobre primario para iconos en hover */
+}
+
 
 /* Si los botones prev/next están agrupados por FullCalendar (fc-button-group) */
 #mini-calendar .fc-button-group {
     display: flex;
-    gap: 1px; /* Pequeño espacio entre prev y next si están agrupados */
-    order: 2; /* Mover el grupo prev/next a la derecha del botón "Hoy" */
+    gap: 1px;
+    order: 2;
 }
 
 #mini-calendar .fc-button-group > .fc-button {
-    margin: 0; /* Quitar márgenes individuales si están en un grupo */
+    margin: 0;
 }
-
-
