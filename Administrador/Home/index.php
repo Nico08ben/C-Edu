@@ -71,7 +71,7 @@ include '../../conexion.php'; ?>
                         }
                         ?>
                     </div>
-                    <a href="../Tareas asignadas/index.php"><button class="btn-ingresar">INGRESAR</button></a>
+                    <a href="../Tareas asignadas/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
 
                 <div class="card">
@@ -102,7 +102,7 @@ include '../../conexion.php'; ?>
                         }
                         ?>
                     </div>
-                    <a href="../Calendario/index.php"><button class="btn-ingresar">INGRESAR</button></a>
+                    <a href="../Calendario/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
 
                 <div class="card">
@@ -146,7 +146,7 @@ include '../../conexion.php'; ?>
                         }
                         ?>
                     </div>
-                    <a href="../Chat/index.php"><button class="btn-ingresar">INGRESAR</button></a>
+                    <a href="../Chat/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
             </div>
         </main>

@@ -1,17 +1,29 @@
+<?php
+session_start();
+$theme_class = '';
+if (isset($_SESSION['rol'])) {
+    if ($_SESSION['rol'] == 0) { // 0 para Admin
+        $theme_class = 'theme-admin';
+    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
+        $theme_class = 'theme-docente';
+    }
+}
+include '../../conexion.php'; ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="<?php echo $theme_class; ?>">
 <head>
-<?php include "../../SIDEBAR/Admin/head.php" ?>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    
+    <?php include "../../SIDEBAR/Admin/head.php" ?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Chat</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<?php include "../../SIDEBAR/Admin/sidebar.php" ?>
-<section class="home">
+    <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
+
+    <section class="home">
     <!-- start: Chat -->
     <section class="chat-section">
         <div class="chat-container">
@@ -246,17 +258,14 @@
             <!-- end: Content -->
         </div>
     </section>
-    <!-- end: Chat -->
-    </section>
     <script src="script.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <emoji-picker style="position: absolute; bottom: 60px; right: 80px; display: none;"></emoji-picker>
     <div id="imageModal" class="image-modal" style="display:none;">
-  <span class="image-modal-close" style="position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer;">&times;</span>
-  <img class="image-modal-content" id="modalImage">
-</div>
-<div class="sticker-panel" id="stickerPanel"></div>
-
-
+    <span class="image-modal-close" style="position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer;">&times;</span>
+    <img class="image-modal-content" id="modalImage">
+    </div>
+    <div class="sticker-panel" id="stickerPanel"></div>
 </body>
+
 </html>

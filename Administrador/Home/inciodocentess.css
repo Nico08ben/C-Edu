@@ -78,6 +78,7 @@
     margin-bottom: 20px;
     padding: 15px;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); /* Sombra interna sutil */
+    color: var(--text-primary);
 }
 
 .task-item,
@@ -98,6 +99,7 @@
 
 .task-item {
     position: relative;
+    color: var(--text-primary);
 }
 
 .task-item .red-dot {
@@ -206,6 +208,7 @@
     margin-top: auto;
     display: block;
     width: 100%;
+    text-decoration: none;
 }
 
 .btn-ingresar:hover {

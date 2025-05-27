@@ -1,7 +1,18 @@
+<?php
+session_start();
+$theme_class = '';
+if (isset($_SESSION['rol'])) {
+    if ($_SESSION['rol'] == 0) { // 0 para Admin
+        $theme_class = 'theme-admin';
+    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
+        $theme_class = 'theme-docente';
+    }
+}
+include '../../conexion.php'; ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="<?php echo $theme_class; ?>">
 <head>
-<?php include "../../SIDEBAR/Docente/head.php" ?>
+<?php include "../../SIDEBAR/Docente/head.php"; ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
@@ -11,7 +22,7 @@
 </head>
 <body>
     <?php 
-    include "../../SIDEBAR/Docente/sidebar.php" 
+    include "../../SIDEBAR/Docente/sidebar.php" ;
     ?>
 <section class="home">
     <!-- start: Chat -->
