@@ -207,7 +207,7 @@ body {
 }
 .content-message-text {
     font-size: 13px;
-    color: var(--white);
+    color: var(--text-secondary);
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -225,7 +225,7 @@ body {
 }
 .content-message-time {
     font-size: 12px;
-    color: var(--white);
+    color: var(--text-secondary);
     font-weight: 500;
 }
 /* end: Content side */
@@ -287,7 +287,7 @@ body {
     font-size: 17px;
 }
 .conversation-user-status {
-    color: var(--white);
+    color: var(--text-secondary);
     font-size: 13px;
 }
 .conversation-user-status::before {
@@ -320,7 +320,7 @@ body {
     border: none;
     outline: transparent;
     cursor: pointer;
-    color: var(--white);
+    color: var(--text-secondary);
     margin-left: 4px;
 }
 .conversation-buttons > :hover {
@@ -436,7 +436,7 @@ body {
     transition: all .15s ease-in-out;
 }
 .ri-more-2-line{
-    color: var(--white);
+    color: var(--text-secondary);
 }
 .conversation-item-dropdown-toggle:hover {
     background-color: var(--primary-color);
@@ -475,7 +475,7 @@ body {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: var(--white);
+    color: var(--text-secondary);
     font-size: 13px;
     padding: 6px 12px;
 }
@@ -550,7 +550,7 @@ body {
     bottom: 8px;
     right: 16px;
     font-size: 20px;
-    color: var(--white);
+    color: var(--text-secondary);
     background-color: transparent;
     border: none;
     outline: transparent;
@@ -570,7 +570,7 @@ body {
     background-color: transparent;
     outline: transparent;
     font-size: 20px;
-    color: var(--white);
+    color: var(--text-secondary);
     cursor: pointer;
     flex-shrink: 0;
 }
@@ -742,7 +742,7 @@ body {
     background-color: transparent;
     outline: transparent;
     font-size: 20px;
-    color: var(--white);
+    color: var(--text-secondary);
     cursor: pointer;
     flex-shrink: 0;
     
@@ -870,7 +870,7 @@ body {
     background-color: transparent;
     outline: transparent;
     font-size: 20px;
-    color: var(--white);
+    color: var(--text-secondary);
     cursor: pointer;
     flex-shrink: 0;
 }

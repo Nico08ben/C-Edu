@@ -9,6 +9,55 @@
     box-sizing: border-box;
     font: inherit;
 }
+:root {
+    --body-color: #e4e9f7;
+    --sidebar-color: #fff;
+    --primary-color: #40c3a5;
+    --primary-color-ligth: #fff3d2;
+    --toggle-color: #ddd;
+    --text-color: #707070;
+    --title-color: #333;
+    --slate-50: #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --slate-950: #020617;
+    --white: #94a3b8;
+
+    --trans-02: all 0.2s ease;
+    --trans-03: all 0.3s ease;
+    --trans-04: all 0.4s ease;
+    --trans-05: all 0.5s ease;
+}
+body.dark {
+    --body-color: #18191a;
+    --sidebar-color: #242526;
+    --primary-color: #3a3b3c;
+    --primary-color-ligth: #3a3b3c;
+    --toggle-color: #fff;
+    --text-color: #ccc;
+    --title-color: #ffffff;
+
+    --slate-50: #020617;
+    --slate-100: #0f172a;
+    --slate-200: #1e293b;
+    --slate-300: #334155;
+    --slate-400: #475569;
+    --slate-500: #64748b;
+    --slate-600:  #94a3b8;
+    --slate-700:  #cbd5e1;
+    --slate-800:  #e2e8f0;
+    --slate-900:  #f1f5f9;
+    --slate-950: #f8fafc;
+    --white: #fff; 
+    
+}
 
 body {
     font-family: 'Inter', sans-serif;
@@ -20,19 +69,19 @@ body {
 
 /* start: Chat */
 .chat-section {
-    box-shadow: inset 0 160px 0 0 var(--emerald-500);
+    box-shadow: inset 0 160px 0 0 var(--primary-color);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--slate-100);
+    background-color: var(--body-color);
 }
 .chat-container {
     max-width: 1360px;
     width: 100%;
     height: 720px;
     box-shadow: 0 8px 24px -4px rgba(0, 0, 0, .1);
-    background-color: var(--white);
+    background-color: var(--sidebar-color);
     position: relative;
 }
 /* end: Chat */
@@ -45,7 +94,7 @@ body {
 }
 .content-sidebar {
     width: 256px;
-    background-color: var(--white);
+    background-color: var(--sidebar-color);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -124,7 +173,7 @@ body {
     position: relative;
     z-index: 1;
     padding: 0 4px 0 0;
-    background-color: var(--white);
+    background-color: var( --sidebar-color);
 }
 .content-message-title::before {
     content: '';
@@ -158,7 +207,7 @@ body {
 }
 .content-message-text {
     font-size: 13px;
-    color: var(--slate-400);
+    color: var(--text-secondary);
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -169,14 +218,14 @@ body {
 .content-message-unread {
     font-size: 12px;
     font-weight: 500;
-    color: var(--white);
-    background-color: var(--emerald-500);
+    color: var( --sidebar-color);
+    background-color: #40c3a5;
     padding: 2px 4px;
     border-radius: 4px;
 }
 .content-message-time {
     font-size: 12px;
-    color: var(--slate-400);
+    color: var(--text-secondary);
     font-weight: 500;
 }
 /* end: Content side */
@@ -196,7 +245,7 @@ body {
 }
 .conversation-top {
     padding: 8px 16px;
-    background-color: var(--white);
+    background-color: var( --sidebar-color);
     display: flex;
     align-items: center;
 }
@@ -238,7 +287,7 @@ body {
     font-size: 17px;
 }
 .conversation-user-status {
-    color: var(--slate-400);
+    color: var(--text-secondary);
     font-size: 13px;
 }
 .conversation-user-status::before {
@@ -252,7 +301,7 @@ body {
     margin-right: 4px;
 }
 .conversation-user-status.online::before {
-    background-color: var(--emerald-500);
+    background-color: #40c3a5;
 }
 .conversation-buttons {
     display: flex;
@@ -271,7 +320,7 @@ body {
     border: none;
     outline: transparent;
     cursor: pointer;
-    color: var(--slate-600);
+    color: var(--text-secondary);
     margin-left: 4px;
 }
 .conversation-buttons > :hover {
@@ -314,7 +363,7 @@ body {
     display: block;
 }
 .conversation-item-content {
-    width: 100%;
+    width: auto;
 }
 .conversation-item-wrapper:not(:last-child) {
     margin-bottom: 8px;
@@ -329,20 +378,21 @@ body {
 }
 .conversation-item-text {
     padding: 12px 16px 8px;
-    background-color: var(--white);
+    background-color: var( --sidebar-color);
     box-shadow: 0 2px 12px -2px rgba(0, 0, 0, .1);
     font-size: 14px;
     border-radius: 6px;
     line-height: 1.5;
     margin-left: 32px;
+    text-align: left;
 }
 .conversation-item.me .conversation-item-text {
     margin-left: unset;
     margin-right: 32px;
 }
 .conversation-item.me .conversation-item-text {
-    background-color: var(--emerald-500);
-    box-shadow: 0 2px 12px -2px var(--emerald-500);
+    background-color: var(--primary-color);
+    box-shadow: 0 2px 12px -2px var(--primary-color);
     color: rgba(255, 255, 255, .8);
 }
 .conversation-item-time {
@@ -379,16 +429,19 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    background-color: var(--white);
+    background-color: var( --sidebar-color);
     outline: transparent;
     border: 1px solid var(--slate-200);
     cursor: pointer;
     transition: all .15s ease-in-out;
 }
+.ri-more-2-line{
+    color: var(--text-secondary);
+}
 .conversation-item-dropdown-toggle:hover {
-    background-color: var(--emerald-500);
-    color: var(--white);
-    box-shadow: 0 2px 12px -2px var(--emerald-500);
+    background-color: var(--primary-color);
+    color: var( --sidebar-color);
+    box-shadow: 0 2px 12px -2px var(--primary-color);
 }
 .conversation-item-dropdown-toggle:active {
     background-color: var(--emerald-600);
@@ -397,7 +450,7 @@ body {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: var(--white);
+    background-color: var( --sidebar-color);
     z-index: 10;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
     border-radius: 4px;
@@ -422,7 +475,7 @@ body {
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: var(--slate-400);
+    color: var(--text-secondary);
     font-size: 13px;
     padding: 6px 12px;
 }
@@ -464,7 +517,7 @@ body {
 
 .conversation-form {
     padding: 8px 16px;
-    background-color: var(--white);
+    background-color: var( --sidebar-color);
     display: flex;
     align-items: flex-end;
 }
@@ -487,6 +540,7 @@ body {
     display: block;
     line-height: 1.5;
     max-height: calc(20px + ((14px * 2) * 6));
+    color: var(--slate-950);
 }
 .conversation-form-input:focus {
     border-color: var(--slate-400);
@@ -496,7 +550,7 @@ body {
     bottom: 8px;
     right: 16px;
     font-size: 20px;
-    color: var(--slate-400);
+    color: var(--text-secondary);
     background-color: transparent;
     border: none;
     outline: transparent;
@@ -516,7 +570,7 @@ body {
     background-color: transparent;
     outline: transparent;
     font-size: 20px;
-    color: var(--slate-400);
+    color: var(--text-secondary);
     cursor: pointer;
     flex-shrink: 0;
 }
@@ -529,17 +583,17 @@ body {
     color: var(--slate-600);
 }
 .conversation-form-submit {
-    background-color: var(--emerald-500);
-    box-shadow: 0 2px 8px -2px var(--emerald-500);
-    color: var(--white);
+    background-color: var(--primary-color);
+    box-shadow: 0 2px 8px -2px var(--primary-color);
+    color: var( --white);
 }
 .conversation-form-submit:hover {
     background-color: var(--emerald-600);
-    color: var(--white);
+    color: var( --toggle-color);
 }
 .conversation-form-submit:active {
     background-color: var(--emerald-700);
-    color: var(--white);
+    color: var( --toggle-color);
 }
 .conversation-default {
     align-items: center;
@@ -589,7 +643,7 @@ body {
         padding: 8px;
     }
     .chat-sidebar-menu > .active > a {
-        box-shadow: inset 0 4px 0 0 var(--emerald-500);
+        box-shadow: inset 0 4px 0 0 var(--primary-color);
     }
     .chat-sidebar-profile {
         margin-top: 0;
@@ -645,12 +699,19 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #f1f1f1;
+    background: var(--sidebar-color);
     padding: 8px 12px;
-    border-left: 4px solid #007bff;
+    border-left: 4px solid #40c3a5;
     margin: 10px 15px;
     border-radius: 4px;
     font-size: 14px;
+}
+.conversation-reply-preview img,
+.reply-box img {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 4px;
+  margin-right: 10px;
 }
 
 .cancel-reply {
@@ -670,3 +731,304 @@ body {
     border-radius: 4px;
     color: #555;
 }
+.conversation-form-file {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: none;
+    background-color: transparent;
+    outline: transparent;
+    font-size: 20px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    flex-shrink: 0;
+    
+}
+.conversation-form-file:hover {
+    background-color: var(--slate-100);
+    color: var(--slate-600);
+}
+.conversation-form-file:active {
+    background-color: var(--slate-200);
+    color: var(--slate-600);
+}
+.reply-box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--sidebar-color);
+    padding: 8px 12px;
+    border-left: 4px solid #40c3a5;
+    margin: 10px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.conversation-main {
+    overflow-y: auto;
+    height: 100%;
+    padding: 16px;
+}
+.recording-indicator {
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    animation: pulse 1s infinite;
+    margin-left: 8px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.audio-message-wrapper audio {
+    width: 100%;
+    max-width: 250px;
+}
+.stop-recording-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
+.highlighted-reply {
+    animation: highlightBlink 1.5s;
+    background-color: #ffeaa7;
+    border-radius: 6px;
+}
+
+@keyframes highlightBlink {
+    0% { background-color: #ffeaa7; }
+    100% { background-color: transparent; }
+}
+.message-image {
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+    .message-image:hover {
+        transform: scale(1.03);
+        opacity: 0.9;
+    }
+.image-modal {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-modal-content {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #000;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.conversation-form-sticker {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: none;
+    background-color: transparent;
+    outline: transparent;
+    font-size: 20px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+    .conversation-form-sticker:hover {
+        background-color: var(--slate-100);
+        color: var(--slate-600);
+    }
+
+    .conversation-form-sticker:active {
+        background-color: var(--slate-200);
+        color: var(--slate-600);
+    }
+.sticker-panel {
+    display: none;
+    position: absolute;
+    bottom: 65px;
+    right: 110px;
+    width: 480px;
+    max-height: 320px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    overflow-y: auto;
+    z-index: 9999;
+    transition: all 0.2s ease-in-out;
+}
+
+    .sticker-panel img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin: 5px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+        .sticker-panel img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+.voice-message {
+    background-color: #e0f7fa;
+    padding: 10px 12px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 220px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.voice-bar-wrapper {
+    background: #ccc;
+    height: 4px;
+    width: 100%;
+    flex: 1;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.voice-bar {
+    background: #00bcd4;
+    height: 100%;
+    width: 0%;
+    transition: width 0.2s ease;
+}
+
+.voice-time {
+    font-size: 12px;
+    color: #333;
+    min-width: 40px;
+}
+/* style.css - A�adir al final */
+
+/* Clase principal para el bot�n de grabar cuando est� activo (grabando) */
+.conversation-form-record.is-recording {
+    background-color: var(--red-500, #ef4444); /* Un rojo m�s agradable de tu paleta Tailwind o un fallback */
+    color: var(--white, #fff); /* Texto/�cono blanco, usando tu variable --white */
+    min-width: 130px; /* Permitir que el bot�n se ensanche para el texto */
+    padding: 8px 12px; /* Un padding similar al que ten�as inline */
+    transition: background-color var(--trans-03), color var(--trans-03), width var(--trans-03); /* Transiciones suaves */
+    /* Mantiene otros estilos de .conversation-form-button si es posible */
+}
+
+    .conversation-form-record.is-recording:hover {
+        background-color: var(--red-600, #dc2626); /* Un rojo un poco m�s oscuro al pasar el mouse */
+    }
+
+/* Contenido dentro del bot�n de grabaci�n activo */
+.recording-indicator-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px; /* Tama�o de fuente que ten�as */
+    font-weight: 500; /* Hacerlo un poco m�s notable */
+    /* El color del texto es heredado de .conversation-form-record.is-recording */
+}
+
+    .recording-indicator-content .ri-stop-circle-line { /* �cono de detener */
+        margin-right: 8px; /* Espacio entre el �cono y el texto */
+        font-size: 18px; /* Tama�o del �cono */
+    }
+
+    .recording-indicator-content .recording-text { /* El texto "Grabando..." */
+        animation: pulseText 1.5s infinite ease-in-out; /* Animaci�n de pulso sutil */
+    }
+
+/* Animaci�n de pulso para el texto (puedes reusar la que ten�as o esta) */
+@keyframes pulseText {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+/* En tu style.css */
+#sound-visualizer-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 24px;
+    width: 80px;
+    position: absolute;
+    bottom: 8px;
+    /* right: 50px; */ /* Comenta o elimina la l�nea original */
+    right: 150px; /* <--- NUEVO VALOR: Mueve el visualizador m�s a la izquierda */
+    /* Ajusta este valor (150px) seg�n necesites para que se vea bien al lado del bot�n expandido */
+    gap: 2px;
+    pointer-events: none;
+    /* z-index: 1; */ /* Opcional, si el bot�n tuviera un z-index mayor, podr�as necesitar esto */
+}
+
+    #sound-visualizer-container div {
+        background-color: var(--primary-color); /* Prueba con lime si sigues sin verlo para descartar contraste */
+        /* background-color: lime !important; */
+        width: 3px;
+        min-height: 1px;
+        transition: height 0.05s ease-out;
+    }
+
+/* Tambi�n aseg�rate de que el bot�n de grabaci�n no tenga un z-index innecesariamente alto */
+.conversation-form-record.is-recording {
+    background-color: var(--red-500, #ef4444);
+    color: var(--white, #fff);
+    min-width: 130px;
+    padding: 8px 12px;
+    transition: background-color var(--trans-03), color var(--trans-03), width var(--trans-03);
+    /* z-index: 2; */ /* A�ade z-index si es necesario, pero el posicionamiento es la clave aqu� */
+}
+
+

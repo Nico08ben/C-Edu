@@ -1,21 +1,29 @@
 // script.js
 
 // -----------------------------------------------------------------------------
-// #region VARIABLES GLOBALES Y CONSTANTES
+// #region GLOBAL STATE & CONSTANTS
 // -----------------------------------------------------------------------------
+let activeChatUserId = null;
+let activeChatUserName = null;
+let activeChatUserFoto = null;
+let lastMessageIdChecked = 0;
+let pollingInterval = null;
+
+// Constants from index.php (should be globally available)
+// const LOGGED_IN_USER_ID, LOGGED_IN_USER_FOTO_URL, DEFAULT_AVATAR_PATH are expected to be defined in the HTML <script> tag
+
+// Variables from original script (to be integrated or used as reference)
 let activeReplyPreview = null;
 let replyingToElement = null;
 let mediaRecorder;
 let audioChunks = [];
 let isRecording = false;
-
-// Variables para el visualizador de sonido
 let visualizerAudioContext;
 let visualizerAnalyser;
-let visualizerSourceNode; 
+let visualizerSourceNode;
 let visualizerDataArray;
 let visualizerRequestFrameId;
-let originalStreamForRecorder; 
+let originalStreamForRecorder;
 
 const STICKERS_LIST = [
     "https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif",
@@ -28,143 +36,106 @@ const STICKERS_LIST = [
 // #endregion
 
 // -----------------------------------------------------------------------------
-// #region FUNCIONES AUXILIARES Y DE VISUALIZADOR DE SONIDO
+// #region HELPER FUNCTIONS (some from original script.js)
 // -----------------------------------------------------------------------------
-
-function getCurrentTime() {
+function getCurrentTimeJS() { // Renamed to avoid conflict if PHP has one
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
-function generateMessageId() {
-    return 'msg-' + Date.now();
+function escapeHTML(str) {
+    if (str === null || str === undefined) return '';
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
 }
 
-function clearActiveReplyPreview() {
+function scrollToBottom(element) {
+    if (element) {
+        element.scrollTop = element.scrollHeight;
+    }
+}
+
+function clearActiveReplyPreviewGlobal() { // Renamed
     const replyPreviewEl = document.querySelector('.conversation-reply-preview');
     if (replyPreviewEl) {
         replyPreviewEl.style.display = 'none';
         const replyTextEl = replyPreviewEl.querySelector('.reply-text');
-        if (replyTextEl) {
-            replyTextEl.innerHTML = '';
-        }
+        if (replyTextEl) replyTextEl.innerHTML = '';
     }
-    activeReplyPreview = null;
-    replyingToElement = null;
+    activeReplyPreview = null; // From original script
+    replyingToElement = null; // From original script
 }
 
-function appendMessageToConversation(messageHTML) {
-    const activeConversationWrapper = document.querySelector('.conversation.active .conversation-wrapper');
-    if (!activeConversationWrapper) {
-        console.error("No se encontró el contenedor de la conversación activa.");
-        return;
-    }
-    activeConversationWrapper.insertAdjacentHTML('beforeend', messageHTML);
-
-    const conversationMain = activeConversationWrapper.parentElement;
-    if (conversationMain && typeof conversationMain.scrollTop !== 'undefined') {
-        conversationMain.scrollTop = conversationMain.scrollHeight;
-    }
-}
-
-// Funciones para el visualizador de sonido
+// Sound visualizer functions (ensure these are complete implementations from your original script)
 function initializeVisualizerNodes(streamForVisualizer) {
-    console.log("Initializing visualizer nodes with stream:", streamForVisualizer); 
-    if (visualizerSourceNode) { 
+    // This is a placeholder. Ensure you have the full implementation from your original script.js.
+    console.log("Vis Init placeholder. Original stream for visualizer:", streamForVisualizer);
+    if (visualizerAudioContext && visualizerSourceNode) {
         visualizerSourceNode.disconnect();
-        visualizerSourceNode = null;
     }
-
+    if (!visualizerAudioContext) visualizerAudioContext = new AudioContext();
+    
     try {
         visualizerSourceNode = visualizerAudioContext.createMediaStreamSource(streamForVisualizer);
         visualizerAnalyser = visualizerAudioContext.createAnalyser();
-        visualizerAnalyser.fftSize = 256;
+        visualizerAnalyser.fftSize = 256; // Example value
         const bufferLength = visualizerAnalyser.frequencyBinCount;
         visualizerDataArray = new Uint8Array(bufferLength);
         visualizerSourceNode.connect(visualizerAnalyser);
 
         const visualizerContainer = document.getElementById('sound-visualizer-container');
         if (visualizerContainer) {
-            visualizerContainer.innerHTML = '';
-            const numberOfBars = 12;
+            visualizerContainer.innerHTML = ''; // Clear previous bars
+            const numberOfBars = 12; // Example value
             for (let i = 0; i < numberOfBars; i++) {
                 const bar = document.createElement('div');
+                // Add styling for bars if not in CSS, e.g., bar.style.width, bar.style.margin, bar.style.backgroundColor
                 visualizerContainer.appendChild(bar);
             }
-            console.log(numberOfBars + " visualizer bars created."); 
-        } else {
-            console.error("Visualizer container not found!"); 
         }
-        drawSoundVisualizer(); 
     } catch (e) {
-        console.error("Error creating media stream source for visualizer:", e);
+        console.error("Error initializing visualizer nodes:", e);
     }
 }
-
 function startSoundVisualizer(streamToVisualize) {
-    console.log("Attempting to start sound visualizer..."); 
-    if (!visualizerAudioContext) {
-        visualizerAudioContext = new AudioContext();
-        console.log("New AudioContext created."); 
+    // This is a placeholder. Ensure you have the full implementation from your original script.js.
+    console.log("Vis Start placeholder. Stream to visualize:", streamToVisualize);
+    isRecording = true; /* ensure isRecording is set */
+    if (visualizerAudioContext && visualizerAudioContext.state === 'suspended') {
+        visualizerAudioContext.resume();
     }
-
-    if (visualizerAudioContext.state === 'suspended') {
-        console.log("AudioContext is suspended, attempting to resume..."); 
-        visualizerAudioContext.resume().then(() => {
-            console.log("AudioContext resumed successfully!"); 
-            initializeVisualizerNodes(streamToVisualize);
-        }).catch(err => {
-            console.error("Error resuming AudioContext for visualizer:", err); 
-        });
-    } else {
-        console.log("AudioContext state (visualizer):", visualizerAudioContext.state); 
-        initializeVisualizerNodes(streamToVisualize);
+    initializeVisualizerNodes(streamToVisualize); // Initialize with the correct stream
+    if (visualizerAnalyser) { // Only draw if analyser is ready
+       drawSoundVisualizer();
     }
 }
-
 function drawSoundVisualizer() {
-    if (!isRecording || !visualizerAnalyser || !visualizerDataArray) {
-        console.log("drawSoundVisualizer stopped or did not run animation loop. Conditions:", {
-            isRecording: isRecording,
-            hasAnalyser: !!visualizerAnalyser, 
-            hasDataArray: !!visualizerDataArray 
-        });
-        if (visualizerRequestFrameId) {
-            cancelAnimationFrame(visualizerRequestFrameId);
-            visualizerRequestFrameId = null;
-        }
+    // This is a placeholder. Ensure you have the full implementation from your original script.js.
+    if(!isRecording || !visualizerAnalyser || !visualizerDataArray) {
+        if(visualizerRequestFrameId) cancelAnimationFrame(visualizerRequestFrameId);
+        visualizerRequestFrameId = null;
         return;
     }
     visualizerRequestFrameId = requestAnimationFrame(drawSoundVisualizer);
-
     visualizerAnalyser.getByteFrequencyData(visualizerDataArray);
-
-    // console.log("Visualizer Raw Data Sample:", visualizerDataArray[0], visualizerDataArray[10], visualizerDataArray[20]); // Descomentar si se necesita más depuración
-
+    // Add logic to update bar heights based on visualizerDataArray
     const visualizerContainer = document.getElementById('sound-visualizer-container');
     if (visualizerContainer) {
         const bars = visualizerContainer.children;
-        const bufferLength = visualizerAnalyser.frequencyBinCount;
-        const containerHeight = 24;
-
+        const containerHeight = 24; // Max height for bars
         for (let i = 0; i < bars.length; i++) {
             if (bars[i]) {
-                const dataIndex = Math.floor((i * bufferLength) / (bars.length * 3));
-                const rawValue = visualizerDataArray[dataIndex];
-                const normalizedValue = rawValue / 255;
-                let barHeight = Math.pow(normalizedValue, 0.6) * containerHeight;
-                barHeight = Math.max(1, barHeight);
-                barHeight = Math.min(barHeight, containerHeight);
-                bars[i].style.height = `${barHeight}px`;
+                const barHeight = (visualizerDataArray[i] / 255) * containerHeight;
+                bars[i].style.height = `${Math.max(1, barHeight)}px`; // Ensure min height of 1px
             }
         }
     }
 }
-
 function stopSoundVisualizer() {
-    console.log("Stopping sound visualizer...");
-    // console.trace(); // Descomentar si necesitas ver quién llama a esta función
-
-    if (visualizerRequestFrameId) {
+    // This is a placeholder. Ensure you have the full implementation from your original script.js.
+    console.log("Vis Stop placeholder");
+    isRecording = false; /* ensure isRecording is reset */
+    if(visualizerRequestFrameId) {
         cancelAnimationFrame(visualizerRequestFrameId);
         visualizerRequestFrameId = null;
     }
@@ -172,250 +143,397 @@ function stopSoundVisualizer() {
         visualizerSourceNode.disconnect();
         visualizerSourceNode = null;
     }
-    visualizerAnalyser = null;
-    visualizerDataArray = null;
-
+    // visualizerAnalyser = null; // Don't nullify analyser here, it's part of context
+    // visualizerDataArray = null;
     const visualizerContainer = document.getElementById('sound-visualizer-container');
     if (visualizerContainer) {
-        visualizerContainer.innerHTML = '';
-        console.log("Visualizer container cleared.");
+        visualizerContainer.innerHTML = ''; // Clear bars
+    }
+    if (originalStreamForRecorder && typeof originalStreamForRecorder.getTracks === 'function') {
+        originalStreamForRecorder.getTracks().forEach(track => track.stop());
+        console.log("Microphone stream tracks stopped in stopSoundVisualizer.");
     }
 }
+
 // #endregion
 
 // -----------------------------------------------------------------------------
-// #region CREACIÓN DE HTML DE MENSAJES
+// #region CORE CHAT LOGIC
 // -----------------------------------------------------------------------------
-function createMessageListItemHTML(id, messageSpecificContentHTML, time, replyData) {
-    const avatarHTML = `
-        <div class="conversation-item-side">
-            <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
-        </div>`;
 
-    let replyBoxHTMLString = '';
-    if (replyData && replyData.replyTextContent && replyData.replyingToElementId) {
-        replyBoxHTMLString = `
-            <div class="reply-box" data-reply-id="${replyData.replyingToElementId}" style="margin-bottom: 5px; cursor: pointer;">
-                <div class="reply-text">${replyData.replyTextContent}</div>
+function initChatApp() {
+    loadUserList();
+    setupMessageSendingAndInput();
+    setupStaticEventListeners(); // For parts of UI not dynamically loaded initially
+    console.log("Chat App Initialized. Current User ID:", LOGGED_IN_USER_ID);
+}
+
+function loadUserList() {
+    const userListElement = document.querySelector('.content-messages-list');
+    if (!userListElement) {
+        console.error("User list container not found.");
+        return;
+    }
+    // Clear existing static items if any (except titles like "Recently")
+    userListElement.querySelectorAll('li:not(.content-message-title)').forEach(li => li.remove());
+
+    fetch('get_users.php') // Path relative to index.php
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.users) {
+                data.users.forEach(user => {
+                    const userLi = document.createElement('li');
+                    // Make sure user.foto_perfil_url_resolved is the correct field name from get_users.php
+                    const userPhoto = user.foto_perfil_url_resolved || DEFAULT_AVATAR_PATH;
+                    userLi.innerHTML = `
+                        <a href="#" data-user-id="${user.id_usuario}"
+                                     data-user-name="${escapeHTML(user.fullName)}"
+                                     data-user-foto="${escapeHTML(userPhoto)}">
+                            <img class="content-message-image" src="${escapeHTML(userPhoto)}" alt="${escapeHTML(user.fullName)}">
+                            <span class="content-message-info">
+                                <span class="content-message-name">${escapeHTML(user.fullName)}</span>
+                                <span class="content-message-text">Click to open chat...</span> </span>
+                            <span class="content-message-more">
+                                <span class="content-message-unread"></span> <span class="content-message-time"></span>   </span>
+                        </a>`;
+                    userListElement.appendChild(userLi);
+
+                    userLi.querySelector('a').addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetUser = e.currentTarget;
+                        openConversationWithUser(
+                            targetUser.dataset.userId,
+                            targetUser.dataset.userName,
+                            targetUser.dataset.userFoto
+                        );
+                    });
+                });
+            } else {
+                console.error('Failed to load users:', data.message || 'No users data');
+                userListElement.innerHTML += '<li>Failed to load users.</li>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error);
+            if (userListElement) userListElement.innerHTML += `<li>Error loading users: ${error.message}</li>`;
+        });
+}
+
+function openConversationWithUser(userId, userName, userFoto) {
+    console.log(`Opening conversation with User ID: ${userId}, Name: ${userName}`);
+    activeChatUserId = parseInt(userId);
+    activeChatUserName = userName;
+    activeChatUserFoto = userFoto;
+    lastMessageIdChecked = 0; // Reset for new conversation
+
+    const conversationDiv = document.getElementById('conversation-active-chat');
+    const defaultConversationDiv = document.querySelector('.conversation-default');
+    const conversationWrapper = conversationDiv.querySelector('.conversation-wrapper');
+    const conversationTopName = conversationDiv.querySelector('.conversation-user-name');
+    const conversationTopImage = conversationDiv.querySelector('.conversation-user-image');
+
+    if (!conversationDiv || !defaultConversationDiv || !conversationWrapper || !conversationTopName || !conversationTopImage) {
+        console.error("One or more conversation UI elements are missing.");
+        return;
+    }
+
+    // Update header
+    conversationTopName.textContent = userName;
+    conversationTopImage.src = userFoto;
+    conversationTopImage.alt = userName;
+
+    // Show the target conversation, hide default
+    defaultConversationDiv.classList.remove('active');
+    defaultConversationDiv.style.display = 'none';
+    conversationDiv.classList.add('active');
+    conversationDiv.style.display = ''; // Or 'flex' if it's a flex container
+
+    // Clear previous messages
+    conversationWrapper.innerHTML = `<div class="coversation-divider"><span>${new Date().toLocaleDateString()}</span></div>`;
+
+    fetchAndDisplayMessages();
+
+    if (pollingInterval) clearInterval(pollingInterval);
+    pollingInterval = setInterval(fetchAndDisplayMessages, 5000); // Poll every 5 seconds
+}
+
+function fetchAndDisplayMessages() {
+    if (!activeChatUserId) return;
+
+    fetch(`get_messages.php?user_id=${activeChatUserId}&last_message_id=${lastMessageIdChecked}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.messages) {
+                const conversationWrapper = document.querySelector('#conversation-active-chat .conversation-wrapper');
+                if (!conversationWrapper) return;
+
+                let newMessagesFetched = false;
+                data.messages.forEach(msg => {
+                    if (!document.getElementById(`msg-${msg.id_mensaje}`)) {
+                        renderMessageToDOM(msg, conversationWrapper);
+                        newMessagesFetched = true;
+                    }
+                    lastMessageIdChecked = Math.max(lastMessageIdChecked, msg.id_mensaje);
+                });
+
+                if (newMessagesFetched) {
+                    scrollToBottom(conversationWrapper.parentElement);
+                }
+            } else if (data.success && data.messages.length === 0) {
+                // No new messages
+            } else {
+                console.error('Failed to fetch messages:', data.message || 'No messages data');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching messages:', error); // This will catch network errors and json parse errors
+        });
+}
+
+// Inside script.js
+
+function renderMessageToDOM(msg, container) {
+    // isMe is true if the message is from the currently logged-in user.
+    const isMe = msg.id_emisor === LOGGED_IN_USER_ID;
+    const li = document.createElement('li');
+    li.classList.add('conversation-item');
+    li.id = `msg-${msg.id_mensaje}`;
+
+    // Apply 'me' class if the message is NOT from the current user (i.e., it's a received message)
+    if (!isMe) { // <<<<------ THE ONLY CHANGE IS HERE: `!isMe` instead of `isMe`
+        li.classList.add('me');
+    }
+
+    // Profile photo for the sender of this message
+    const senderMessagePhoto = msg.emisor_foto_url || (isMe ? LOGGED_IN_USER_FOTO_URL : DEFAULT_AVATAR_PATH);
+
+    let messageContentHTML = '';
+    const content = msg.contenido_mensaje;
+
+    const chatContentImageBasePath = '/C-edu/Administrador/Chat/';
+
+    if (content && (content.toLowerCase().endsWith('.jpg') || content.toLowerCase().endsWith('.jpeg') || content.toLowerCase().endsWith('.png') || content.toLowerCase().endsWith('.gif') || content.toLowerCase().endsWith('.webp'))) {
+        if (content.startsWith('http://') || content.startsWith('https://')) {
+             messageContentHTML = `<img class="message-image sticker-image" src="${escapeHTML(content)}" alt="Sticker" style="max-width: 180px; height: auto; border-radius: 8px;" />`;
+        } else if (content.startsWith('uploads/')) {
+             messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
+        } else {
+             messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + 'uploads/' + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
+        }
+    } else if (content && content.startsWith('blob:http')) {
+        messageContentHTML = `
+            <div class="voice-message" data-audio-src="${escapeHTML(content)}" style="background: white; padding: 10px 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; width: fit-content;">
+                <button class="play-button" style="border: none; background: #e7bb41; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="ri-play-fill"></i>
+                </button>
+                <div class="voice-bar-wrapper" style="background: #d3f4ff; height: 4px; width: 120px; border-radius: 2px; position: relative;">
+                    <div class="voice-bar" style="background: #00C2FF; height: 100%; width: 0%; transition: width 0.2s;"></div>
+                </div>
+                <div class="voice-time" style="font-size: 13px;">00:00</div>
             </div>`;
+    } else if (content) {
+        messageContentHTML = `<p>${escapeHTML(content)}</p>`;
+    } else {
+        messageContentHTML = `<p><em>Mensaje vacío o archivo no compatible.</em></p>`;
+    }
+
+    let time = '??:??';
+    if (msg.fecha_envio) {
+        try {
+            const dateStr = msg.fecha_envio.replace(' ', 'T') + (msg.fecha_envio.includes('Z') ? '' : 'Z');
+            const dateObj = new Date(dateStr);
+            if (!isNaN(dateObj)) {
+                time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } else {
+                 console.warn("Invalid date format for message:", msg.id_mensaje, msg.fecha_envio);
+            }
+        } catch (e) {
+            console.error("Error parsing date:", msg.fecha_envio, e);
+        }
     }
 
     const dropdownHTML = `
         <div class="conversation-item-dropdown">
             <button type="button" class="conversation-item-dropdown-toggle"><i class="ri-more-2-line"></i></button>
             <ul class="conversation-item-dropdown-list">
-                <li><a href="#" class="edit-btn"><i class="ri-pencil-fill"></i>Edit</a></li>
-                <li><a href="#" class="forward-btn"><i class="ri-share-forward-line"></i>Forward</a></li>
-                <li><a href="#" class="Delete-btn"><i class="ri-delete-bin-line"></i>Delete</a></li>
+                <li><a href="#" class="edit-btn" data-message-id="${msg.id_mensaje}"><i class="ri-pencil-fill"></i>Edit</a></li>
+                <li><a href="#" class="forward-btn" data-message-id="${msg.id_mensaje}"><i class="ri-share-forward-line"></i>Forward</a></li>
+                <li><a href="#" class="Delete-btn" data-message-id="${msg.id_mensaje}"><i class="ri-delete-bin-line"></i>Delete</a></li>
             </ul>
         </div>`;
 
-    return `
-        <li class="conversation-item" id="${id}">
-            ${avatarHTML}
-            <div class="conversation-item-content">
-                <div class="conversation-item-wrapper">
-                    <div class="conversation-item-box">
-                        ${replyBoxHTMLString}
-                        <div class="conversation-item-text">
-                            ${messageSpecificContentHTML}
-                            <div class="conversation-item-time">${time}</div>
-                        </div>
-                        ${dropdownHTML}
-                    </div>
-                </div>
-            </div>
-        </li>`;
-}
-// #endregion
+    let finalMessageHTML = '';
+    // The 'isMe' here determines if the dropdown appears (typically for messages the user sent).
+    // If you want dropdowns on received messages (which now have '.me' class), you'd use !isMe here too.
+    // For typical UI, dropdowns are for messages the user owns.
+    // If '.me' class is now for received messages, you might want the dropdown for messages that *don't* have '.me' (i.e., where isMe is true).
+    const showDropdown = isMe; // Standard: Dropdown for messages sent by the current user. Adjust if needed.
 
-// -----------------------------------------------------------------------------
-// #region FUNCIONES DE INSERCIÓN DE MENSAJES
-// -----------------------------------------------------------------------------
-function insertTextMessage(text) {
-    const messageId = generateMessageId();
-    const time = getCurrentTime();
-    let replyData = null;
-    const replyPreviewEl = document.querySelector('.conversation-reply-preview');
-
-    if (replyPreviewEl && replyPreviewEl.style.display === 'flex' && replyingToElement) {
-        replyData = {
-            replyTextContent: replyPreviewEl.querySelector('.reply-text').innerHTML,
-            replyingToElementId: replyingToElement
-        };
-    }
-
-    const messageTextHTML = `<p>${text}</p>`;
-    const messageHTML = createMessageListItemHTML(messageId, messageTextHTML, time, replyData);
-    appendMessageToConversation(messageHTML);
-
-    if (replyData) {
-        clearActiveReplyPreview();
-    }
-}
-
-function insertImageMessage(imageUrl) {
-    const messageId = generateMessageId();
-    const time = getCurrentTime();
-    let replyData = null;
-    const replyPreviewEl = document.querySelector('.conversation-reply-preview');
-    let currentReplyingToElementForThisMessage = null;
-
-    if (replyPreviewEl && replyPreviewEl.style.display === 'flex' && replyingToElement) {
-        currentReplyingToElementForThisMessage = replyingToElement;
-        replyData = {
-            replyTextContent: replyPreviewEl.querySelector('.reply-text').innerHTML,
-            replyingToElementId: currentReplyingToElementForThisMessage
-        };
-    }
-
-    const imageContentHTML = `<img class="message-image" src="${imageUrl}" style="max-width: 300px; border-radius: 8px; height: 150px;" />`;
-    const messageHTML = createMessageListItemHTML(messageId, imageContentHTML, time, replyData);
-    appendMessageToConversation(messageHTML);
-
-    if (replyData && replyingToElement === currentReplyingToElementForThisMessage) {
-        clearActiveReplyPreview();
-    }
-}
-
-function insertStickerMessage(stickerUrl) {
-    const messageId = generateMessageId();
-    const time = getCurrentTime();
-    let replyData = null;
-    const replyPreviewEl = document.querySelector('.conversation-reply-preview');
-    let currentReplyingToElementForThisMessage = null;
-
-    if (replyPreviewEl && replyPreviewEl.style.display === 'flex' && replyingToElement) {
-        currentReplyingToElementForThisMessage = replyingToElement;
-        replyData = {
-            replyTextContent: replyPreviewEl.querySelector('.reply-text').innerHTML,
-            replyingToElementId: currentReplyingToElementForThisMessage
-        };
-    }
-
-    const stickerContentHTML = `<img class="message-image" src="${stickerUrl}" style="max-width: 180px; height: auto; border-radius: 8px;" />`;
-    const messageHTML = createMessageListItemHTML(messageId, stickerContentHTML, time, replyData);
-    appendMessageToConversation(messageHTML);
-
-    if (replyData && replyingToElement === currentReplyingToElementForThisMessage) {
-        clearActiveReplyPreview();
-    }
-}
-
-function insertAudioMessage(audioUrl) {
-    const messageId = generateMessageId();
-    const time = getCurrentTime();
-    let replyData = null;
-    const replyPreviewEl = document.querySelector('.conversation-reply-preview');
-    let currentReplyingToElementForThisMessage = null;
-
-    if (replyPreviewEl && replyPreviewEl.style.display === 'flex' && replyingToElement) {
-        currentReplyingToElementForThisMessage = replyingToElement;
-        replyData = {
-            replyTextContent: replyPreviewEl.querySelector('.reply-text').innerHTML,
-            replyingToElementId: currentReplyingToElementForThisMessage
-        };
-    }
-    
-    let replyBoxHTMLString = '';
-    if (replyData) {
-        replyBoxHTMLString = `
-            <div class="reply-box" data-reply-id="${replyData.replyingToElementId}" style="margin-bottom: 5px; cursor: pointer;">
-                <div class="reply-text">${replyData.replyTextContent}</div>
-            </div>`;
-    }
-    
-    const originalAudioDropdownHTML = `
-        <div class="conversation-item-dropdown" style="margin-left: -30px;"> 
-            <button type="button" class="conversation-item-dropdown-toggle"><i class="ri-more-2-line"></i></button>
-            <ul class="conversation-item-dropdown-list">
-                <li><a href="#" class="edit-btn"><i class="ri-pencil-fill"></i>Edit</a></li>
-                <li><a href="#" class="forward-btn"><i class="ri-share-forward-line"></i>Forward</a></li>
-                <li><a href="#" class="Delete-btn"><i class="ri-delete-bin-line"></i>Delete</a></li>
-            </ul>
-        </div>`;
-
-    const audioMessageSpecificContentHTML = `
-        <div class="voice-message" data-audio-src="${audioUrl}" style="background: white; padding: 10px 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; width: fit-content;">
-            <button class="play-button" style="border: none; background: #e7bb41; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-                <i class="ri-play-fill"></i>
-            </button>
-            <div class="voice-bar-wrapper" style="background: #d3f4ff; height: 4px; width: 120px; border-radius: 2px; position: relative;">
-                <div class="voice-bar" style="background: #00C2FF; height: 100%; width: 0%; transition: width 0.2s;"></div>
-            </div>
-            <div class="voice-time" style="font-size: 13px;">00:00</div>
-            ${originalAudioDropdownHTML} 
-        </div>`;
-
-    const finalAudioMessageHTML = `
-        <li class="conversation-item" id="${messageId}">
+    if (content && content.startsWith('blob:http')) { // Audio message
+        finalMessageHTML = `
             <div class="conversation-item-side">
-                <img class="conversation-item-image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cGVvcGxlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="">
+                <img class="conversation-item-image" src="${escapeHTML(senderMessagePhoto)}" alt="User Avatar">
             </div>
             <div class="conversation-item-content">
                 <div class="conversation-item-wrapper">
                     <div class="conversation-item-box" style="background: transparent; box-shadow: none; padding: 0;">
-                        ${replyBoxHTMLString}
-                        ${audioMessageSpecificContentHTML}
-                        <div class="conversation-item-time" style="margin-top: 4px;">${time}</div>
+                        ${messageContentHTML} <div class="conversation-item-time" style="margin-top: 4px; ${!isMe ? '' : 'text-align: left;'}">${time}</div> 
+                        ${showDropdown ? dropdownHTML : ''}
                     </div>
                 </div>
+            </div>`;
+            // Note: ${!isMe ? '' : 'text-align: left;'} -> if it's a received message (now .me), align time normally (right), else align left.
+            // You'll need to ensure your CSS for .me aligns content as you expect for received messages.
+    } else { // Text or uploaded image message
+        finalMessageHTML = `
+            <div class="conversation-item-side">
+                <img class="conversation-item-image" src="${escapeHTML(senderMessagePhoto)}" alt="User Avatar">
             </div>
-        </li>`;
+            <div class="conversation-item-content">
+                <div class="conversation-item-wrapper">
+                    <div class="conversation-item-box">
+                        <div class="conversation-item-text">
+                            ${messageContentHTML} <div class="conversation-item-time">${time}</div>
+                        </div>
+                        ${showDropdown ? dropdownHTML : ''}
+                    </div>
+                </div>
+            </div>`;
+    }
+    li.innerHTML = finalMessageHTML;
+    container.appendChild(li);
+}
 
-    appendMessageToConversation(finalAudioMessageHTML);
+// This function might no longer be needed if all paths are absolute or correctly relative from their source.
+// function webRootPathForJS() {
+//     return '/C-edu/';
+// }
 
-    if (replyData && replyingToElement === currentReplyingToElementForThisMessage) {
-        clearActiveReplyPreview();
+function sendMessageToServer(messageContent, isFilePlaceholder = false, type = 'text') {
+    if ((!messageContent || messageContent.trim() === '') && !isFilePlaceholder) {
+        console.log("Message content is empty and not a file placeholder.");
+        return;
+    }
+    if (!activeChatUserId) {
+        alert('Please select a chat to send a message.');
+        return;
+    }
+
+    const payload = {
+        receiver_id: activeChatUserId,
+        message: messageContent
+    };
+    if (isFilePlaceholder) {
+        payload.is_file_placeholder = true;
+    }
+
+    fetch('send_message.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return response.json();
+    })
+    .then(data => {
+        if (data.success && data.message_data) {
+            const conversationWrapper = document.querySelector('#conversation-active-chat .conversation-wrapper');
+            if (conversationWrapper) {
+                renderMessageToDOM(data.message_data, conversationWrapper);
+                scrollToBottom(conversationWrapper.parentElement);
+            }
+            if (type === 'text' && document.querySelector('.conversation-form-input')) {
+                 document.querySelector('.conversation-form-input').value = '';
+                 document.querySelector('.conversation-form-input').rows = 1;
+            }
+            clearActiveReplyPreviewGlobal();
+        } else {
+            alert('Error sending message: ' + (data.message || 'Unknown error from server'));
+            console.error('Send message error (data):', data);
+        }
+    })
+    .catch(error => {
+        alert('Network error sending message. Check console.');
+        console.error('Network send message error (fetch):', error);
+    });
+}
+
+function setupMessageSendingAndInput() {
+    const conversationFormSubmit = document.querySelector('.conversation-form-submit');
+    const conversationFormInput = document.querySelector('.conversation-form-input');
+    const imageUploadInput = document.getElementById('imageInput');
+
+    if (conversationFormSubmit && conversationFormInput) {
+        conversationFormSubmit.addEventListener('click', () => {
+            sendMessageToServer(conversationFormInput.value.trim(), false, 'text');
+        });
+
+        conversationFormInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessageToServer(conversationFormInput.value.trim(), false, 'text');
+            }
+        });
+        conversationFormInput.addEventListener('input', function () {
+            this.rows = Math.max(1, this.value.split('\n').length);
+        });
+    }
+
+    if (imageUploadInput) {
+        imageUploadInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (!file) { this.value = ""; return; }
+            if (!file.type.startsWith('image/')) {
+                alert('Solo se permiten imágenes.'); this.value = ""; return;
+            }
+            if (!activeChatUserId) {
+                alert('Please select a chat before sending an image.'); this.value = ""; return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            fetch('upload.php', { method: 'POST', body: formData })
+                .then(res => {
+                    if (!res.ok) return res.text().then(text => { throw new Error(`Upload error: ${res.status} ${text}`); });
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.success && data.imageUrl) {
+                        // data.imageUrl is like "uploads/img_uniqueid.jpg"
+                        // This path is relative to where upload.php saved it (Administrador/Chat/uploads/)
+                        sendMessageToServer(data.imageUrl, false, 'image');
+                    } else {
+                        throw new Error(data.message || 'Image upload failed (server response).');
+                    }
+                })
+                .catch(err => {
+                    console.error('Image upload/send process error:', err);
+                    alert('Error processing image: ' + err.message);
+                })
+                .finally(() => {
+                    this.value = "";
+                });
+        });
     }
 }
 // #endregion
 
 // -----------------------------------------------------------------------------
-// #region MANEJADORES DE EVENTOS Y LÓGICA DE UI INICIAL
+// #region UI EVENT LISTENERS (Stickers, Emoji, Modals, Audio - adapted from original script.js)
 // -----------------------------------------------------------------------------
-document.querySelectorAll('.conversation-form-input').forEach(function (item) {
-    item.addEventListener('input', function () {
-        this.rows = this.value.split('\n').length;
-    });
-});
-document.querySelectorAll('[data-conversation]').forEach(function (item) {
-    item.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelectorAll('.conversation').forEach(function (i) {
-            i.classList.remove('active');
-        });
-        const targetConversation = document.querySelector(this.dataset.conversation);
-        if (targetConversation) {
-            targetConversation.classList.add('active');
-        }
-    });
-});
-document.querySelectorAll('.conversation-back').forEach(function (item) {
-    item.addEventListener('click', function (e) {
-        e.preventDefault();
-        const currentConversation = this.closest('.conversation');
-        if (currentConversation) {
-            currentConversation.classList.remove('active');
-        }
-        const defaultConversation = document.querySelector('.conversation-default');
-        if (defaultConversation) {
-            defaultConversation.classList.add('active');
-        }
-    });
-});
-// #endregion
-
-// -----------------------------------------------------------------------------
-// #region LÓGICA PRINCIPAL (DOMContentLoaded)
-// -----------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', function () {
-    const conversationWrapper = document.querySelector('.conversation-wrapper');
-    const conversationFormInput = document.querySelector('.conversation-form-input');
-    const conversationFormSubmit = document.querySelector('.conversation-form-submit');
-    const imageInput = document.getElementById('imageInput');
+function setupStaticEventListeners() {
+    const conversationWrapper = document.querySelector('#conversation-active-chat .conversation-wrapper');
     const emojiBtn = document.querySelector('.emoji-btn');
     const emojiPicker = document.querySelector('emoji-picker');
+    const conversationFormInput = document.querySelector('.conversation-form-input');
     const stickerBtn = document.querySelector('.conversation-form-sticker');
     const stickerPanel = document.getElementById('stickerPanel');
     const recordBtn = document.querySelector('.conversation-form-record');
@@ -423,84 +541,38 @@ document.addEventListener('DOMContentLoaded', function () {
     const imageModal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
     const imageModalClose = document.querySelector('.image-modal-close');
+    const conversationBackBtn = document.querySelector('#conversation-active-chat .conversation-back');
 
-    // --- Reproducción de Mensajes de Voz y Modal de Imagen (en conversationWrapper) ---
-    if (conversationWrapper) {
-        conversationWrapper.addEventListener('click', function (e) {
-            // Reproducir/Pausar mensaje de voz
-            const voiceMsg = e.target.closest('.voice-message');
-            console.log("Voice message play clicked. Target:", e.target); // DEBUG
-            console.log("Found .voice-message element:", voiceMsg); // DEBUG
+    if (conversationBackBtn) {
+        conversationBackBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const conversationDiv = document.getElementById('conversation-active-chat');
+            const defaultConversationDiv = document.querySelector('.conversation-default');
 
-            if (voiceMsg && !e.target.closest('.conversation-item-dropdown')) { // No interferir con dropdown
-                console.log("Processing voice message play..."); // DEBUG
-                let audio = voiceMsg.audioInstance;
-                console.log("Initial audioInstance:", audio); // DEBUG
-
-                if (!audio) {
-                    const src = voiceMsg.dataset.audioSrc;
-                    console.log("Audio source from data-audio-src:", src); // DEBUG
-                    if (src) {
-                        audio = new Audio(src);
-                        voiceMsg.audioInstance = audio; // Guardar la instancia para reutilizarla
-                        console.log("New Audio object created:", audio); // DEBUG
-                    }
-                }
-
-                if (!audio) {
-                    console.error("Audio object could not be created or found."); // DEBUG
-                    return; // Si no hay instancia de audio, no hacer nada
-                }
-
-                const playBtnIcon = voiceMsg.querySelector('.play-button i');
-                const timeLabel = voiceMsg.querySelector('.voice-time');
-                const bar = voiceMsg.querySelector('.voice-bar');
-
-                if (audio.paused) {
-                    console.log("Audio is paused, attempting to play..."); // DEBUG
-                    audio.play().then(() => {
-                        console.log("Audio playback started."); // DEBUG
-                        if(playBtnIcon) playBtnIcon.className = 'ri-pause-fill'; // Cambiar a ícono de pausa
-                    }).catch(error => {
-                        console.error("Error playing audio:", error); // DEBUG - Importante si play() falla
-                    });
-                    
-                    audio.ontimeupdate = () => {
-                        const percent = (audio.currentTime / audio.duration) * 100;
-                        if(bar) bar.style.width = percent + '%';
-                        const sec = Math.floor(audio.currentTime);
-                        if(timeLabel) timeLabel.textContent = '00:' + String(sec).padStart(2, '0');
-                    };
-                    audio.onended = () => {
-                        if(playBtnIcon) playBtnIcon.className = 'ri-play-fill';
-                        if(bar) bar.style.width = '0%';
-                        if(timeLabel) timeLabel.textContent = '00:00';
-                        // Limpiar instancia para que se pueda volver a crear si es necesario (opcional)
-                        // voiceMsg.audioInstance = null; 
-                    };
-                } else {
-                    console.log("Audio is playing, attempting to pause..."); // DEBUG
-                    audio.pause();
-                    if(playBtnIcon) playBtnIcon.className = 'ri-play-fill'; // Cambiar a ícono de play
-                    console.log("Audio paused."); // DEBUG
-                }
-            } else if (voiceMsg) {
-                console.log("Click on voice message, but likely on its dropdown."); // DEBUG
+            if (conversationDiv) {
+                conversationDiv.classList.remove('active');
+                conversationDiv.style.display = 'none';
             }
-
-
-            // Abrir modal de imagen
-            const imageClicked = e.target.closest('.message-image');
-            if (imageClicked && imageModal && modalImage) { // No interferir con dropdown de imagen
-                if(!e.target.closest('.conversation-item-dropdown')){
-                    imageModal.style.display = 'flex';
-                    modalImage.src = imageClicked.src;
-                }
+            if (defaultConversationDiv) {
+                defaultConversationDiv.classList.add('active');
+                defaultConversationDiv.style.display = '';
             }
+            if (pollingInterval) clearInterval(pollingInterval);
+            activeChatUserId = null;
         });
     }
 
-    // --- Panel de Stickers ---
+    if (emojiBtn && emojiPicker && conversationFormInput) {
+        emojiBtn.addEventListener('click', () => {
+            emojiPicker.style.display = emojiPicker.style.display === 'none' || emojiPicker.style.display === '' ? 'block' : 'none';
+        });
+        emojiPicker.addEventListener('emoji-click', event => {
+            conversationFormInput.value += event.detail.unicode;
+            conversationFormInput.focus();
+            emojiPicker.style.display = 'none';
+        });
+    }
+
     if (stickerBtn && stickerPanel) {
         stickerBtn.addEventListener('click', () => {
             if (stickerPanel.style.display === 'none' || stickerPanel.style.display === '') {
@@ -508,12 +580,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 STICKERS_LIST.forEach(url => {
                     const img = document.createElement('img');
                     img.src = url;
-                    img.style.width = '60px';
-                    img.style.margin = '4px';
-                    img.style.cursor = 'pointer';
-                    img.alt = "Sticker";
+                    img.style.width = '60px'; img.style.margin = '4px'; img.style.cursor = 'pointer'; img.alt = "Sticker";
                     img.addEventListener('click', () => {
-                        insertStickerMessage(url);
+                        sendMessageToServer(url, false, 'sticker');
                         stickerPanel.style.display = 'none';
                     });
                     stickerPanel.appendChild(img);
@@ -524,333 +593,226 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-    
-    // --- Cerrar Modales y Paneles ---
-    if (imageModalClose) {
-        imageModalClose.addEventListener('click', () => {
-            if(imageModal) imageModal.style.display = 'none';
-        });
-    }
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            if(imageModal && imageModal.style.display !== 'none') imageModal.style.display = 'none';
-            if(stickerPanel && stickerPanel.style.display !== 'none') stickerPanel.style.display = 'none';
-            if(emojiPicker && emojiPicker.style.display !== 'none') emojiPicker.style.display = 'none';
-        }
-    });
-    if (imageModal) {
-        imageModal.addEventListener('click', function (e) {
-            if (e.target === this) {
-                this.style.display = 'none';
+
+    if (imageModal && modalImage && imageModalClose && conversationWrapper) {
+        conversationWrapper.addEventListener('click', function(e) {
+            const imageClicked = e.target.closest('.message-image:not(.sticker-image)');
+            if (imageClicked && !e.target.closest('.conversation-item-dropdown')) {
+                modalImage.src = imageClicked.src;
+                imageModal.style.display = 'flex';
             }
         });
+        imageModalClose.addEventListener('click', () => imageModal.style.display = 'none');
+        imageModal.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
     }
 
-    // --- Grabación de Audio ---
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (imageModal && imageModal.style.display !== 'none') imageModal.style.display = 'none';
+            if (stickerPanel && stickerPanel.style.display !== 'none') stickerPanel.style.display = 'none';
+            if (emojiPicker && emojiPicker.style.display !== 'none') emojiPicker.style.display = 'none';
+        }
+    });
+
+    if (cancelReplyBtn) {
+        cancelReplyBtn.addEventListener('click', (e) => { e.preventDefault(); clearActiveReplyPreviewGlobal(); });
+    }
+
     if (recordBtn) {
         recordBtn.addEventListener('click', async () => {
             const sendBtn = document.querySelector('.conversation-form-submit');
             if (isRecording) {
-                isRecording = false; 
                 if (mediaRecorder && mediaRecorder.state !== "inactive") {
-                    mediaRecorder.stop(); 
+                    mediaRecorder.stop();
                 } else {
-                    stopSoundVisualizer(); 
+                    stopSoundVisualizer(); // Will also attempt to stop tracks
                     recordBtn.classList.remove('is-recording');
                     recordBtn.innerHTML = '<i class="ri-mic-line"></i>';
                     if (sendBtn) sendBtn.style.display = 'flex';
                 }
+                isRecording = false;
                 return;
+            }
+
+            if (!activeChatUserId) {
+                alert('Please select a chat to send an audio message.'); return;
             }
             try {
                 originalStreamForRecorder = await navigator.mediaDevices.getUserMedia({ audio: true });
-                
-                let streamForVisualizer;
-                if (typeof originalStreamForRecorder.clone === 'function') {
-                    streamForVisualizer = originalStreamForRecorder.clone();
-                    console.log("Stream cloned for visualizer.");
-                } else {
-                    streamForVisualizer = originalStreamForRecorder; 
-                    console.log("Stream clone not available, using original for visualizer.");
-                }
-                
-                const recorderOptions = { mimeType: 'audio/webm; codecs=opus' };
-                if (MediaRecorder.isTypeSupported(recorderOptions.mimeType)) {
-                    mediaRecorder = new MediaRecorder(originalStreamForRecorder, recorderOptions);
-                } else {
-                    console.warn("Opus codec for webm not supported, falling back.");
-                    mediaRecorder = new MediaRecorder(originalStreamForRecorder); 
-                }
-                
-                audioChunks = []; 
-                isRecording = true; // Establecer ANTES de startSoundVisualizer
+                let streamForVisualizer = originalStreamForRecorder.clone ? originalStreamForRecorder.clone() : originalStreamForRecorder;
 
-                startSoundVisualizer(streamForVisualizer);
+                const recorderOptions = { mimeType: 'audio/webm; codecs=opus' };
+                mediaRecorder = MediaRecorder.isTypeSupported(recorderOptions.mimeType)
+                                ? new MediaRecorder(originalStreamForRecorder, recorderOptions)
+                                : new MediaRecorder(originalStreamForRecorder);
+
+                audioChunks = [];
+                startSoundVisualizer(streamForVisualizer); // Sets isRecording to true
 
                 if (sendBtn) sendBtn.style.display = 'none';
-
                 recordBtn.classList.add('is-recording');
-                recordBtn.innerHTML = `
-                    <span class="recording-indicator-content">
-                        <i class="ri-stop-circle-line"></i> 
-                        <span class="recording-text">Grabando...</span>
-                    </span>`;
+                recordBtn.innerHTML = `<span class="recording-indicator-content"><i class="ri-stop-circle-line"></i> <span class="recording-text">Grabando...</span></span>`;
 
                 mediaRecorder.ondataavailable = event => {
-                    console.log("MediaRecorder ondataavailable, chunk size:", event.data.size);
-                    if (event.data.size > 0) {
-                        audioChunks.push(event.data);
-                    }
+                    if (event.data.size > 0) audioChunks.push(event.data);
                 };
 
                 mediaRecorder.onstop = () => {
-                    console.log("MediaRecorder.onstop triggered. Audio chunks length:", audioChunks.length);
-                    
-                    if (audioChunks.length > 0) {
-                        const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        console.log("Audio Blob URL:", audioUrl, "Size:", audioBlob.size);
-                        insertAudioMessage(audioUrl);
-                    } else {
-                        console.log("No audio chunks recorded.");
-                    }
-                    
-                    stopSoundVisualizer(); 
+                    // Visualizer and stream stopping is handled by stopSoundVisualizer now if called from there.
+                    // If onstop is called directly by mediaRecorder.stop(), ensure visualizer is also stopped.
+                    if(isRecording) stopSoundVisualizer();
+
 
                     recordBtn.classList.remove('is-recording');
                     recordBtn.innerHTML = '<i class="ri-mic-line"></i>';
                     if (sendBtn) sendBtn.style.display = 'flex';
-                    
-                    if (originalStreamForRecorder && typeof originalStreamForRecorder.getTracks === 'function') {
-                        originalStreamForRecorder.getTracks().forEach(track => track.stop());
-                        console.log("Original microphone stream tracks stopped.");
-                    }
-                };
-                
-                mediaRecorder.start(1000); 
-                console.log("MediaRecorder started with 1s timeslice.");
 
+                    if (audioChunks.length > 0) {
+                        const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        sendMessageToServer(audioUrl, false, 'audio');
+                    } else {
+                        console.log("No audio chunks recorded.");
+                    }
+                    audioChunks = [];
+                };
+                mediaRecorder.start(1000);
             } catch (err) {
-                console.error('Error al acceder al micrófono o iniciar MediaRecorder:', err);
-                alert('No se pudo acceder al micrófono o iniciar la grabación.');
-                
-                isRecording = false; 
-                stopSoundVisualizer(); 
-                
+                console.error('Error accessing mic or starting MediaRecorder:', err);
+                alert('Mic access or recording failed: ' + err.message);
+                isRecording = false;
+                stopSoundVisualizer();
                 recordBtn.classList.remove('is-recording');
                 recordBtn.innerHTML = '<i class="ri-mic-line"></i>';
                 if (sendBtn) sendBtn.style.display = 'flex';
-
-                if (originalStreamForRecorder && typeof originalStreamForRecorder.getTracks === 'function') {
-                    originalStreamForRecorder.getTracks().forEach(track => track.stop());
-                    console.log("Original microphone stream tracks stopped in catch block.");
-                }
             }
         });
     }
 
-    // --- Emoji Picker ---
-    if (emojiBtn && emojiPicker && conversationFormInput) {
-        emojiBtn.addEventListener('click', () => {
-            emojiPicker.style.display = emojiPicker.style.display === 'none' || emojiPicker.style.display === '' ? 'block' : 'none';
-        });
-        emojiPicker.addEventListener('emoji-click', event => {
-            conversationFormInput.value += event.detail.unicode;
-            conversationFormInput.focus();
-        });
-    }
-
-    // --- Enviar Mensaje con Enter ---
-    if (conversationFormInput) {
-        conversationFormInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                if(conversationFormSubmit) conversationFormSubmit.click();
-            }
-        });
-    }
-    
-    // --- Acciones de Mensaje (Editar, Responder, Eliminar) en conversationWrapper ---
     if (conversationWrapper) {
-        conversationWrapper.addEventListener('click', function (e) {
-            const targetLink = e.target.closest('a');
-            if (!targetLink) return;
-
-            // Si el clic fue en el botón de play de un audio, ya se manejó arriba, no hacer nada más aquí para acciones
-            if (e.target.closest('.play-button')) return;
-
-
-            const messageWrapper = targetLink.closest('.conversation-item-wrapper');
-            const conversationItem = targetLink.closest('.conversation-item');
-
-            if (targetLink.classList.contains('Delete-btn')) {
+        conversationWrapper.addEventListener('click', function(e) {
+            const dropdownToggle = e.target.closest('.conversation-item-dropdown-toggle');
+            if (dropdownToggle) {
                 e.preventDefault();
-                if (messageWrapper) {
-                    const itemContent = messageWrapper.parentElement;
-                    messageWrapper.remove();
-                    if (itemContent && itemContent.querySelectorAll('.conversation-item-wrapper').length === 0) {
-                        if(conversationItem) conversationItem.remove();
-                    }
+                const parentDropdown = dropdownToggle.closest('.conversation-item-dropdown');
+                if (parentDropdown) {
+                    document.querySelectorAll('#conversation-active-chat .conversation-item-dropdown.active').forEach(activeDd => {
+                        if (activeDd !== parentDropdown) activeDd.classList.remove('active');
+                    });
+                    parentDropdown.classList.toggle('active');
                 }
+                return;
             }
-            else if (targetLink.classList.contains('edit-btn')) {
+
+            const actionLink = e.target.closest('.conversation-item-dropdown-list a');
+            if (actionLink) {
                 e.preventDefault();
-                if (messageWrapper) {
-                    const messageTextEl = messageWrapper.querySelector('.conversation-item-text p');
-                    if (messageTextEl) {
-                        const currentText = messageTextEl.textContent;
-                        const newText = prompt("Editar mensaje:", currentText);
-                        if (newText !== null && newText.trim() !== "") {
-                            messageTextEl.textContent = newText;
+                const messageId = actionLink.dataset.messageId;
+                const messageItem = document.getElementById(`msg-${messageId}`);
+                if (actionLink.classList.contains('Delete-btn')) {
+                    console.log("Delete message:", messageId);
+                    if (messageItem) messageItem.remove(); // TODO: Server-side delete
+                } else if (actionLink.classList.contains('edit-btn')) {
+                    console.log("Edit message:", messageId);
+                    const textEl = messageItem ? messageItem.querySelector('.conversation-item-text p') : null;
+                    if(textEl) {
+                        const newText = prompt("Edit:", textEl.textContent);
+                        if(newText !== null && newText.trim() !== "") {
+                             textEl.textContent = newText; // TODO: Server-side update
                         }
                     } else {
                         alert("Solo se pueden editar mensajes de texto.");
                     }
-                }
-            }
-            else if (targetLink.classList.contains('forward-btn')) {
-                e.preventDefault();
-                if (conversationItem) {
-                    replyingToElement = conversationItem.id;
-                    let replyContent = '';
-                    const textElement = conversationItem.querySelector('.conversation-item-text p');
-                    const imgElement = conversationItem.querySelector('.conversation-item-text .message-image');
-                    const audioWrapper = conversationItem.querySelector('.voice-message');
-                    if (audioWrapper) {
-                        replyContent = `<p style="font-weight:bold; color:#007bff;">Nota de voz 🔊</p>`;
-                    } else if (imgElement) {
-                        replyContent = `<img src="${imgElement.src}" style="max-width:50px; max-height:50px; border-radius:4px; margin-right:5px;" alt="Imagen adjunta"> Contenido de imagen`;
-                    } else if (textElement) {
-                        replyContent = `<p>${textElement.innerText.substring(0, 50)}${textElement.innerText.length > 50 ? '...' : ''}</p>`;
-                    } else {
-                         replyContent = `<p>Mensaje adjunto</p>`;
-                    }
+                } else if (actionLink.classList.contains('forward-btn')) {
+                    console.log("Forward message:", messageId); // Placeholder for reply/forward logic
+                    // Example: Setup reply preview
                     const replyPreviewEl = document.querySelector('.conversation-reply-preview');
-                    if (replyPreviewEl) {
-                        const replyTextEl = replyPreviewEl.querySelector('.reply-text');
-                        if (replyTextEl) replyTextEl.innerHTML = replyContent;
+                    const replyTextEl = replyPreviewEl.querySelector('.reply-text');
+                    if (messageItem && replyPreviewEl && replyTextEl) {
+                        let originalContent = "Mensaje adjunto";
+                        const textP = messageItem.querySelector('.conversation-item-text p');
+                        const imgMsg = messageItem.querySelector('.conversation-item-text .message-image');
+                        if (textP) originalContent = textP.textContent.substring(0,50) + (textP.textContent.length > 50 ? "..." : "");
+                        else if (imgMsg) originalContent = "Imagen adjunta";
+                        
+                        replyTextEl.innerHTML = `Respondiendo a: <i>${originalContent}</i>`;
                         replyPreviewEl.style.display = 'flex';
-                        activeReplyPreview = replyPreviewEl;
+                        replyingToElement = messageId; // Store ID of message being replied to
+                        activeReplyPreview = replyPreviewEl; // From original script
                     }
                 }
-            }
-        });
-    }
-    
-    // --- Cancelar Respuesta ---
-    if (cancelReplyBtn) {
-        cancelReplyBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            clearActiveReplyPreview();
-        });
-    }
-
-    // --- Enviar Mensaje de Texto (Botón Submit) ---
-    if (conversationFormSubmit && conversationFormInput) {
-        conversationFormSubmit.addEventListener('click', function () {
-            const messageText = conversationFormInput.value.trim();
-            const replyPreviewEl = document.querySelector('.conversation-reply-preview');
-            if (messageText === '' && !(replyPreviewEl && replyPreviewEl.style.display === 'flex')) {
-                 return;
-            }
-            insertTextMessage(messageText);
-            conversationFormInput.value = '';
-            conversationFormInput.rows = 1;
-        });
-    }
-
-    // --- Subir Imagen ---
-    if (imageInput) {
-        imageInput.addEventListener('change', function () {
-            const file = this.files[0];
-            if (!file) { this.value = ""; return; }
-            if (!file.type.startsWith('image/')) {
-                alert('Solo se permiten imágenes.');
-                this.value = "";
+                if(actionLink.closest('.conversation-item-dropdown')) {
+                   actionLink.closest('.conversation-item-dropdown').classList.remove('active');
+                }
                 return;
             }
-            const formData = new FormData();
-            formData.append('image', file);
-            fetch('upload.php', { method: 'POST', body: formData })
-                .then(res => {
-                    if (!res.ok) {
-                        return res.text().then(text => { throw new Error(`Error del servidor: ${res.status} ${res.statusText}. Respuesta: ${text}`); });
-                    }
-                    return res.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        insertImageMessage(data.imageUrl);
-                    } else {
-                        alert(data.message || 'No se pudo subir la imagen (respuesta del servidor).');
-                    }
-                })
-                .catch(err => {
-                    console.error('Detalle del error de subida:', err);
-                    alert('Error al subir la imagen. ' + (err.message ? err.message : 'Verifique la consola para más detalles.'));
-                })
-                .finally(() => {
-                    this.value = "";
-                });
-        });
-    }
 
-    // --- Navegar a Mensaje Respondido (en conversationWrapper) ---
-    if (conversationWrapper) {
-        conversationWrapper.addEventListener('click', function (e) {
-            const replyBoxClicked = e.target.closest('.reply-box');
-            if (!replyBoxClicked) return;
-
-            // Si el clic fue en el replyBox pero también en un botón de acción del dropdown, no hacer nada aquí
-            if (e.target.closest('.conversation-item-dropdown-list a')) return;
-
-            const targetId = replyBoxClicked.dataset.replyId;
-            if (!targetId) return;
-            const targetMessage = document.getElementById(targetId);
-            if (!targetMessage) return;
-            targetMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            targetMessage.classList.add('highlighted-reply');
-            setTimeout(() => {
-                targetMessage.classList.remove('highlighted-reply');
-            }, 1500);
-        });
-    }
-
-}); // Fin de DOMContentLoaded
-
-
-// -----------------------------------------------------------------------------
-// #region MANEJADOR GLOBAL DE CLICS (Dropdowns y cierre de paneles)
-// -----------------------------------------------------------------------------
-document.addEventListener('click', function (e) {
-    const dropdownToggle = e.target.closest('.conversation-item-dropdown-toggle');
-    const clickedWithinAnyDropdown = e.target.closest('.conversation-item-dropdown');
-
-    if (dropdownToggle) {
-        e.preventDefault();
-        const parentDropdown = dropdownToggle.closest('.conversation-item-dropdown');
-        if (parentDropdown) {
-            document.querySelectorAll('.conversation-item-dropdown.active').forEach(activeDropdown => {
-                if (activeDropdown !== parentDropdown) {
-                    activeDropdown.classList.remove('active');
+            const voiceMsgContainer = e.target.closest('.voice-message');
+            if (voiceMsgContainer) {
+                if (e.target.closest('.conversation-item-dropdown')) return;
+                let audio = voiceMsgContainer.audioInstance;
+                const src = voiceMsgContainer.dataset.audioSrc;
+                if (!audio && src) {
+                    audio = new Audio(src);
+                    voiceMsgContainer.audioInstance = audio;
                 }
-            });
-            parentDropdown.classList.toggle('active');
-        }
-    } else if (!clickedWithinAnyDropdown) {
-        document.querySelectorAll('.conversation-item-dropdown.active').forEach(activeDropdown => {
-            activeDropdown.classList.remove('active');
-        });
-        
-        const stickerPanel = document.getElementById('stickerPanel');
-        const emojiPicker = document.querySelector('emoji-picker');
+                if (!audio) { console.error("No audio source for voice message."); return; }
 
+                const playBtnIcon = voiceMsgContainer.querySelector('.play-button i');
+                const timeLabel = voiceMsgContainer.querySelector('.voice-time');
+                const progressBar = voiceMsgContainer.querySelector('.voice-bar');
+
+                if (audio.paused) {
+                    document.querySelectorAll('#conversation-active-chat .voice-message audio').forEach(otherAudio => {
+                        if (otherAudio !== audio && !otherAudio.paused) {
+                            otherAudio.pause();
+                            const otherIcon = otherAudio.closest('.voice-message').querySelector('.play-button i');
+                            if(otherIcon) otherIcon.className = 'ri-play-fill';
+                        }
+                    });
+                    audio.play().then(() => {
+                        if (playBtnIcon) playBtnIcon.className = 'ri-pause-fill';
+                    }).catch(error => console.error("Error playing audio:", error));
+                    audio.ontimeupdate = () => {
+                        if (progressBar && audio.duration) progressBar.style.width = (audio.currentTime / audio.duration) * 100 + '%';
+                        if (timeLabel) {
+                            const minutes = Math.floor(audio.currentTime / 60);
+                            const seconds = Math.floor(audio.currentTime % 60);
+                            timeLabel.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                        }
+                    };
+                    audio.onended = () => {
+                        if (playBtnIcon) playBtnIcon.className = 'ri-play-fill';
+                        if (progressBar) progressBar.style.width = '0%';
+                         // Optionally reset time display to 00:00 or full duration
+                        if (timeLabel) timeLabel.textContent = '00:00';
+                    };
+                } else {
+                    audio.pause();
+                    if (playBtnIcon) playBtnIcon.className = 'ri-play-fill';
+                }
+            }
+        });
+    }
+
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.conversation-item-dropdown-toggle') && !e.target.closest('.conversation-item-dropdown.active')) {
+            document.querySelectorAll('#conversation-active-chat .conversation-item-dropdown.active').forEach(activeDropdown => {
+                activeDropdown.classList.remove('active');
+            });
+        }
         if (stickerPanel && stickerPanel.style.display === 'block' && !e.target.closest('.conversation-form-sticker') && !e.target.closest('#stickerPanel')) {
             stickerPanel.style.display = 'none';
         }
         if (emojiPicker && emojiPicker.style.display === 'block' && !e.target.closest('.emoji-btn') && !e.target.closest('emoji-picker')) {
             emojiPicker.style.display = 'none';
         }
-    }
-});
+    });
+}
+// #endregion
+
+// -----------------------------------------------------------------------------
+// #region INITIALIZATION
+// -----------------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', initChatApp);
 // #endregion
