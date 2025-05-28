@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-05-2025 a las 22:22:44
--- Versión del servidor: 10.4.27-MariaDB
+-- Tiempo de generación: 28-05-2025 a las 05:29:03
+-- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -120,9 +120,23 @@ CREATE TABLE `mensaje` (
   `id_mensaje` int(11) NOT NULL,
   `id_emisor` int(11) NOT NULL,
   `id_receptor` int(11) NOT NULL,
-  `mensaje` text NOT NULL,
-  `fecha_mensaje` timestamp NOT NULL DEFAULT current_timestamp()
+  `contenido_mensaje` text DEFAULT NULL,
+  `fecha_envio` timestamp NOT NULL DEFAULT current_timestamp(),
+  `leido` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `mensaje`
+--
+
+INSERT INTO `mensaje` (`id_mensaje`, `id_emisor`, `id_receptor`, `contenido_mensaje`, `fecha_envio`, `leido`) VALUES
+(2, 3, 4, 'Hola', '2025-05-28 02:31:32', 1),
+(4, 3, 4, 'uploads/img_68367783e52737.26627023.webp', '2025-05-28 02:40:03', 1),
+(5, 3, 4, 'Hola', '2025-05-28 02:57:16', 1),
+(6, 3, 4, 'Hola', '2025-05-28 03:01:16', 1),
+(7, 3, 4, 'Hpña', '2025-05-28 03:09:26', 1),
+(8, 4, 3, 'Hola', '2025-05-28 03:26:51', 1),
+(9, 3, 6, 'Hola', '2025-05-28 03:27:27', 0);
 
 -- --------------------------------------------------------
 
@@ -346,7 +360,7 @@ ALTER TABLE `materia`
 -- AUTO_INCREMENT de la tabla `mensaje`
 --
 ALTER TABLE `mensaje`
-  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `notificacion`
