@@ -141,6 +141,100 @@
 }
 
 /* Icono de usuario en chat-item (si es un <i> de FontAwesome) */
+/* Estilos para la lista de usuarios (versión más pequeña) */
+.content-messages-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font-family: Arial, sans-serif; /* Puedes cambiar esto por la fuente de tu proyecto */
+}
+
+.content-messages-list li {
+    border-bottom: 1px solid #eeeeee;
+}
+
+.content-messages-list li:last-child {
+    border-bottom: none;
+}
+
+.content-messages-list li a {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px; /* Reducido el padding */
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.content-messages-list li a:hover {
+    background-color: #f5f5f5;
+}
+
+.content-message-image {
+    width: 36px;        /* Reducido el tamaño de la imagen */
+    height: 36px;       /* Reducido el tamaño de la imagen */
+    border-radius: 50%;
+    border: 1px solid #dddddd;
+    margin-right: 12px; /* Reducido el margen derecho */
+    object-fit: cover;
+}
+
+.content-message-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content-message-name {
+    font-weight: bold;
+    font-size: 0.9rem; /* Reducido el tamaño de fuente del nombre */
+    color: #333333;
+    margin-bottom: 2px; /* Ajustado el margen inferior */
+}
+
+.content-message-text {
+    font-size: 0.8rem; /* Reducido el tamaño de fuente del subtexto */
+    color: #757575;
+    white-space: nowrap;     /* Evita que el texto haga saltos de línea */
+    overflow: hidden;        /* Oculta el texto que se desborda del contenedor */
+    text-overflow: ellipsis;
+    min-width: 0;
+    max-width: 150px;
+}
+/* Para pantallas medianas (ej. tablets) */
+@media (min-width: 768px) {
+    .content-message-text {
+        max-width: 130px; /* Un poco más de espacio */
+    }
+}
+
+/* Para pantallas grandes (ej. escritorio) */
+@media (min-width: 992px) {
+    .content-message-text {
+        max-width: 185px; /* Aún más espacio */
+    }
+}
+
+.content-message-more {
+    width: 6px;           /* Reducido el ancho de la cápsula */
+    height: 22px;         /* Reducido el alto de la cápsula */
+    background-color: #1ABC9C;
+    border-radius: 3px;   /* Ajustado el borde redondeado */
+    margin-left: 12px;    /* Reducido el margen izquierdo */
+}
+
+/* Estilos para el título "Recently" (si lo usas) */
+.content-message-title {
+    padding: 8px 12px; /* Reducido el padding */
+    font-size: 0.8em;  /* Reducido el tamaño de fuente */
+    color: #666;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #eeeeee;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 .chat-item>.fa-user {
     font-size: 20px;
     color: var(--role-text-on-primary-color); /* Texto en color primario (blanco por defecto) */

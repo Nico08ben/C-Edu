@@ -162,10 +162,53 @@ function stopSoundVisualizer() {
 // -----------------------------------------------------------------------------
 
 function initChatApp() {
-    loadUserList();
+    // ---- NUEVO CÓDIGO PARA LEER PARÁMETROS URL ----
+    const urlParams = new URLSearchParams(window.location.search);
+    const userIdFromUrl = urlParams.get('userId');
+    const userNameFromUrl = urlParams.get('userName');
+    const userFotoFromUrl = urlParams.get('userFoto');
+
+    let chatOpenedFromUrl = false;
+    if (userIdFromUrl && userNameFromUrl && userFotoFromUrl) {
+        console.log(`Attempting to open chat from URL: UserID=${userIdFromUrl}, Name=${userNameFromUrl}`);
+        // Llama a openConversationWithUser con los datos de la URL
+        // Asegúrate de que la UI principal del chat se muestre si está oculta
+        const conversationDiv = document.getElementById('conversation-active-chat');
+        const defaultConversationDiv = document.querySelector('.conversation-default');
+
+        if (conversationDiv && defaultConversationDiv) {
+            defaultConversationDiv.classList.remove('active');
+            defaultConversationDiv.style.display = 'none';
+            conversationDiv.classList.add('active');
+            // Asegúrate que el display sea el correcto (ej. 'flex' si es un contenedor flex)
+            // openConversationWithUser también maneja parte de esto.
+            conversationDiv.style.display = ''; // O 'flex'
+        }
+        
+        openConversationWithUser(userIdFromUrl, userNameFromUrl, userFotoFromUrl);
+        chatOpenedFromUrl = true;
+    }
+    // ---- FIN DEL NUEVO CÓDIGO ----
+
+    // El resto de la inicialización para la página de chat
+    loadUserList(); // Esto carga la lista de usuarios en la barra lateral de la página de chat
     setupMessageSendingAndInput();
-    setupStaticEventListeners(); // For parts of UI not dynamically loaded initially
-    console.log("Chat App Initialized. Current User ID:", LOGGED_IN_USER_ID);
+    setupStaticEventListeners();
+    console.log("Chat App Initialized. Current User ID:", LOGGED_IN_USER_ID, "Chat opened from URL:", chatOpenedFromUrl);
+
+    // Opcional: Si no se abrió un chat desde la URL, asegúrate de que la vista por defecto esté visible
+    if (!chatOpenedFromUrl) {
+        const defaultConversationDiv = document.querySelector('.conversation-default');
+        const activeConversationDiv = document.getElementById('conversation-active-chat');
+        if (defaultConversationDiv && !defaultConversationDiv.classList.contains('active')) {
+            defaultConversationDiv.classList.add('active');
+            defaultConversationDiv.style.display = ''; // o 'flex'
+        }
+        if (activeConversationDiv && activeConversationDiv.classList.contains('active')) {
+            activeConversationDiv.classList.remove('active');
+            activeConversationDiv.style.display = 'none';
+        }
+    }
 }
 
 function loadUserList() {
