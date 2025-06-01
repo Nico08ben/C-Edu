@@ -1,7 +1,7 @@
 <?php
-ini_set('display_errors', 1); // Temporal para depuración
-ini_set('display_startup_errors', 1); // Temporal para depuración
-error_reporting(E_ALL); // Temporal para depuración
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 session_start();
 if (!isset($_SESSION['id_usuario'])) {
@@ -9,49 +9,79 @@ if (!isset($_SESSION['id_usuario'])) {
     exit;
 }
 
-// Ruta a conexion.php: D:\xampp\htdocs\C-Edu\conexion.php
-// Desde: D:\xampp\htdocs\C-Edu\Administrador\Chat\get_users.php
-// Ruta correcta: ../../conexion.php
-$pathToConexion = '../../conexion.php'; 
+$pathToConexion = '../../conexion.php';
 if (!file_exists($pathToConexion)) {
-    echo json_encode(['success' => false, 'message' => 'Error critico: conexion.php no encontrado en la ruta esperada: ' . realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . $pathToConexion .'. Por favor, verifica la estructura de tus carpetas.']);
+    echo json_encode(['success' => false, 'message' => 'Error critico: conexion.php no encontrado.']);
     exit;
 }
-include $pathToConexion; 
+include $pathToConexion;
 
-if ($conn->connect_error) { 
+if ($conn->connect_error) {
     echo json_encode(['success' => false, 'message' => 'Connection failed: ' . $conn->connect_error]);
-    exit; 
+    exit;
 }
 $conn->set_charset("utf8");
 
 $currentUserId = $_SESSION['id_usuario'];
 $users = [];
 
-// Asumiendo que C-edu es accesible desde la raíz web (ej. http://localhost/C-edu/)
-$profilePicBasePath = '/C-edu/uploads/'; 
-// La ruta al avatar por defecto debe ser accesible desde el navegador:
-// D:\xampp\htdocs\C-Edu\Administrador\Chat\assets\images\default-avatar.png
-$defaultAvatar = '/C-edu/Administrador/Chat/assets/images/default-avatar.png'; 
+$webRootPath = '/C-edu/';
+// *** IMPORTANTE: Unifica esta ruta del avatar por defecto en TODA tu aplicación ***
+$defaultAvatar = '/C-edu/uploads/profile_pictures/default-avatar.png';  // Ejemplo de ruta unificada
 
-// CORRECCIÓN: Eliminada la columna 'apellido' de la consulta.
-$sql = "SELECT id_usuario, nombre_usuario, foto_perfil_url FROM usuario WHERE id_usuario != ?";
+// Consulta SQL actualizada
+$sql = "SELECT
+            u.id_usuario,
+            u.nombre_usuario AS fullName,
+            u.foto_perfil_url,
+            m_last.contenido_mensaje AS lastMessageContent,
+            m_last.fecha_envio AS lastMessageDate,
+            (
+                SELECT COUNT(*)
+                FROM mensaje unread_m
+                WHERE unread_m.id_emisor = u.id_usuario -- Mensajes DEL usuario de la lista
+                  AND unread_m.id_receptor = ?           -- PARA el usuario actual (logeado)
+                  AND unread_m.leido = 0                 -- Y que no estén leídos
+            ) AS unreadCount
+        FROM
+            usuario u
+        LEFT JOIN
+            mensaje m_last ON m_last.id_mensaje = (
+                SELECT id_mensaje
+                FROM mensaje sub_m
+                WHERE
+                    (sub_m.id_emisor = u.id_usuario AND sub_m.id_receptor = ?) OR -- Para el último mensaje
+                    (sub_m.id_emisor = ? AND sub_m.id_receptor = u.id_usuario)    -- Para el último mensaje
+                ORDER BY sub_m.fecha_envio DESC
+                LIMIT 1
+            )
+        WHERE
+            u.id_usuario != ? -- No incluir al usuario actual en la lista
+        ORDER BY
+            CASE WHEN m_last.fecha_envio IS NULL THEN 1 ELSE 0 END,
+            m_last.fecha_envio DESC,
+            u.nombre_usuario ASC";
+
 $stmt = $conn->prepare($sql);
 
 if ($stmt) {
-    $stmt->bind_param("i", $currentUserId);
+    // Ahora son 4 parámetros para bind_param: uno para unreadCount, dos para last_message, uno para el WHERE final.
+    $stmt->bind_param("iiii", $currentUserId, $currentUserId, $currentUserId, $currentUserId);
     $stmt->execute();
     $result = $stmt->get_result();
 
     while ($row = $result->fetch_assoc()) {
-        // CORRECCIÓN: fullName ahora solo usa nombre_usuario.
-        $row['fullName'] = trim($row['nombre_usuario']); 
         if (!empty($row['foto_perfil_url'])) {
-            $row['foto_perfil_url_url'] = $profilePicBasePath . htmlspecialchars($row['foto_perfil_url']);
+            $row['foto_perfil_url_url'] = $webRootPath . htmlspecialchars($row['foto_perfil_url']);
         } else {
             $row['foto_perfil_url_url'] = $defaultAvatar;
         }
-        unset($row['foto_perfil_url']); 
+        unset($row['foto_perfil_url']);
+
+        $row['lastMessageContent'] = $row['lastMessageContent'] ?? null;
+        $row['lastMessageDate'] = $row['lastMessageDate'] ?? null;
+        $row['unreadCount'] = $row['unreadCount'] ?? 0; // Asegurar que unreadCount siempre esté, por defecto 0
+        
         $users[] = $row;
     }
     $stmt->close();

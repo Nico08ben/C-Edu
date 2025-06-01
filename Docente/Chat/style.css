@@ -3,12 +3,15 @@
 
 
 /* start: Globals */
-*, ::before, ::after {
+*,
+::before,
+::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font: inherit;
 }
+
 :root {
     --body-color: #e4e9f7;
     --sidebar-color: #fff;
@@ -35,6 +38,7 @@
     --trans-04: all 0.4s ease;
     --trans-05: all 0.5s ease;
 }
+
 body.dark {
     --body-color: #18191a;
     --sidebar-color: #242526;
@@ -50,19 +54,20 @@ body.dark {
     --slate-300: #334155;
     --slate-400: #475569;
     --slate-500: #64748b;
-    --slate-600:  #94a3b8;
-    --slate-700:  #cbd5e1;
-    --slate-800:  #e2e8f0;
-    --slate-900:  #f1f5f9;
+    --slate-600: #94a3b8;
+    --slate-700: #cbd5e1;
+    --slate-800: #e2e8f0;
+    --slate-900: #f1f5f9;
     --slate-950: #f8fafc;
-    --white: #fff; 
-    
+    --white: #fff;
+
 }
 
 body {
     font-family: 'Inter', sans-serif;
     color: var(--slate-700);
 }
+
 /* end: Globals */
 
 
@@ -76,6 +81,7 @@ body {
     justify-content: center;
     background-color: var(--body-color);
 }
+
 .chat-container {
     max-width: 1360px;
     width: 100%;
@@ -84,6 +90,7 @@ body {
     background-color: var(--sidebar-color);
     position: relative;
 }
+
 /* end: Chat */
 
 
@@ -92,6 +99,7 @@ body {
     height: 100%;
     position: relative;
 }
+
 .content-sidebar {
     width: 256px;
     background-color: var(--sidebar-color);
@@ -101,15 +109,18 @@ body {
     position: absolute;
     top: 0;
 }
+
 .content-sidebar-title {
     font-size: 20px;
     font-weight: 600;
     padding: 16px;
 }
+
 .content-sidebar-form {
     position: relative;
     padding: 0 16px;
 }
+
 .content-sidebar-input {
     padding: 8px 16px;
     background-color: var(--slate-100);
@@ -120,9 +131,11 @@ body {
     padding-right: 32px;
     font-size: 14px;
 }
+
 .content-sidebar-input:focus {
     border-color: var(--slate-400);
 }
+
 .content-sidebar-submit {
     position: absolute;
     top: 50%;
@@ -135,31 +148,38 @@ body {
     cursor: pointer;
     transition: color .15s ease-in-out;
 }
+
 .content-sidebar-submit:hover {
     color: var(--slate-600);
 }
+
 .content-messages {
     overflow-y: auto;
     height: 100%;
     margin-top: 16px;
 }
+
 .content-messages-list {
     list-style-type: none;
     padding: 8px 0;
 }
-.content-messages-list > * > a {
+
+.content-messages-list>*>a {
     display: flex;
     align-items: center;
     text-decoration: none;
     color: var(--slate-700);
     padding: 6px 16px;
 }
-.content-messages-list > * > a:hover {
+
+.content-messages-list>*>a:hover {
     background-color: var(--slate-50);
 }
-.content-messages-list > .active > a {
+
+.content-messages-list>.active>a {
     background-color: var(--slate-100);
 }
+
 .content-message-title {
     margin-left: 16px;
     margin-right: 16px;
@@ -169,12 +189,14 @@ body {
     margin-bottom: 2px;
     position: relative;
 }
-.content-message-title > * {
+
+.content-message-title>* {
     position: relative;
     z-index: 1;
     padding: 0 4px 0 0;
-    background-color: var( --sidebar-color);
+    background-color: var(--sidebar-color);
 }
+
 .content-message-title::before {
     content: '';
     position: absolute;
@@ -186,6 +208,7 @@ body {
     border-bottom: 1px solid var(--slate-300);
     z-index: 0;
 }
+
 .content-message-image {
     width: 32px;
     height: 32px;
@@ -194,17 +217,20 @@ body {
     flex-shrink: 0;
     margin-right: 12px;
 }
+
 .content-message-info {
     display: grid;
     margin-right: 12px;
     width: 100%;
 }
+
 .content-message-name {
     display: block;
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 2px;
 }
+
 .content-message-text {
     font-size: 13px;
     color: var(--text-secondary);
@@ -212,22 +238,121 @@ body {
     overflow: hidden;
     white-space: nowrap;
 }
+
+/* --- Modificaciones para la Lista de Usuarios del Chat (basado en la imagen) --- */
+
+/* Contenedor del indicador de no leídos y la hora/fecha */
 .content-message-more {
-    text-align: right;
+    display: flex;
+    /* Usa flexbox para alinear la barra y la hora */
+    flex-direction: row;
+    /* Ítems en fila */
+    align-items: center;
+    /* Centra verticalmente la barra y el bloque de hora */
+    justify-content: flex-end;
+    /* Empuja el contenido a la derecha */
+    gap: 8px;
+    /* Espacio entre la barra verde y el bloque de hora/fecha */
+    min-width: 70px;
+    /* Asegura un espacio mínimo para la hora y la barra */
+    /* text-align: right; ya no es necesario con flex y justify-content */
 }
+
+/* Barra Vertical Verde (estilizando el .content-message-unread) 
+   Esto asume que quieres que esta barra sea visible incluso si no hay mensajes no leídos,
+   actuando como un elemento visual como en la imagen. */
 .content-message-unread {
-    font-size: 12px;
-    font-weight: 500;
-    color: var( --sidebar-color);
-    background-color: #40c3a5;
-    padding: 2px 4px;
-    border-radius: 4px;
+    display: block;
+    /* Para controlar dimensiones */
+    width: 5px;
+    /* Ancho de la barra */
+    height: 28px;
+    /* Altura de la barra (ajústala para alinearla con el texto) */
+    background-color: var(--primary-color);
+    /* Color verde principal (#40c3a5) */
+    border-radius: 2.5px;
+    /* Extremos redondeados para forma de píldora */
+
+    /* Si esta barra es puramente visual y no mostrará números: */
+    color: transparent;
+    /* Oculta cualquier texto dentro */
+    font-size: 0;
+    /* Reduce el tamaño de fuente a cero */
+    padding: 0;
+    /* Elimina el padding original si no hay texto */
 }
+
+/* Si SÍ quieres mostrar números de no leídos dentro de la "barra" (haciéndola más una "etiqueta"):
+.content-message-unread {
+    display: inline-block;
+    font-size: 12px;             
+    font-weight: 500;
+    color: var(--sidebar-color);   
+    background-color: var(--primary-color); 
+    padding: 2px 6px;            
+    border-radius: 4px;        
+    min-width: 20px; 
+    text-align: center;
+}
+*/
+
+/* Bloque de Hora/Fecha */
 .content-message-time {
     font-size: 12px;
-    color: var(--text-secondary);
+    /* color: var(--text-secondary); ya estaba definido */
+    color: var(--slate-500);
+    /* Un color específico de tu paleta, puedes ajustarlo */
     font-weight: 500;
+    text-align: right;
+    /* Para alinear el texto a la derecha si ocupa varias líneas */
+    line-height: 1.3;
+    /* Espacio entre líneas si la hora/fecha se muestra en dos renglones 
+                                (ej. "07:24" arriba y "p.m." abajo) */
 }
+
+/* Ajustes opcionales para el bloque de información (Nombre y Mensaje) */
+.content-message-info {
+    /* display: grid; ya estaba definido */
+    /* margin-right: 12px; ya estaba definido, puedes aumentarlo si necesitas más espacio */
+    /* width: 100%; ya estaba definido */
+}
+
+.content-message-name {
+    /* font-size: 14px; ya estaba definido */
+    /* font-weight: 500; ya estaba definido */
+    color: var(--title-color);
+    /* Usa el color de título para más énfasis si lo deseas */
+    margin-bottom: 3px;
+    /* Ligero ajuste al margen inferior */
+}
+
+.content-message-text {
+    /* font-size: 13px; ya estaba definido */
+    /* color: var(--text-secondary); ya estaba definido */
+    /* text-overflow: ellipsis; overflow: hidden; white-space: nowrap; ya estaba definido */
+    /* Podrías darle una opacidad ligeramente menor para diferenciarlo del nombre: */
+    /* opacity: 0.9; */
+}
+
+/* Ajuste general al padding de cada item de la lista para un poco más de aire */
+.content-messages-list>li>a {
+    /* Selector más específico */
+    /* display: flex; align-items: center; text-decoration: none; ya estaban definidos */
+    padding-top: 10px;
+    /* Aumenta el padding superior */
+    padding-bottom: 10px;
+    /* Aumenta el padding inferior */
+    /* padding-left y padding-right (16px) ya estaban bien */
+}
+
+/* Estilo para cuando un chat está activo en la lista (opcional, si quieres resaltarlo más) */
+.content-messages-list>li.active>a {
+    /* Selector más específico */
+    background-color: var(--slate-200);
+    /* Un fondo un poco más oscuro que --slate-100 */
+    /* border-left: 3px solid var(--primary-color); /* Ejemplo: una barra lateral para el activo */
+}
+
 /* end: Content side */
 
 
@@ -239,16 +364,19 @@ body {
     padding-left: 256px;
     display: none;
 }
+
 .conversation.active {
     display: flex;
     flex-direction: column;
 }
+
 .conversation-top {
     padding: 8px 16px;
-    background-color: var( --sidebar-color);
+    background-color: var(--sidebar-color);
     display: flex;
     align-items: center;
 }
+
 .conversation-back {
     background-color: transparent;
     border: none;
@@ -263,18 +391,22 @@ body {
     margin-right: 12px;
     display: none;
 }
+
 .conversation-back:hover {
     background-color: var(--slate-100);
     border-radius: 50%;
     color: var(--slate-600);
 }
+
 .conversation-back:active {
     background-color: var(--slate-200);
 }
+
 .conversation-user {
     display: flex;
     align-items: center;
 }
+
 .conversation-user-image {
     width: 40px;
     height: 40px;
@@ -282,14 +414,17 @@ body {
     object-fit: cover;
     margin-right: 8px;
 }
+
 .conversation-user-name {
     font-weight: 500;
     font-size: 17px;
 }
+
 .conversation-user-status {
     color: var(--text-secondary);
     font-size: 13px;
 }
+
 .conversation-user-status::before {
     content: '';
     width: 10px;
@@ -300,15 +435,18 @@ body {
     display: inline-block;
     margin-right: 4px;
 }
+
 .conversation-user-status.online::before {
     background-color: #40c3a5;
 }
+
 .conversation-buttons {
     display: flex;
     align-items: center;
     margin-left: auto;
 }
-.conversation-buttons > * {
+
+.conversation-buttons>* {
     width: 36px;
     height: 36px;
     display: flex;
@@ -323,11 +461,13 @@ body {
     color: var(--text-secondary);
     margin-left: 4px;
 }
-.conversation-buttons > :hover {
+
+.conversation-buttons> :hover {
     background-color: var(--slate-100);
     color: var(--slate-700);
 }
-.conversation-buttons > :active {
+
+.conversation-buttons> :active {
     background-color: var(--slate-200);
 }
 
@@ -337,24 +477,30 @@ body {
     height: 100%;
     padding: 16px;
 }
+
 .conversation-wrapper {
     list-style-type: none;
 }
+
 .conversation-item {
     display: flex;
     align-items: flex-end;
     flex-direction: row-reverse;
     margin-bottom: 16px;
 }
+
 .conversation-item.me {
     flex-direction: row;
 }
+
 .conversation-item-side {
     margin-left: 8px;
 }
+
 .conversation-item.me .conversation-item-side {
     margin-right: 8px;
 }
+
 .conversation-item-image {
     width: 24px;
     height: 24px;
@@ -362,23 +508,28 @@ body {
     object-fit: cover;
     display: block;
 }
+
 .conversation-item-content {
     width: auto;
 }
+
 .conversation-item-wrapper:not(:last-child) {
     margin-bottom: 8px;
 }
+
 .conversation-item-box {
     max-width: 720px;
     position: relative;
     margin-left: auto;
 }
+
 .conversation-item.me .conversation-item-box {
     margin-left: unset;
 }
+
 .conversation-item-text {
     padding: 12px 16px 8px;
-    background-color: var( --sidebar-color);
+    background-color: var(--sidebar-color);
     box-shadow: 0 2px 12px -2px rgba(0, 0, 0, .1);
     font-size: 14px;
     border-radius: 6px;
@@ -386,15 +537,18 @@ body {
     margin-left: 32px;
     text-align: left;
 }
+
 .conversation-item.me .conversation-item-text {
     margin-left: unset;
     margin-right: 32px;
 }
+
 .conversation-item.me .conversation-item-text {
     background-color: var(--primary-color);
     box-shadow: 0 2px 12px -2px var(--primary-color);
     color: rgba(255, 255, 255, .8);
 }
+
 .conversation-item-time {
     font-size: 10px;
     color: var(--slate-400);
@@ -403,9 +557,11 @@ body {
     margin-top: 4px;
     line-height: 1;
 }
+
 .conversation-item.me .conversation-item-time {
     color: rgba(255, 255, 255, .7);
 }
+
 .conversation-item-dropdown {
     position: absolute;
     top: 0;
@@ -414,14 +570,17 @@ body {
     visibility: hidden;
     transition: all .15s ease-in-out;
 }
+
 .conversation-item.me .conversation-item-dropdown {
     left: unset;
     right: 0;
 }
+
 .conversation-item-wrapper:hover .conversation-item-dropdown {
     opacity: 1;
     visibility: visible;
 }
+
 .conversation-item-dropdown-toggle {
     width: 24px;
     height: 24px;
@@ -429,28 +588,32 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    background-color: var( --sidebar-color);
+    background-color: var(--sidebar-color);
     outline: transparent;
     border: 1px solid var(--slate-200);
     cursor: pointer;
     transition: all .15s ease-in-out;
 }
-.ri-more-2-line{
+
+.ri-more-2-line {
     color: var(--text-secondary);
 }
+
 .conversation-item-dropdown-toggle:hover {
     background-color: var(--primary-color);
-    color: var( --sidebar-color);
+    color: var(--sidebar-color);
     box-shadow: 0 2px 12px -2px var(--primary-color);
 }
+
 .conversation-item-dropdown-toggle:active {
     background-color: var(--emerald-600);
 }
+
 .conversation-item-dropdown-list {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: var( --sidebar-color);
+    background-color: var(--sidebar-color);
     z-index: 10;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
     border-radius: 4px;
@@ -462,15 +625,18 @@ body {
     transform-origin: left top;
     transition: all .15s ease-in-out;
 }
+
 .conversation-item.me .conversation-item-dropdown-list {
     left: unset;
     right: 0;
 }
+
 .conversation-item-dropdown.active .conversation-item-dropdown-list {
     opacity: 1;
     visibility: visible;
     transform: scale(1);
 }
+
 .conversation-item-dropdown-list a {
     display: flex;
     align-items: center;
@@ -479,17 +645,21 @@ body {
     font-size: 13px;
     padding: 6px 12px;
 }
+
 .conversation-item-dropdown-list a:hover {
     background-color: var(--slate-100);
     color: var(--slate-600);
 }
+
 .conversation-item-dropdown-list a:active {
     background-color: var(--slate-200);
 }
+
 .conversation-item-dropdown-list a i {
     font-size: 16px;
     margin-right: 8px;
 }
+
 .coversation-divider {
     text-align: center;
     font-size: 13px;
@@ -497,6 +667,7 @@ body {
     margin-bottom: 16px;
     position: relative;
 }
+
 .coversation-divider::before {
     content: '';
     position: absolute;
@@ -507,6 +678,7 @@ body {
     height: 0;
     border-bottom: 1px solid var(--slate-300);
 }
+
 .coversation-divider span {
     display: inline-block;
     padding: 0 8px;
@@ -517,16 +689,18 @@ body {
 
 .conversation-form {
     padding: 8px 16px;
-    background-color: var( --sidebar-color);
+    background-color: var(--sidebar-color);
     display: flex;
     align-items: flex-end;
 }
+
 .conversation-form-group {
     width: 100%;
     position: relative;
     margin-left: 16px;
     margin-right: 16px;
 }
+
 .conversation-form-input {
     background-color: var(--slate-100);
     border: 1px solid var(--slate-300);
@@ -542,9 +716,11 @@ body {
     max-height: calc(20px + ((14px * 2) * 6));
     color: var(--slate-950);
 }
+
 .conversation-form-input:focus {
     border-color: var(--slate-400);
 }
+
 .conversation-form-record {
     position: absolute;
     bottom: 8px;
@@ -556,9 +732,11 @@ body {
     outline: transparent;
     cursor: pointer;
 }
+
 .conversation-form-record:hover {
     color: var(--slate-600);
 }
+
 .conversation-form-button {
     width: 40px;
     height: 40px;
@@ -574,27 +752,33 @@ body {
     cursor: pointer;
     flex-shrink: 0;
 }
+
 .conversation-form-button:hover {
     background-color: var(--slate-100);
     color: var(--slate-600);
 }
+
 .conversation-form-button:active {
     background-color: var(--slate-200);
     color: var(--slate-600);
 }
+
 .conversation-form-submit {
     background-color: var(--primary-color);
     box-shadow: 0 2px 8px -2px var(--primary-color);
-    color: var( --white);
+    color: var(--white);
 }
+
 .conversation-form-submit:hover {
     background-color: var(--emerald-600);
-    color: var( --toggle-color);
+    color: var(--toggle-color);
 }
+
 .conversation-form-submit:active {
     background-color: var(--emerald-700);
-    color: var( --toggle-color);
+    color: var(--toggle-color);
 }
+
 .conversation-default {
     align-items: center;
     justify-content: center;
@@ -602,12 +786,15 @@ body {
     padding-left: calc(256px + 16px);
     color: var(--slate-400);
 }
+
 .conversation-default i {
     font-size: 32px;
 }
+
 .conversation-default p {
     margin-top: 16px;
 }
+
 /* end: Conversation */
 
 
@@ -627,33 +814,41 @@ body {
         width: 100%;
         height: 48px;
     }
+
     .chat-sidebar-logo {
         display: none;
     }
+
     .chat-sidebar-menu {
         flex-direction: row;
         padding: 0;
     }
-    .chat-sidebar-menu > *,
-    .chat-sidebar-menu > * > a {
+
+    .chat-sidebar-menu>*,
+    .chat-sidebar-menu>*>a {
         width: 100%;
         height: 100%;
     }
-    .chat-sidebar-menu > * > a {
+
+    .chat-sidebar-menu>*>a {
         padding: 8px;
     }
-    .chat-sidebar-menu > .active > a {
+
+    .chat-sidebar-menu>.active>a {
         box-shadow: inset 0 4px 0 0 var(--primary-color);
     }
+
     .chat-sidebar-profile {
         margin-top: 0;
         display: flex;
         align-items: center;
     }
+
     .chat-sidebar-profile-toggle {
         width: 32px;
         height: 32px;
     }
+
     .chat-sidebar-profile-dropdown {
         left: unset;
         right: 16px;
@@ -663,18 +858,21 @@ body {
     .chat-content {
         padding-left: unset;
     }
+
     .content-sidebar {
         left: unset;
         z-index: 10;
         width: 100%;
     }
-    .chat-sidebar-menu > * > a::before {
+
+    .chat-sidebar-menu>*>a::before {
         left: 50%;
         transform: translateX(-50%);
         bottom: 100%;
         top: unset;
     }
-    .chat-sidebar-menu > * > a:hover::before {
+
+    .chat-sidebar-menu>*>a:hover::before {
         bottom: calc(100% + 8px);
         left: 50%;
     }
@@ -683,18 +881,22 @@ body {
         position: relative;
         height: calc(100% - 48px);
     }
+
     .conversation.active {
         position: relative;
         z-index: 20;
     }
+
     .conversation-back {
         display: flex;
     }
+
     .conversation-default.active {
         display: none;
         padding: 16px;
     }
 }
+
 .conversation-reply-preview {
     display: flex;
     justify-content: space-between;
@@ -706,12 +908,13 @@ body {
     border-radius: 4px;
     font-size: 14px;
 }
+
 .conversation-reply-preview img,
 .reply-box img {
-  max-width: 100px;
-  max-height: 100px;
-  border-radius: 4px;
-  margin-right: 10px;
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 4px;
+    margin-right: 10px;
 }
 
 .cancel-reply {
@@ -731,6 +934,7 @@ body {
     border-radius: 4px;
     color: #555;
 }
+
 .conversation-form-file {
     width: 40px;
     height: 40px;
@@ -745,17 +949,20 @@ body {
     color: var(--text-secondary);
     cursor: pointer;
     flex-shrink: 0;
-    
+
 }
+
 .conversation-form-file:hover {
     background-color: var(--slate-100);
     color: var(--slate-600);
 }
+
 .conversation-form-file:active {
     background-color: var(--slate-200);
     color: var(--slate-600);
 }
-.reply-box{
+
+.reply-box {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -767,11 +974,13 @@ body {
     font-size: 14px;
     cursor: pointer;
 }
+
 .conversation-main {
     overflow-y: auto;
     height: 100%;
     padding: 16px;
 }
+
 .recording-indicator {
     width: 12px;
     height: 12px;
@@ -782,14 +991,27 @@ body {
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 0.5; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
+
 .audio-message-wrapper audio {
     width: 100%;
     max-width: 250px;
 }
+
 .stop-recording-btn {
     background-color: red;
     color: white;
@@ -802,9 +1024,17 @@ body {
 }
 
 @keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.6; }
-    100% { opacity: 1; }
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
 
 .highlighted-reply {
@@ -814,18 +1044,25 @@ body {
 }
 
 @keyframes highlightBlink {
-    0% { background-color: #ffeaa7; }
-    100% { background-color: transparent; }
+    0% {
+        background-color: #ffeaa7;
+    }
+
+    100% {
+        background-color: transparent;
+    }
 }
+
 .message-image {
     cursor: zoom-in;
     transition: transform 0.3s ease;
 }
 
-    .message-image:hover {
-        transform: scale(1.03);
-        opacity: 0.9;
-    }
+.message-image:hover {
+    transform: scale(1.03);
+    opacity: 0.9;
+}
+
 .image-modal {
     position: fixed;
     z-index: 9999;
@@ -834,7 +1071,7 @@ body {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -859,6 +1096,7 @@ body {
         transform: scale(1);
     }
 }
+
 .conversation-form-sticker {
     width: 40px;
     height: 40px;
@@ -875,15 +1113,16 @@ body {
     flex-shrink: 0;
 }
 
-    .conversation-form-sticker:hover {
-        background-color: var(--slate-100);
-        color: var(--slate-600);
-    }
+.conversation-form-sticker:hover {
+    background-color: var(--slate-100);
+    color: var(--slate-600);
+}
 
-    .conversation-form-sticker:active {
-        background-color: var(--slate-200);
-        color: var(--slate-600);
-    }
+.conversation-form-sticker:active {
+    background-color: var(--slate-200);
+    color: var(--slate-600);
+}
+
 .sticker-panel {
     display: none;
     position: absolute;
@@ -901,19 +1140,21 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
-    .sticker-panel img {
-        width: 60px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 6px;
-        margin: 5px;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-    }
-        .sticker-panel img:hover {
-            transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
+.sticker-panel img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.sticker-panel img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
 .voice-message {
     background-color: #e0f7fa;
     padding: 10px 12px;
@@ -947,40 +1188,54 @@ body {
     color: #333;
     min-width: 40px;
 }
+
 /* style.css - A�adir al final */
 
 /* Clase principal para el bot�n de grabar cuando est� activo (grabando) */
 .conversation-form-record.is-recording {
-    background-color: var(--red-500, #ef4444); /* Un rojo m�s agradable de tu paleta Tailwind o un fallback */
-    color: var(--white, #fff); /* Texto/�cono blanco, usando tu variable --white */
-    min-width: 130px; /* Permitir que el bot�n se ensanche para el texto */
-    padding: 8px 12px; /* Un padding similar al que ten�as inline */
-    transition: background-color var(--trans-03), color var(--trans-03), width var(--trans-03); /* Transiciones suaves */
+    background-color: var(--red-500, #ef4444);
+    /* Un rojo m�s agradable de tu paleta Tailwind o un fallback */
+    color: var(--white, #fff);
+    /* Texto/�cono blanco, usando tu variable --white */
+    min-width: 130px;
+    /* Permitir que el bot�n se ensanche para el texto */
+    padding: 8px 12px;
+    /* Un padding similar al que ten�as inline */
+    transition: background-color var(--trans-03), color var(--trans-03), width var(--trans-03);
+    /* Transiciones suaves */
     /* Mantiene otros estilos de .conversation-form-button si es posible */
 }
 
-    .conversation-form-record.is-recording:hover {
-        background-color: var(--red-600, #dc2626); /* Un rojo un poco m�s oscuro al pasar el mouse */
-    }
+.conversation-form-record.is-recording:hover {
+    background-color: var(--red-600, #dc2626);
+    /* Un rojo un poco m�s oscuro al pasar el mouse */
+}
 
 /* Contenido dentro del bot�n de grabaci�n activo */
 .recording-indicator-content {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px; /* Tama�o de fuente que ten�as */
-    font-weight: 500; /* Hacerlo un poco m�s notable */
+    font-size: 14px;
+    /* Tama�o de fuente que ten�as */
+    font-weight: 500;
+    /* Hacerlo un poco m�s notable */
     /* El color del texto es heredado de .conversation-form-record.is-recording */
 }
 
-    .recording-indicator-content .ri-stop-circle-line { /* �cono de detener */
-        margin-right: 8px; /* Espacio entre el �cono y el texto */
-        font-size: 18px; /* Tama�o del �cono */
-    }
+.recording-indicator-content .ri-stop-circle-line {
+    /* �cono de detener */
+    margin-right: 8px;
+    /* Espacio entre el �cono y el texto */
+    font-size: 18px;
+    /* Tama�o del �cono */
+}
 
-    .recording-indicator-content .recording-text { /* El texto "Grabando..." */
-        animation: pulseText 1.5s infinite ease-in-out; /* Animaci�n de pulso sutil */
-    }
+.recording-indicator-content .recording-text {
+    /* El texto "Grabando..." */
+    animation: pulseText 1.5s infinite ease-in-out;
+    /* Animaci�n de pulso sutil */
+}
 
 /* Animaci�n de pulso para el texto (puedes reusar la que ten�as o esta) */
 @keyframes pulseText {
@@ -996,6 +1251,7 @@ body {
         opacity: 1;
     }
 }
+
 /* En tu style.css */
 #sound-visualizer-container {
     display: flex;
@@ -1005,21 +1261,25 @@ body {
     width: 80px;
     position: absolute;
     bottom: 8px;
-    /* right: 50px; */ /* Comenta o elimina la l�nea original */
-    right: 150px; /* <--- NUEVO VALOR: Mueve el visualizador m�s a la izquierda */
+    /* right: 50px; */
+    /* Comenta o elimina la l�nea original */
+    right: 150px;
+    /* <--- NUEVO VALOR: Mueve el visualizador m�s a la izquierda */
     /* Ajusta este valor (150px) seg�n necesites para que se vea bien al lado del bot�n expandido */
     gap: 2px;
     pointer-events: none;
-    /* z-index: 1; */ /* Opcional, si el bot�n tuviera un z-index mayor, podr�as necesitar esto */
+    /* z-index: 1; */
+    /* Opcional, si el bot�n tuviera un z-index mayor, podr�as necesitar esto */
 }
 
-    #sound-visualizer-container div {
-        background-color: var(--primary-color); /* Prueba con lime si sigues sin verlo para descartar contraste */
-        /* background-color: lime !important; */
-        width: 3px;
-        min-height: 1px;
-        transition: height 0.05s ease-out;
-    }
+#sound-visualizer-container div {
+    background-color: var(--primary-color);
+    /* Prueba con lime si sigues sin verlo para descartar contraste */
+    /* background-color: lime !important; */
+    width: 3px;
+    min-height: 1px;
+    transition: height 0.05s ease-out;
+}
 
 /* Tambi�n aseg�rate de que el bot�n de grabaci�n no tenga un z-index innecesariamente alto */
 .conversation-form-record.is-recording {
@@ -1028,7 +1288,58 @@ body {
     min-width: 130px;
     padding: 8px 12px;
     transition: background-color var(--trans-03), color var(--trans-03), width var(--trans-03);
-    /* z-index: 2; */ /* A�ade z-index si es necesario, pero el posicionamiento es la clave aqu� */
+    /* z-index: 2; */
+    /* A�ade z-index si es necesario, pero el posicionamiento es la clave aqu� */
 }
 
+/* En tu archivo style.css */
 
+/* Estilo base para el contenedor de "más" (barra/contador y hora) */
+.content-message-more {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px; /* Espacio entre el indicador y la hora */
+    min-width: 70px;
+}
+
+/* Estilo para .content-message-unread CUANDO ES UN CONTADOR NUMÉRICO */
+.content-message-unread {
+    display: inline-block;
+    font-size: 11px;             /* Tamaño de fuente para el número */
+    font-weight: 600;            /* Peso de la fuente */
+    color: var(--sidebar-color);   /* Color del texto del número (blanco sobre fondo verde) */
+    background-color: var(--primary-color); /* Fondo verde */
+    padding: 2px 6px;            /* Espaciado interno para que el número no esté pegado al borde */
+    border-radius: 10px;         /* Bordes redondeados para forma de píldora/insignia */
+    line-height: 1.2;            /* Altura de línea */
+    min-width: 18px;             /* Ancho mínimo para que se vea bien con un solo dígito */
+    text-align: center;          /* Centrar el número si el padding es grande */
+    vertical-align: middle;      /* Alinear verticalmente con el texto de la hora si están en línea */
+}
+
+/* Estilo para .content-message-unread CUANDO ES LA BARRA INDICADORA (si no hay no leídos) */
+.content-message-unread.is-indicator-bar {
+    display: block;     /* Como bloque para definir dimensiones */
+    width: 5px;         /* Ancho de la barra */
+    height: 28px;       /* Altura de la barra (ajústala para alinear con el texto de la hora) */
+    background-color: var(--primary-color); /* Fondo verde */
+    border-radius: 2.5px; /* Bordes redondeados */
+    
+    /* Sobrescribir estilos del contador numérico si aplican */
+    padding: 0;
+    font-size: 0;       /* Sin texto visible */
+    color: transparent; /* Texto transparente */
+    min-width: 5px;     /* Ancho fijo */
+    line-height: normal; /* Resetear line-height */
+}
+
+/* Estilo para la hora/fecha del mensaje (ya lo tenías, asegúrate que esté bien) */
+.content-message-time {
+    font-size: 12px;
+    color: var(--slate-500); /* O var(--text-secondary) como lo tenías */
+    font-weight: 500;
+    text-align: right;
+    line-height: 1.3;
+}

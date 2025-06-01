@@ -1,14 +1,24 @@
 <?php
 session_start();
+
+// RUTA ÚNICA Y CORRECTA para el avatar por defecto
+// ¡Asegúrate de que esta ruta sea la misma que usas en el resto de tu aplicación!
+if (!defined('DEFAULT_AVATAR_PATH')) {
+    define('DEFAULT_AVATAR_PATH', '/C-edu/uploads/profile_pictures/default-avatar.png'); // <-- EJEMPLO DE RUTA UNIFICADA
+}
+
+$webRootPath = '/C-edu/';
+
 $theme_class = '';
 if (isset($_SESSION['rol'])) {
     if ($_SESSION['rol'] == 0) { // 0 para Admin
         $theme_class = 'theme-admin';
-    } elseif ($_SESSION['rol'] == 1) { // 1 para Docente
+    } elseif ($_SESSION['rol'] == 1) { // 1 para Administrador
         $theme_class = 'theme-docente';
     }
 }
-include '../../conexion.php'; ?>
+include '../../conexion.php';
+?>
 <!DOCTYPE html>
 <html lang="es" class="<?php echo $theme_class; ?>">
 
@@ -18,8 +28,7 @@ include '../../conexion.php'; ?>
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Inicio</title>
-    <link rel="stylesheet" href="inciodocentess.css">
-</head>
+    <link rel="stylesheet" href="inciodocentess.css"> </head>
 
 <body>
     <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
@@ -71,7 +80,7 @@ include '../../conexion.php'; ?>
                         }
                         ?>
                     </div>
-                    <a href="../Tareas asignadas/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
+                    <a href="/C-EDU/Administrador/Tareas Asignadas/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
 
                 <div class="card">
@@ -80,20 +89,12 @@ include '../../conexion.php'; ?>
                     </div>
                     <div class="div-card">
                         <?php
-                        $sql = "SELECT
-                                    asignacion_evento AS nombre_evento
-                                FROM
-                                    evento
-                                WHERE
-                                    fecha_evento >= CURDATE()
-                                ORDER BY
-                                    fecha_evento ASC
-                                LIMIT 3";
-                        $result = $conn->query($sql);
-                        if ($result && $result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
+                        $sql_eventos = "SELECT asignacion_evento AS nombre_evento FROM evento WHERE fecha_evento >= CURDATE() ORDER BY fecha_evento ASC LIMIT 3";
+                        $result_eventos = $conn->query($sql_eventos);
+                        if ($result_eventos && $result_eventos->num_rows > 0) {
+                            while ($row_evento = $result_eventos->fetch_assoc()) {
                                 echo '<div class="event-item">';
-                                echo '<div>' . htmlspecialchars($row['nombre_evento']) . '</div>';
+                                echo '<div>' . htmlspecialchars($row_evento['nombre_evento']) . '</div>';
                                 echo '<span><i class="fa-solid fa-arrow-right"></i></span>';
                                 echo '</div>';
                             }
@@ -102,7 +103,7 @@ include '../../conexion.php'; ?>
                         }
                         ?>
                     </div>
-                    <a href="../Calendario/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
+                    <a href="/C-EDU/Administrador/Calendario/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
 
                 <div class="card">
@@ -111,46 +112,167 @@ include '../../conexion.php'; ?>
                     </div>
                     <div class="div-card">
                         <?php
-                        $sql = "SELECT
-                                    u_emisor.nombre_usuario AS nombre,
-                                    r.tipo_rol AS rol,
-                                    m.mensaje,
-                                    m.fecha_mensaje -- Necesaria para ordenar, aunque no se muestre directamente en esta parte del HTML
-                                FROM
-                                    mensaje m
-                                JOIN
-                                    usuario u_emisor ON m.id_emisor = u_emisor.id_usuario
-                                JOIN
-                                    rol r ON u_emisor.id_rol = r.id_rol
-                                WHERE
-                                    m.id_receptor = $id_Admin -- Mostrar mensajes donde el Admin actual es el receptor
-                                ORDER BY
-                                    m.fecha_mensaje DESC
-                                LIMIT 3";
-                        $result = $conn->query($sql);
-                        if ($result && $result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                $status_class = $row['estado'] == 'online' ? 'green' : ($row['estado'] == 'ausente' ? 'orange' : 'gray');
-                                echo '<div class="chat-item">';
-                                echo '<i class="fa-solid fa-user"></i>';
-                                echo '<div class="chat-content">';
-                                echo '<div class="chat-name">' . htmlspecialchars($row['nombre']) . '</div>';
-                                echo '<div class="chat-role">' . htmlspecialchars($row['rol']) . '</div>';
-                                echo '<div class="chat-message">' . htmlspecialchars($row['mensaje']) . '</div>';
-                                echo '</div>';
-                                echo '<div class="status-dot ' . $status_class . '"></div>';
-                                echo '</div>';
+                        if (isset($_SESSION['id_usuario'])) {
+                            $id_Administrador_com = $_SESSION['id_usuario'];
+                        
+                            echo '<ul class="content-messages-list">';
+
+                            // SQL MODIFICADA para incluir unreadCount
+                            $sql_users = "SELECT
+                                            u_interlocutor.id_usuario,
+                                            u_interlocutor.nombre_usuario AS fullName,
+                                            u_interlocutor.foto_perfil_url,
+                                            m_actual_last.contenido_mensaje AS lastMessageContent,
+                                            m_actual_last.fecha_envio AS last_message_date,
+                                            (
+                                                SELECT COUNT(*)
+                                                FROM mensaje unread_m
+                                                WHERE unread_m.id_emisor = u_interlocutor.id_usuario
+                                                  AND unread_m.id_receptor = {$id_Administrador_com}
+                                                  AND unread_m.leido = 0
+                                            ) AS unreadCount
+                                        FROM
+                                            (
+                                                SELECT
+                                                    interlocutor_id,
+                                                    MAX(fecha_envio_conv) AS max_fecha_conversacion
+                                                FROM (
+                                                    SELECT id_receptor AS interlocutor_id, fecha_envio AS fecha_envio_conv FROM mensaje WHERE id_emisor = {$id_Administrador_com}
+                                                    UNION ALL
+                                                    SELECT id_emisor AS interlocutor_id, fecha_envio AS fecha_envio_conv FROM mensaje WHERE id_receptor = {$id_Administrador_com}
+                                                ) AS conversaciones_con_Administrador
+                                                WHERE interlocutor_id != {$id_Administrador_com}
+                                                GROUP BY interlocutor_id
+                                                ORDER BY max_fecha_conversacion DESC
+                                                LIMIT 3
+                                            ) AS interlocutores_recientes
+                                        JOIN
+                                            usuario u_interlocutor ON interlocutores_recientes.interlocutor_id = u_interlocutor.id_usuario
+                                        JOIN
+                                            mensaje m_actual_last ON m_actual_last.id_mensaje = (
+                                                SELECT id_mensaje
+                                                FROM mensaje
+                                                WHERE
+                                                    (id_emisor = {$id_Administrador_com} AND id_receptor = interlocutores_recientes.interlocutor_id) OR
+                                                    (id_emisor = interlocutores_recientes.interlocutor_id AND id_receptor = {$id_Administrador_com})
+                                                ORDER BY fecha_envio DESC
+                                                LIMIT 1
+                                            )
+                                        ORDER BY
+                                            m_actual_last.fecha_envio DESC";
+
+                            $result_users = $conn->query($sql_users);
+
+                            if ($result_users && $result_users->num_rows > 0) {
+                                while ($user = $result_users->fetch_assoc()) {
+                                    $userPhotoUrl = '';
+                                    if (!empty($user['foto_perfil_url'])) {
+                                        $userPhotoUrl = $webRootPath . htmlspecialchars($user['foto_perfil_url']);
+                                    } else {
+                                        $userPhotoUrl = DEFAULT_AVATAR_PATH;
+                                    }
+
+                                    $userName = htmlspecialchars($user['fullName']);
+                                    $userId = htmlspecialchars($user['id_usuario']);
+                                    
+                                    $lastMessageRaw = $user['lastMessageContent'] ?? '';
+                                    $lastMessagePreview = 'Conversación iniciada.';
+                                    if (!empty($lastMessageRaw)) {
+                                        if (preg_match('/\.(jpeg|jpg|gif|png|webp)$/i', $lastMessageRaw) || strpos(strtolower($lastMessageRaw), 'uploads/') === 0) {
+                                            $lastMessagePreview = '[Imagen]';
+                                        } elseif (strpos(strtolower($lastMessageRaw), 'http://') === 0 || strpos(strtolower($lastMessageRaw), 'https://') === 0) {
+                                            $lastMessagePreview = '[Sticker]';
+                                        } elseif (strpos(strtolower($lastMessageRaw), 'blob:http') === 0) {
+                                            $lastMessagePreview = '[Mensaje de voz]';
+                                        } else {
+                                            $tempPreview = mb_substr($lastMessageRaw, 0, 25);
+                                            if (mb_strlen($lastMessageRaw) > 25) {
+                                                $tempPreview .= "...";
+                                            }
+                                            $lastMessagePreview = htmlspecialchars($tempPreview);
+                                        }
+                                    }
+                                    
+                                    // Procesar unreadCount
+                                    $unreadCount = isset($user['unreadCount']) ? intval($user['unreadCount']) : 0;
+                                    $unreadIndicatorHTML = '';
+                                    if ($unreadCount > 0) {
+                                        $unreadIndicatorHTML = '<span class="content-message-unread">' . $unreadCount . '</span>';
+                                    } else {
+                                        // Para la barra verde si no hay no leídos (requiere CSS para .is-indicator-bar)
+                                        $unreadIndicatorHTML = '<span class="content-message-unread is-indicator-bar"></span>';
+                                    }
+
+                                    // Procesar y formatear last_message_date
+                                    $lastMessageTimeOutput = '';
+                                    if (!empty($user['last_message_date'])) {
+                                        try {
+                                            $dateObj = new DateTime($user['last_message_date']);
+                                            $today = new DateTime('today'); // Para comparar si es hoy
+                                            
+                                            if ($dateObj->format('Y-m-d') == $today->format('Y-m-d')) {
+                                                // Formato: HH:MM p.m./a.m. (ej: 07:24<br>p.m.)
+                                                $timeStr = $dateObj->format('h:i');
+                                                $ampm = $dateObj->format('a'); // 'am' o 'pm'
+                                                $lastMessageTimeOutput = $timeStr . '<br>' . $ampm;
+                                            } else {
+                                                // Formato: DD-Mes (ej: 27-<br>may)
+                                                $day = $dateObj->format('d');
+                                                $month = '';
+                                                // Para obtener el mes en español (requiere extensión intl o un array)
+                                                if (extension_loaded('intl')) {
+                                                    $formatter = new IntlDateFormatter('es_CO', IntlDateFormatter::NONE, IntlDateFormatter::NONE, null, null, 'MMM');
+                                                    $month = str_replace('.', '', strtolower($formatter->format($dateObj))); // quita el punto si lo hay
+                                                } else {
+                                                    $month = strtolower($dateObj->format('M')); // Fallback: 'Jan', 'Feb', etc.
+                                                }
+                                                $lastMessageTimeOutput = $day . '-<br>' . $month;
+                                            }
+                                        } catch (Exception $e) {
+                                            error_log("Error parsing date in Inicio/index.php: " . $user['last_message_date'] . " - " . $e->getMessage());
+                                        }
+                                    }
+                        
+                                    $chatPageUrl = "/C-EDU/Administrador/Chat/index.php";
+                                    $linkParamsArray = [
+                                        'userId' => $userId,
+                                        'userName' => $userName,
+                                        'userFoto' => $userPhotoUrl
+                                    ];
+                                    $queryString = http_build_query($linkParamsArray);
+                                    $fullLink = $chatPageUrl . '?' . $queryString;
+
+                                    echo '<li>';
+                                    echo '    <a href="' . htmlspecialchars($fullLink) . '" 
+                                                    data-user-id="' . $userId . '"
+                                                    data-user-name="' . $userName . '"
+                                                    data-user-foto="' . htmlspecialchars($userPhotoUrl) . '">';
+                                    echo '        <img class="content-message-image" src="' . htmlspecialchars($userPhotoUrl) . '" alt="' . $userName . '">';
+                                    echo '        <span class="content-message-info">';
+                                    echo '            <span class="content-message-name">' . $userName . '</span>';
+                                    echo '            <span class="content-message-text">' . $lastMessagePreview . '</span>'; // $lastMessagePreview ya está escapado si es texto
+                                    echo '        </span>';
+                                    echo '        <span class="content-message-more">';
+                                    echo              $unreadIndicatorHTML; // Indicador de no leídos
+                                    echo '            <span class="content-message-time">' . $lastMessageTimeOutput . '</span>'; // Hora/Fecha formateada (contiene <br>)
+                                    echo '        </span>';
+                                    echo '    </a>';
+                                    echo '</li>';
+                                }
+                            } else {
+                                echo '<li>No hay conversaciones recientes.</li>';
                             }
+
+                            echo '</ul>';
                         } else {
-                            echo '<div>No hay mensajes recientes.</div>';
+                            echo '<div>No se pudo cargar la lista de usuarios (requiere iniciar sesión).</div>';
                         }
                         ?>
                     </div>
-                    <a href="../Chat/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
+                    <a href="/C-EDU/Administrador/Chat/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
             </div>
         </main>
     </section>
 </body>
-
 </html>

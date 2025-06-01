@@ -19,7 +19,8 @@
 /* Estilos del encabezado ("Bienvenido a C-EDU" y user_info) */
 .header {
     height: 80px;
-    background-color: var(--bg-content); /* Usar --bg-content para el fondo del header */
+    background-color: var(--bg-content);
+    /* Usar --bg-content para el fondo del header */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -27,12 +28,15 @@
     padding-right: 30px;
     padding-left: 30px;
     box-sizing: border-box;
-    box-shadow: 0 4px 12px var(--shadow-color); /* Usar --shadow-color para la sombra */
-    border-radius: 12px; /* Añadido para consistencia con el resto de elementos */
+    box-shadow: 0 4px 12px var(--shadow-color);
+    /* Usar --shadow-color para la sombra */
+    border-radius: 12px;
+    /* Añadido para consistencia con el resto de elementos */
 }
 
 #titulo1-header {
-    color: var(--text-primary); /* Usar --text-primary para el título principal */
+    color: var(--text-primary);
+    /* Usar --text-primary para el título principal */
     font-family: "Rubik", serif;
     font-weight: 500;
     font-size: 22px;
@@ -47,11 +51,11 @@
 }
 
 .card {
-    background: var(--bg-content); /* Usar --bg-content para el fondo de las tarjetas */
-    border: 1px solid var(--border-color); /* Usar --border-color para los bordes */
+    background: var(--bg-content);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 25px;
-    box-shadow: 0 4px 12px var(--shadow-color); /* Usar --shadow-color para la sombra */
+    box-shadow: 0 4px 12px var(--shadow-color);
     display: flex;
     flex-direction: column;
 }
@@ -63,31 +67,33 @@
     margin-bottom: 20px;
     font-size: 1.15rem;
     font-weight: 500;
-    color: var(--text-primary); /* Usar --text-primary para el título de la tarjeta */
+    color: var(--text-primary);
 }
 
 .card-header i {
-    color: var(--role-primary-color); /* Usar --role-primary-color para los iconos */
+    color: var(--role-primary-color);
     font-size: 1.3em;
 }
 
 .div-card {
-    background-color: var(--role-primary-light-color); /* Usar --role-primary-light-color para el fondo interno de las tarjetas */
+    background-color: var(--role-primary-light-color);
     flex-grow: 1;
     border-radius: 8px;
     margin-bottom: 20px;
     padding: 15px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); /* Sombra interna sutil */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .task-item,
 .event-item,
 .chat-item {
-    background: var(--bg-sidebar); /* Usar --bg-sidebar para los items internos (fondo blanco por defecto) */
+    background: var(--bg-sidebar);
+    /* Usar --bg-sidebar para los items internos (fondo blanco por defecto) */
     border-radius: 8px;
     padding: 12px 15px;
     margin-bottom: 12px;
-    box-shadow: 0 1px 4px var(--shadow-color); /* Usar --shadow-color para la sombra */
+    box-shadow: 0 1px 4px var(--shadow-color);
+    /* Usar --shadow-color para la sombra */
 }
 
 .task-item:last-child,
@@ -107,13 +113,16 @@
     transform: translateY(-50%);
     width: 10px;
     height: 10px;
-    background: #e74c3c; /* Podrías definir una variable para 'danger' si se usa mucho */
+    background: #e74c3c;
+    /* Podrías definir una variable para 'danger' si se usa mucho */
     border-radius: 50%;
-    border: 1px solid var(--bg-sidebar); /* Borde blanco para visibilidad sobre fondos oscuros */
+    border: 1px solid var(--bg-sidebar);
+    /* Borde blanco para visibilidad sobre fondos oscuros */
 }
 
 .task-details {
-    color: var(--text-secondary); /* Usar --text-secondary para detalles de texto */
+    color: var(--text-secondary);
+    /* Usar --text-secondary para detalles de texto */
     font-size: 0.8em;
     margin-top: 4px;
 }
@@ -122,11 +131,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: var(--text-secondary); /* Usar --text-secondary para el texto de eventos */
+    color: var(--text-secondary);
+    /* Usar --text-secondary para el texto de eventos */
 }
 
 .event-item span i {
-    color: var(--role-primary-color); /* Usar --role-primary-color para los iconos de eventos */
+    color: var(--role-primary-color);
+    /* Usar --role-primary-color para los iconos de eventos */
     transition: transform 0.2s ease-in-out;
 }
 
@@ -146,7 +157,8 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
-    font-family: Arial, sans-serif; /* Puedes cambiar esto por la fuente de tu proyecto */
+    font-family: Arial, sans-serif;
+    /* Puedes cambiar esto por la fuente de tu proyecto */
 }
 
 .content-messages-list li {
@@ -160,7 +172,8 @@
 .content-messages-list li a {
     display: flex;
     align-items: center;
-    padding: 10px 12px; /* Reducido el padding */
+    padding: 10px 12px;
+    /* Reducido el padding */
     text-decoration: none;
     color: inherit;
     transition: background-color 0.2s ease-in-out;
@@ -171,11 +184,14 @@
 }
 
 .content-message-image {
-    width: 36px;        /* Reducido el tamaño de la imagen */
-    height: 36px;       /* Reducido el tamaño de la imagen */
+    width: 36px;
+    /* Reducido el tamaño de la imagen */
+    height: 36px;
+    /* Reducido el tamaño de la imagen */
     border-radius: 50%;
     border: 1px solid #dddddd;
-    margin-right: 12px; /* Reducido el margen derecho */
+    margin-right: 12px;
+    /* Reducido el margen derecho */
     object-fit: cover;
 }
 
@@ -184,50 +200,125 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    min-width: 0;
 }
 
 .content-message-name {
-    font-weight: bold;
-    font-size: 0.9rem; /* Reducido el tamaño de fuente del nombre */
-    color: #333333;
-    margin-bottom: 2px; /* Ajustado el margen inferior */
+    font-weight: 500;
+    /* Un poco menos bold que 'bold' para un look más suave */
+    font-size: 0.9rem;
+    color: var(--text-primary, #333333);
+    margin-bottom: 3px;
+    /* Ajustado para mejor espaciado */
 }
 
 .content-message-text {
-    font-size: 0.8rem; /* Reducido el tamaño de fuente del subtexto */
-    color: #757575;
-    white-space: nowrap;     /* Evita que el texto haga saltos de línea */
-    overflow: hidden;        /* Oculta el texto que se desborda del contenedor */
+    font-size: 0.8rem;
+    color: var(--text-secondary, #757575);
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
     min-width: 0;
     max-width: 150px;
 }
+
 /* Para pantallas medianas (ej. tablets) */
 @media (min-width: 768px) {
     .content-message-text {
-        max-width: 130px; /* Un poco más de espacio */
+        max-width: 130px;
+        /* Un poco más de espacio */
     }
 }
 
 /* Para pantallas grandes (ej. escritorio) */
 @media (min-width: 992px) {
     .content-message-text {
-        max-width: 185px; /* Aún más espacio */
+        max-width: 185px;
+        /* Aún más espacio */
     }
 }
 
 .content-message-more {
-    width: 6px;           /* Reducido el ancho de la cápsula */
-    height: 22px;         /* Reducido el alto de la cápsula */
-    background-color: #1ABC9C;
-    border-radius: 3px;   /* Ajustado el borde redondeado */
-    margin-left: 12px;    /* Reducido el margen izquierdo */
+    display: flex;
+    /* Para alinear el indicador y la hora */
+    flex-direction: row;
+    /* Uno al lado del otro */
+    align-items: center;
+    /* Centrados verticalmente */
+    justify-content: flex-end;
+    /* Alineados a la derecha del espacio disponible */
+    gap: 6px;
+    /* Espacio entre el indicador y la hora */
+    margin-left: 10px;
+    /* Margen para separarlo del texto del mensaje */
+    min-width: 55px;
+    /* Ancho mínimo para que quepa la hora y el indicador */
+    text-align: right;
 }
+
+.content-message-unread {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    color: #ffffff;
+    /* Texto blanco para el número */
+    background-color: var(--role-primary-color, #1ABC9C);
+    /* Usa el color primario del rol o un verde */
+    padding: 1px 5px;
+    border-radius: 8px;
+    /* Más redondeado para forma de insignia */
+    line-height: 1.2;
+    min-width: 16px;
+    /* Para que se vea bien con 1 dígito */
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Estilo para el indicador de no leídos CUANDO ES SOLO LA BARRA 
+   (se aplica si el PHP le añade la clase 'is-indicator-bar') */
+.content-message-unread.is-indicator-bar {
+    display: block;
+    /* Para controlar dimensiones como barra */
+    width: 4px;
+    /* Ancho de la barra */
+    height: 22px;
+    /* Alto de la barra (ajústalo al alto del texto de la hora) */
+    background-color: var(--role-primary-color, #1ABC9C);
+    /* Color de la barra */
+    border-radius: 2px;
+    /* Bordes de la barra ligeramente redondeados */
+    padding: 0;
+    /* Sin padding para la barra */
+    font-size: 0;
+    /* Sin tamaño de fuente */
+    color: transparent;
+    /* Sin color de texto */
+    min-width: 4px;
+    /* Ancho fijo */
+    line-height: normal;
+    /* Resetear altura de línea */
+}
+
+/* === AÑADE O AJUSTA ESTE ESTILO PARA .content-message-time === */
+.content-message-time {
+    font-size: 0.75rem;
+    /* 12px si la fuente base es 16px */
+    color: var(--text-secondary, #757575);
+    font-weight: 500;
+    text-align: right;
+    line-height: 1.25;
+    /* Para acomodar el <br> en la hora/fecha de dos líneas */
+    white-space: nowrap;
+    /* Evita que la propia hora se parta si es muy larga */
+}
+
 
 /* Estilos para el título "Recently" (si lo usas) */
 .content-message-title {
-    padding: 8px 12px; /* Reducido el padding */
-    font-size: 0.8em;  /* Reducido el tamaño de fuente */
+    padding: 8px 12px;
+    /* Reducido el padding */
+    font-size: 0.8em;
+    /* Reducido el tamaño de fuente */
     color: #666;
     background-color: #f9f9f9;
     border-bottom: 1px solid #eeeeee;
@@ -235,10 +326,13 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
 .chat-item>.fa-user {
     font-size: 20px;
-    color: var(--role-text-on-primary-color); /* Texto en color primario (blanco por defecto) */
-    background-color: var(--role-primary-color); /* Fondo del círculo con el color primario del rol */
+    color: var(--role-text-on-primary-color);
+    /* Texto en color primario (blanco por defecto) */
+    background-color: var(--role-primary-color);
+    /* Fondo del círculo con el color primario del rol */
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -254,13 +348,15 @@
 .chat-name {
     font-weight: 600;
     margin-bottom: 3px;
-    color: var(--text-primary); /* Usar --text-primary para el nombre del chat */
+    color: var(--text-primary);
+    /* Usar --text-primary para el nombre del chat */
 }
 
 .chat-role,
 .chat-message {
     font-size: 0.8em;
-    color: var(--text-secondary); /* Usar --text-secondary para el rol y mensaje */
+    color: var(--text-secondary);
+    /* Usar --text-secondary para el rol y mensaje */
 }
 
 .chat-message {
@@ -275,27 +371,33 @@
 }
 
 .status-dot.green {
-    background: #2ecc71; /* Considera una variable para 'success' */
+    background: #2ecc71;
+    /* Considera una variable para 'success' */
 }
 
 .status-dot.orange {
-    background: #f39c12; /* Considera una variable para 'warning' */
+    background: #f39c12;
+    /* Considera una variable para 'warning' */
 }
 
 .status-dot.gray {
-    background: #95a5a6; /* Considera una variable para 'neutral' */
+    background: #95a5a6;
+    /* Considera una variable para 'neutral' */
 }
 
 .btn-ingresar {
-    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
-    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
+    background-color: var(--role-button-primary-bg);
+    /* Usar --role-button-primary-bg */
+    color: var(--role-button-primary-text);
+    /* Usar --role-button-primary-text */
     border: none;
     padding: 12px 20px;
     font-weight: 500;
     font-size: 0.95em;
     border-radius: 8px;
     cursor: pointer;
-    transition: var(--trans-02); /* Usar la variable de transición */
+    transition: var(--trans-02);
+    /* Usar la variable de transición */
     text-align: center;
     margin-top: auto;
     display: block;
@@ -303,7 +405,8 @@
 }
 
 .btn-ingresar:hover {
-    background-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
+    background-color: var(--role-primary-dark-color);
+    /* Usar --role-primary-dark-color para hover */
     transform: translateY(-2px);
 }
 
@@ -318,7 +421,8 @@
     }
 
     .header {
-        background-color: var(--bg-content); /* Usar --bg-content para el fondo del header */
+        background-color: var(--bg-content);
+        /* Usar --bg-content para el fondo del header */
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -326,7 +430,8 @@
         padding: 18px 25px;
         box-sizing: border-box;
         border-radius: 8px;
-        box-shadow: 0 2px 8px var(--shadow-color); /* Usar --shadow-color para la sombra */
+        box-shadow: 0 2px 8px var(--shadow-color);
+        /* Usar --shadow-color para la sombra */
     }
 
     #titulo1-header {

@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-// Definición de la ruta al avatar predeterminado.
-// ¡IMPORTANTE! Ajusta esta ruta para que apunte a tu imagen de avatar predeterminada.
-// Por ejemplo: define('DEFAULT_AVATAR_PATH', '../../assets/images/default-avatar.png');
-// o una URL completa: define('DEFAULT_AVATAR_PATH', 'https://tusitio.com/imagenes/avatar_predeterminado.png');
+// RUTA ÚNICA Y CORRECTA para el avatar por defecto
+// ¡Asegúrate de que esta ruta sea la misma que usas en el resto de tu aplicación!
 if (!defined('DEFAULT_AVATAR_PATH')) {
-    define('DEFAULT_AVATAR_PATH', '../../assets/images/default_avatar.png'); // ¡Ajusta esta ruta!
+    define('DEFAULT_AVATAR_PATH', '/C-edu/uploads/profile_pictures/default-avatar.png'); // <-- EJEMPLO DE RUTA UNIFICADA
 }
+
+$webRootPath = '/C-edu/';
 
 $theme_class = '';
 if (isset($_SESSION['rol'])) {
@@ -17,7 +17,7 @@ if (isset($_SESSION['rol'])) {
         $theme_class = 'theme-docente';
     }
 }
-include '../../conexion.php'; // Aquí se establece la conexión $conn
+include '../../conexion.php';
 ?>
 <!DOCTYPE html>
 <html lang="es" class="<?php echo $theme_class; ?>">
@@ -28,8 +28,7 @@ include '../../conexion.php'; // Aquí se establece la conexión $conn
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Inicio</title>
-    <link rel="stylesheet" href="inciodocentess.css">
-</head>
+    <link rel="stylesheet" href="inciodocentess.css"> </head>
 
 <body>
     <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
@@ -48,22 +47,9 @@ include '../../conexion.php'; // Aquí se establece la conexión $conn
                     </div>
                     <div class="div-card">
                         <?php
-                        // Aseguramos que $id_docente esté definido
                         if (isset($_SESSION['id_usuario'])) {
-                            $id_docente = $_SESSION['id_usuario'];
-                            $sql_tareas = "SELECT
-                                    t.instruccion_tarea AS clase,
-                                    u.nombre_usuario AS asignado_por,
-                                    t.fecha_fin_tarea AS fecha_limite
-                                FROM
-                                    tarea t
-                                JOIN
-                                    usuario u ON t.id_asignador = u.id_usuario
-                                WHERE
-                                    t.id_usuario = $id_docente
-                                ORDER BY
-                                    t.fecha_fin_tarea DESC
-                                LIMIT 3";
+                            $id_docente_tareas = $_SESSION['id_usuario'];
+                            $sql_tareas = "SELECT t.instruccion_tarea AS clase, u.nombre_usuario AS asignado_por, t.fecha_fin_tarea AS fecha_limite FROM tarea t JOIN usuario u ON t.id_asignador = u.id_usuario WHERE t.id_usuario = $id_docente_tareas ORDER BY t.fecha_fin_tarea DESC LIMIT 3";
                             $result_tareas = $conn->query($sql_tareas);
                             if ($result_tareas && $result_tareas->num_rows > 0) {
                                 while ($row_tarea = $result_tareas->fetch_assoc()) {
@@ -84,8 +70,7 @@ include '../../conexion.php'; // Aquí se establece la conexión $conn
                         }
                         ?>
                     </div>
-                    <a href="/C-EDU/Docente/Tareas Asignadas/index.php" style="text-decoration: none;"><button
-                            class="btn-ingresar">INGRESAR</button></a>
+                    <a href="/C-EDU/Docente/Tareas Asignadas/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
 
                 <div class="card">
@@ -94,15 +79,7 @@ include '../../conexion.php'; // Aquí se establece la conexión $conn
                     </div>
                     <div class="div-card">
                         <?php
-                        $sql_eventos = "SELECT
-                                asignacion_evento AS nombre_evento
-                            FROM
-                                evento
-                            WHERE
-                                fecha_evento >= CURDATE()
-                            ORDER BY
-                                fecha_evento ASC
-                            LIMIT 3";
+                        $sql_eventos = "SELECT asignacion_evento AS nombre_evento FROM evento WHERE fecha_evento >= CURDATE() ORDER BY fecha_evento ASC LIMIT 3";
                         $result_eventos = $conn->query($sql_eventos);
                         if ($result_eventos && $result_eventos->num_rows > 0) {
                             while ($row_evento = $result_eventos->fetch_assoc()) {
@@ -116,8 +93,7 @@ include '../../conexion.php'; // Aquí se establece la conexión $conn
                         }
                         ?>
                     </div>
-                    <a href="/C-EDU/Docente/Calendario/index.php" style="text-decoration: none;"><button
-                            class="btn-ingresar">INGRESAR</button></a>
+                    <a href="/C-EDU/Docente/Calendario/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
 
                 <div class="card">
@@ -127,28 +103,35 @@ include '../../conexion.php'; // Aquí se establece la conexión $conn
                     <div class="div-card">
                         <?php
                         if (isset($_SESSION['id_usuario'])) {
-                            // $id_docente ya debería estar definido desde el inicio del script.
+                            $id_docente_com = $_SESSION['id_usuario'];
                         
                             echo '<ul class="content-messages-list">';
 
-                            // NUEVA CONSULTA SQL
+                            // SQL MODIFICADA para incluir unreadCount
                             $sql_users = "SELECT
                                             u_interlocutor.id_usuario,
                                             u_interlocutor.nombre_usuario AS fullName,
                                             u_interlocutor.foto_perfil_url,
                                             m_actual_last.contenido_mensaje AS lastMessageContent,
-                                            m_actual_last.fecha_envio AS last_message_date
+                                            m_actual_last.fecha_envio AS last_message_date,
+                                            (
+                                                SELECT COUNT(*)
+                                                FROM mensaje unread_m
+                                                WHERE unread_m.id_emisor = u_interlocutor.id_usuario
+                                                  AND unread_m.id_receptor = {$id_docente_com}
+                                                  AND unread_m.leido = 0
+                                            ) AS unreadCount
                                         FROM
                                             (
                                                 SELECT
                                                     interlocutor_id,
                                                     MAX(fecha_envio_conv) AS max_fecha_conversacion
                                                 FROM (
-                                                    SELECT id_receptor AS interlocutor_id, fecha_envio AS fecha_envio_conv FROM mensaje WHERE id_emisor = $id_docente
+                                                    SELECT id_receptor AS interlocutor_id, fecha_envio AS fecha_envio_conv FROM mensaje WHERE id_emisor = {$id_docente_com}
                                                     UNION ALL
-                                                    SELECT id_emisor AS interlocutor_id, fecha_envio AS fecha_envio_conv FROM mensaje WHERE id_receptor = $id_docente
+                                                    SELECT id_emisor AS interlocutor_id, fecha_envio AS fecha_envio_conv FROM mensaje WHERE id_receptor = {$id_docente_com}
                                                 ) AS conversaciones_con_docente
-                                                WHERE interlocutor_id != $id_docente
+                                                WHERE interlocutor_id != {$id_docente_com}
                                                 GROUP BY interlocutor_id
                                                 ORDER BY max_fecha_conversacion DESC
                                                 LIMIT 3
@@ -160,8 +143,8 @@ include '../../conexion.php'; // Aquí se establece la conexión $conn
                                                 SELECT id_mensaje
                                                 FROM mensaje
                                                 WHERE
-                                                    (id_emisor = $id_docente AND id_receptor = interlocutores_recientes.interlocutor_id) OR
-                                                    (id_emisor = interlocutores_recientes.interlocutor_id AND id_receptor = $id_docente)
+                                                    (id_emisor = {$id_docente_com} AND id_receptor = interlocutores_recientes.interlocutor_id) OR
+                                                    (id_emisor = interlocutores_recientes.interlocutor_id AND id_receptor = {$id_docente_com})
                                                 ORDER BY fecha_envio DESC
                                                 LIMIT 1
                                             )
@@ -172,46 +155,99 @@ include '../../conexion.php'; // Aquí se establece la conexión $conn
 
                             if ($result_users && $result_users->num_rows > 0) {
                                 while ($user = $result_users->fetch_assoc()) {
-                                    $userPhoto = (!empty($user['foto_perfil_url'])) ? htmlspecialchars($user['foto_perfil_url']) : DEFAULT_AVATAR_PATH;
+                                    $userPhotoUrl = '';
+                                    if (!empty($user['foto_perfil_url'])) {
+                                        $userPhotoUrl = $webRootPath . htmlspecialchars($user['foto_perfil_url']);
+                                    } else {
+                                        $userPhotoUrl = DEFAULT_AVATAR_PATH;
+                                    }
+
                                     $userName = htmlspecialchars($user['fullName']);
                                     $userId = htmlspecialchars($user['id_usuario']);
-                                    $lastMessage = !empty($user['lastMessageContent']) ? htmlspecialchars($user['lastMessageContent']) : 'Conversación iniciada.'; // Mensaje alternativo
-// ...dentro del bucle while ($user = $result_users->fetch_assoc())
-                                    // $userPhoto, $userName, $userId ya están definidos
-                        
-                                    // Define la URL base de tu página de chat
-                                    $chatPageUrl = "/C-EDU/Docente/Chat/index.php";
+                                    
+                                    $lastMessageRaw = $user['lastMessageContent'] ?? '';
+                                    $lastMessagePreview = 'Conversación iniciada.';
+                                    if (!empty($lastMessageRaw)) {
+                                        if (preg_match('/\.(jpeg|jpg|gif|png|webp)$/i', $lastMessageRaw) || strpos(strtolower($lastMessageRaw), 'uploads/') === 0) {
+                                            $lastMessagePreview = '[Imagen]';
+                                        } elseif (strpos(strtolower($lastMessageRaw), 'http://') === 0 || strpos(strtolower($lastMessageRaw), 'https://') === 0) {
+                                            $lastMessagePreview = '[Sticker]';
+                                        } elseif (strpos(strtolower($lastMessageRaw), 'blob:http') === 0) {
+                                            $lastMessagePreview = '[Mensaje de voz]';
+                                        } else {
+                                            $tempPreview = mb_substr($lastMessageRaw, 0, 25);
+                                            if (mb_strlen($lastMessageRaw) > 25) {
+                                                $tempPreview .= "...";
+                                            }
+                                            $lastMessagePreview = htmlspecialchars($tempPreview);
+                                        }
+                                    }
+                                    
+                                    // Procesar unreadCount
+                                    $unreadCount = isset($user['unreadCount']) ? intval($user['unreadCount']) : 0;
+                                    $unreadIndicatorHTML = '';
+                                    if ($unreadCount > 0) {
+                                        $unreadIndicatorHTML = '<span class="content-message-unread">' . $unreadCount . '</span>';
+                                    } else {
+                                        // Para la barra verde si no hay no leídos (requiere CSS para .is-indicator-bar)
+                                        $unreadIndicatorHTML = '<span class="content-message-unread is-indicator-bar"></span>';
+                                    }
 
-                                    // Prepara los parámetros para la URL
-                                    // http_build_query se encargará de la codificación URL adecuada
+                                    // Procesar y formatear last_message_date
+                                    $lastMessageTimeOutput = '';
+                                    if (!empty($user['last_message_date'])) {
+                                        try {
+                                            $dateObj = new DateTime($user['last_message_date']);
+                                            $today = new DateTime('today'); // Para comparar si es hoy
+                                            
+                                            if ($dateObj->format('Y-m-d') == $today->format('Y-m-d')) {
+                                                // Formato: HH:MM p.m./a.m. (ej: 07:24<br>p.m.)
+                                                $timeStr = $dateObj->format('h:i');
+                                                $ampm = $dateObj->format('a'); // 'am' o 'pm'
+                                                $lastMessageTimeOutput = $timeStr . '<br>' . $ampm;
+                                            } else {
+                                                // Formato: DD-Mes (ej: 27-<br>may)
+                                                $day = $dateObj->format('d');
+                                                $month = '';
+                                                // Para obtener el mes en español (requiere extensión intl o un array)
+                                                if (extension_loaded('intl')) {
+                                                    $formatter = new IntlDateFormatter('es_CO', IntlDateFormatter::NONE, IntlDateFormatter::NONE, null, null, 'MMM');
+                                                    $month = str_replace('.', '', strtolower($formatter->format($dateObj))); // quita el punto si lo hay
+                                                } else {
+                                                    $month = strtolower($dateObj->format('M')); // Fallback: 'Jan', 'Feb', etc.
+                                                }
+                                                $lastMessageTimeOutput = $day . '-<br>' . $month;
+                                            }
+                                        } catch (Exception $e) {
+                                            error_log("Error parsing date in Inicio/index.php: " . $user['last_message_date'] . " - " . $e->getMessage());
+                                        }
+                                    }
+                        
+                                    $chatPageUrl = "/C-EDU/Docente/Chat/index.php";
                                     $linkParamsArray = [
                                         'userId' => $userId,
                                         'userName' => $userName,
-                                        'userFoto' => $userPhoto
+                                        'userFoto' => $userPhotoUrl
                                     ];
                                     $queryString = http_build_query($linkParamsArray);
                                     $fullLink = $chatPageUrl . '?' . $queryString;
 
                                     echo '<li>';
-                                    // El href ahora apunta a la página de chat con los parámetros del usuario
-                                    // Los atributos data-* se pueden mantener si tienes otra lógica JS en la Home que los use,
-                                    // pero para esta navegación específica, la información viaja por la URL.
                                     echo '    <a href="' . htmlspecialchars($fullLink) . '" 
                                                     data-user-id="' . $userId . '"
                                                     data-user-name="' . $userName . '"
-                                                    data-user-foto="' . $userPhoto . '">';
-                                    echo '        <img class="content-message-image" src="' . $userPhoto . '" alt="' . $userName . '">';
+                                                    data-user-foto="' . htmlspecialchars($userPhotoUrl) . '">';
+                                    echo '        <img class="content-message-image" src="' . htmlspecialchars($userPhotoUrl) . '" alt="' . $userName . '">';
                                     echo '        <span class="content-message-info">';
                                     echo '            <span class="content-message-name">' . $userName . '</span>';
-                                    echo '            <span class="content-message-text">' . $lastMessage . '</span>'; // Asumiendo que $lastMessage ya lo tienes
+                                    echo '            <span class="content-message-text">' . $lastMessagePreview . '</span>'; // $lastMessagePreview ya está escapado si es texto
                                     echo '        </span>';
                                     echo '        <span class="content-message-more">';
-                                    echo '            <span class="content-message-unread"></span>';
-                                    echo '            <span class="content-message-time"></span>';
+                                    echo              $unreadIndicatorHTML; // Indicador de no leídos
+                                    echo '            <span class="content-message-time">' . $lastMessageTimeOutput . '</span>'; // Hora/Fecha formateada (contiene <br>)
                                     echo '        </span>';
                                     echo '    </a>';
                                     echo '</li>';
-                                    // ...
                                 }
                             } else {
                                 echo '<li>No hay conversaciones recientes.</li>';
@@ -223,12 +259,10 @@ include '../../conexion.php'; // Aquí se establece la conexión $conn
                         }
                         ?>
                     </div>
-                    <a href="/C-EDU/Docente/Chat/index.php" style="text-decoration: none;"><button
-                            class="btn-ingresar">INGRESAR</button></a>
+                    <a href="/C-EDU/Docente/Chat/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
             </div>
         </main>
     </section>
 </body>
-
 </html>

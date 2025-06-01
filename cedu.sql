@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-05-2025 a las 05:29:03
+-- Tiempo de generación: 01-06-2025 a las 02:45:23
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -136,7 +136,8 @@ INSERT INTO `mensaje` (`id_mensaje`, `id_emisor`, `id_receptor`, `contenido_mens
 (6, 3, 4, 'Hola', '2025-05-28 03:01:16', 1),
 (7, 3, 4, 'Hpña', '2025-05-28 03:09:26', 1),
 (8, 4, 3, 'Hola', '2025-05-28 03:26:51', 1),
-(9, 3, 6, 'Hola', '2025-05-28 03:27:27', 0);
+(9, 3, 6, 'Hola', '2025-05-28 03:27:27', 1),
+(10, 4, 6, 'Hola', '2025-06-01 00:24:59', 1);
 
 -- --------------------------------------------------------
 
@@ -237,9 +238,9 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contrasena_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`, `foto_perfil_url`) VALUES
-(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL, NULL),
+(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL, 'uploads/profile_pictures/user_3_683b842cc4a4b.png'),
 (4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL, 'uploads/profile_pictures/user_4_68264a90e9889.png'),
-(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL, 'uploads/profile_pictures/user_6_68263f95ab9ac.jpg');
+(6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL, '');
 
 -- --------------------------------------------------------
 
@@ -360,7 +361,7 @@ ALTER TABLE `materia`
 -- AUTO_INCREMENT de la tabla `mensaje`
 --
 ALTER TABLE `mensaje`
-  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `notificacion`

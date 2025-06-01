@@ -20,7 +20,7 @@ if (isset($_SESSION['foto_perfil_url']) && !empty($_SESSION['foto_perfil_url']))
     $loggedInUserFotoUrl = $webRootForIndex . htmlspecialchars($_SESSION['foto_perfil_url'], ENT_QUOTES, 'UTF-8');
 } else {
     // Default avatar path relative to web root
-    $loggedInUserFotoUrl = $webRootForIndex . 'Docente/Chat/assets/images/default-avatar.png';
+    $loggedInUserFotoUrl = $webRootForIndex . '/C-edu/uploads/profile_pictures/default-avatar.png';
 }
 // --- End Logic for LOGGED_IN_USER_FOTO_URL ---
 ?>

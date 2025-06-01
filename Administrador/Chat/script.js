@@ -74,7 +74,7 @@ function initializeVisualizerNodes(streamForVisualizer) {
         visualizerSourceNode.disconnect();
     }
     if (!visualizerAudioContext) visualizerAudioContext = new AudioContext();
-    
+
     try {
         visualizerSourceNode = visualizerAudioContext.createMediaStreamSource(streamForVisualizer);
         visualizerAnalyser = visualizerAudioContext.createAnalyser();
@@ -106,13 +106,13 @@ function startSoundVisualizer(streamToVisualize) {
     }
     initializeVisualizerNodes(streamToVisualize); // Initialize with the correct stream
     if (visualizerAnalyser) { // Only draw if analyser is ready
-       drawSoundVisualizer();
+        drawSoundVisualizer();
     }
 }
 function drawSoundVisualizer() {
     // This is a placeholder. Ensure you have the full implementation from your original script.js.
-    if(!isRecording || !visualizerAnalyser || !visualizerDataArray) {
-        if(visualizerRequestFrameId) cancelAnimationFrame(visualizerRequestFrameId);
+    if (!isRecording || !visualizerAnalyser || !visualizerDataArray) {
+        if (visualizerRequestFrameId) cancelAnimationFrame(visualizerRequestFrameId);
         visualizerRequestFrameId = null;
         return;
     }
@@ -135,7 +135,7 @@ function stopSoundVisualizer() {
     // This is a placeholder. Ensure you have the full implementation from your original script.js.
     console.log("Vis Stop placeholder");
     isRecording = false; /* ensure isRecording is reset */
-    if(visualizerRequestFrameId) {
+    if (visualizerRequestFrameId) {
         cancelAnimationFrame(visualizerRequestFrameId);
         visualizerRequestFrameId = null;
     }
@@ -162,11 +162,56 @@ function stopSoundVisualizer() {
 // -----------------------------------------------------------------------------
 
 function initChatApp() {
-    loadUserList();
+    // ---- NUEVO CÓDIGO PARA LEER PARÁMETROS URL ----
+    const urlParams = new URLSearchParams(window.location.search);
+    const userIdFromUrl = urlParams.get('userId');
+    const userNameFromUrl = urlParams.get('userName');
+    const userFotoFromUrl = urlParams.get('userFoto');
+
+    let chatOpenedFromUrl = false;
+    if (userIdFromUrl && userNameFromUrl && userFotoFromUrl) {
+        console.log(`Attempting to open chat from URL: UserID=${userIdFromUrl}, Name=${userNameFromUrl}`);
+        // Llama a openConversationWithUser con los datos de la URL
+        // Asegúrate de que la UI principal del chat se muestre si está oculta
+        const conversationDiv = document.getElementById('conversation-active-chat');
+        const defaultConversationDiv = document.querySelector('.conversation-default');
+
+        if (conversationDiv && defaultConversationDiv) {
+            defaultConversationDiv.classList.remove('active');
+            defaultConversationDiv.style.display = 'none';
+            conversationDiv.classList.add('active');
+            // Asegúrate que el display sea el correcto (ej. 'flex' si es un contenedor flex)
+            // openConversationWithUser también maneja parte de esto.
+            conversationDiv.style.display = ''; // O 'flex'
+        }
+
+        openConversationWithUser(userIdFromUrl, userNameFromUrl, userFotoFromUrl);
+        chatOpenedFromUrl = true;
+    }
+    // ---- FIN DEL NUEVO CÓDIGO ----
+
+    // El resto de la inicialización para la página de chat
+    loadUserList(); // Esto carga la lista de usuarios en la barra lateral de la página de chat
     setupMessageSendingAndInput();
-    setupStaticEventListeners(); // For parts of UI not dynamically loaded initially
-    console.log("Chat App Initialized. Current User ID:", LOGGED_IN_USER_ID);
+    setupStaticEventListeners();
+    console.log("Chat App Initialized. Current User ID:", LOGGED_IN_USER_ID, "Chat opened from URL:", chatOpenedFromUrl);
+
+    // Opcional: Si no se abrió un chat desde la URL, asegúrate de que la vista por defecto esté visible
+    if (!chatOpenedFromUrl) {
+        const defaultConversationDiv = document.querySelector('.conversation-default');
+        const activeConversationDiv = document.getElementById('conversation-active-chat');
+        if (defaultConversationDiv && !defaultConversationDiv.classList.contains('active')) {
+            defaultConversationDiv.classList.add('active');
+            defaultConversationDiv.style.display = ''; // o 'flex'
+        }
+        if (activeConversationDiv && activeConversationDiv.classList.contains('active')) {
+            activeConversationDiv.classList.remove('active');
+            activeConversationDiv.style.display = 'none';
+        }
+    }
 }
+
+// En script.js, dentro de la función loadUserList:
 
 function loadUserList() {
     const userListElement = document.querySelector('.content-messages-list');
@@ -174,10 +219,10 @@ function loadUserList() {
         console.error("User list container not found.");
         return;
     }
-    // Clear existing static items if any (except titles like "Recently")
+    // Limpiar solo los elementos <li> que no sean títulos
     userListElement.querySelectorAll('li:not(.content-message-title)').forEach(li => li.remove());
 
-    fetch('get_users.php') // Path relative to index.php
+    fetch('get_users.php') // Asumiendo que está en la misma carpeta que index.php del chat
         .then(response => {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return response.json();
@@ -186,18 +231,64 @@ function loadUserList() {
             if (data.success && data.users) {
                 data.users.forEach(user => {
                     const userLi = document.createElement('li');
-                    // Make sure user.foto_perfil_url_resolved is the correct field name from get_users.php
-                    const userPhoto = user.foto_perfil_url_resolved || DEFAULT_AVATAR_PATH;
+                    // user.foto_perfil_url_url ya es la URL completa o el avatar por defecto
+                    const userPhoto = user.foto_perfil_url_url; 
+
+                    // Preparar texto del último mensaje y hora
+                    let lastMessageText = 'Conversación no iniciada';
+                    if (user.lastMessageContent) {
+                        const maxLen = 30;
+                        if (user.lastMessageContent.toLowerCase().startsWith('uploads/') || /\.(jpeg|jpg|gif|png|webp)$/i.test(user.lastMessageContent.toLowerCase())) {
+                            lastMessageText = '[Imagen]';
+                        } else if (user.lastMessageContent.toLowerCase().startsWith('http://') || user.lastMessageContent.toLowerCase().startsWith('https://')) {
+                            lastMessageText = '[Sticker]';
+                        } else if (user.lastMessageContent.toLowerCase().startsWith('blob:http')) {
+                            lastMessageText = '[Mensaje de voz]';
+                        } else {
+                            lastMessageText = user.lastMessageContent.length > maxLen ? user.lastMessageContent.substring(0, maxLen) + '...' : user.lastMessageContent;
+                        }
+                        lastMessageText = escapeHTML(lastMessageText);
+                    }
+                    let lastMessageTime = '';
+                    if (user.lastMessageDate) {
+                        try {
+                            const dateStr = user.lastMessageDate.replace(' ', 'T');
+                            const dateObj = new Date(dateStr); // Considera manejo de zona horaria si es necesario
+                            const today = new Date();
+                            if (dateObj.toDateString() === today.toDateString()) {
+                                lastMessageTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            } else {
+                                lastMessageTime = dateObj.toLocaleDateString([], { day: '2-digit', month: 'short' });
+                            }
+                        } catch (e) { console.error("Error formatting date:", user.lastMessageDate, e); }
+                    }
+                    // ----- Lógica para el indicador de no leídos -----
+                    let unreadCount = parseInt(user.unreadCount) || 0;
+                    let unreadIndicatorHTML = '';
+
+                    if (unreadCount > 0) {
+                        // Si hay mensajes no leídos, muestra el contador (estilo de insignia/badge)
+                        unreadIndicatorHTML = `<span class="content-message-unread">${unreadCount}</span>`;
+                    } else {
+                        // Si no hay mensajes no leídos, muestra la barra verde (estilo de barra indicadora)
+                        // Se usará una clase CSS adicional para diferenciar el estilo
+                        unreadIndicatorHTML = `<span class="content-message-unread is-indicator-bar"></span>`;
+                    }
+
+                    // ---- Construcción del HTML del elemento de lista ----
                     userLi.innerHTML = `
                         <a href="#" data-user-id="${user.id_usuario}"
                                      data-user-name="${escapeHTML(user.fullName)}"
-                                     data-user-foto="${escapeHTML(userPhoto)}">
-                            <img class="content-message-image" src="${escapeHTML(userPhoto)}" alt="${escapeHTML(user.fullName)}">
+                                     data-user-foto="${escapeHTML(user.foto_perfil_url_url)}">
+                            <img class="content-message-image" src="${escapeHTML(user.foto_perfil_url_url)}" alt="${escapeHTML(user.fullName)}">
                             <span class="content-message-info">
                                 <span class="content-message-name">${escapeHTML(user.fullName)}</span>
-                                <span class="content-message-text">Click to open chat...</span> </span>
+                                <span class="content-message-text">${lastMessageText}</span>
+                            </span>
                             <span class="content-message-more">
-                                <span class="content-message-unread"></span> <span class="content-message-time"></span>   </span>
+                                ${unreadIndicatorHTML}
+                                <span class="content-message-time">${lastMessageTime}</span>
+                            </span>
                         </a>`;
                     userListElement.appendChild(userLi);
 
@@ -213,12 +304,22 @@ function loadUserList() {
                 });
             } else {
                 console.error('Failed to load users:', data.message || 'No users data');
-                userListElement.innerHTML += '<li>Failed to load users.</li>';
+                const errorLi = document.createElement('li');
+                errorLi.textContent = 'No se pudieron cargar los usuarios.';
+                errorLi.style.textAlign = 'center';
+                errorLi.style.padding = '10px';
+                userListElement.appendChild(errorLi);
             }
         })
         .catch(error => {
             console.error('Error fetching users:', error);
-            if (userListElement) userListElement.innerHTML += `<li>Error loading users: ${error.message}</li>`;
+            if (userListElement) {
+                 const errorLi = document.createElement('li');
+                 errorLi.textContent = `Error al cargar usuarios: ${error.message}`;
+                 errorLi.style.textAlign = 'center';
+                 errorLi.style.padding = '10px';
+                 userListElement.appendChild(errorLi);
+            }
         });
 }
 
@@ -311,8 +412,7 @@ function renderMessageToDOM(msg, container) {
     }
 
     // Profile photo for the sender of this message
-    const senderMessagePhoto = msg.emisor_foto_url || (isMe ? LOGGED_IN_USER_FOTO_URL : DEFAULT_AVATAR_PATH);
-
+    const senderMessagePhoto = msg.emisor_foto_url; 
     let messageContentHTML = '';
     const content = msg.contenido_mensaje;
 
@@ -320,11 +420,11 @@ function renderMessageToDOM(msg, container) {
 
     if (content && (content.toLowerCase().endsWith('.jpg') || content.toLowerCase().endsWith('.jpeg') || content.toLowerCase().endsWith('.png') || content.toLowerCase().endsWith('.gif') || content.toLowerCase().endsWith('.webp'))) {
         if (content.startsWith('http://') || content.startsWith('https://')) {
-             messageContentHTML = `<img class="message-image sticker-image" src="${escapeHTML(content)}" alt="Sticker" style="max-width: 180px; height: auto; border-radius: 8px;" />`;
+            messageContentHTML = `<img class="message-image sticker-image" src="${escapeHTML(content)}" alt="Sticker" style="max-width: 180px; height: auto; border-radius: 8px;" />`;
         } else if (content.startsWith('uploads/')) {
-             messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
+            messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
         } else {
-             messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + 'uploads/' + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
+            messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + 'uploads/' + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
         }
     } else if (content && content.startsWith('blob:http')) {
         messageContentHTML = `
@@ -351,7 +451,7 @@ function renderMessageToDOM(msg, container) {
             if (!isNaN(dateObj)) {
                 time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             } else {
-                 console.warn("Invalid date format for message:", msg.id_mensaje, msg.fecha_envio);
+                console.warn("Invalid date format for message:", msg.id_mensaje, msg.fecha_envio);
             }
         } catch (e) {
             console.error("Error parsing date:", msg.fecha_envio, e);
@@ -388,8 +488,8 @@ function renderMessageToDOM(msg, container) {
                     </div>
                 </div>
             </div>`;
-            // Note: ${!isMe ? '' : 'text-align: left;'} -> if it's a received message (now .me), align time normally (right), else align left.
-            // You'll need to ensure your CSS for .me aligns content as you expect for received messages.
+        // Note: ${!isMe ? '' : 'text-align: left;'} -> if it's a received message (now .me), align time normally (right), else align left.
+        // You'll need to ensure your CSS for .me aligns content as you expect for received messages.
     } else { // Text or uploaded image message
         finalMessageHTML = `
             <div class="conversation-item-side">
@@ -438,31 +538,31 @@ function sendMessageToServer(messageContent, isFilePlaceholder = false, type = '
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     })
-    .then(response => {
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        return response.json();
-    })
-    .then(data => {
-        if (data.success && data.message_data) {
-            const conversationWrapper = document.querySelector('#conversation-active-chat .conversation-wrapper');
-            if (conversationWrapper) {
-                renderMessageToDOM(data.message_data, conversationWrapper);
-                scrollToBottom(conversationWrapper.parentElement);
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.message_data) {
+                const conversationWrapper = document.querySelector('#conversation-active-chat .conversation-wrapper');
+                if (conversationWrapper) {
+                    renderMessageToDOM(data.message_data, conversationWrapper);
+                    scrollToBottom(conversationWrapper.parentElement);
+                }
+                if (type === 'text' && document.querySelector('.conversation-form-input')) {
+                    document.querySelector('.conversation-form-input').value = '';
+                    document.querySelector('.conversation-form-input').rows = 1;
+                }
+                clearActiveReplyPreviewGlobal();
+            } else {
+                alert('Error sending message: ' + (data.message || 'Unknown error from server'));
+                console.error('Send message error (data):', data);
             }
-            if (type === 'text' && document.querySelector('.conversation-form-input')) {
-                 document.querySelector('.conversation-form-input').value = '';
-                 document.querySelector('.conversation-form-input').rows = 1;
-            }
-            clearActiveReplyPreviewGlobal();
-        } else {
-            alert('Error sending message: ' + (data.message || 'Unknown error from server'));
-            console.error('Send message error (data):', data);
-        }
-    })
-    .catch(error => {
-        alert('Network error sending message. Check console.');
-        console.error('Network send message error (fetch):', error);
-    });
+        })
+        .catch(error => {
+            alert('Network error sending message. Check console.');
+            console.error('Network send message error (fetch):', error);
+        });
 }
 
 function setupMessageSendingAndInput() {
@@ -544,7 +644,7 @@ function setupStaticEventListeners() {
     const conversationBackBtn = document.querySelector('#conversation-active-chat .conversation-back');
 
     if (conversationBackBtn) {
-        conversationBackBtn.addEventListener('click', function(e) {
+        conversationBackBtn.addEventListener('click', function (e) {
             e.preventDefault();
             const conversationDiv = document.getElementById('conversation-active-chat');
             const defaultConversationDiv = document.querySelector('.conversation-default');
@@ -595,7 +695,7 @@ function setupStaticEventListeners() {
     }
 
     if (imageModal && modalImage && imageModalClose && conversationWrapper) {
-        conversationWrapper.addEventListener('click', function(e) {
+        conversationWrapper.addEventListener('click', function (e) {
             const imageClicked = e.target.closest('.message-image:not(.sticker-image)');
             if (imageClicked && !e.target.closest('.conversation-item-dropdown')) {
                 modalImage.src = imageClicked.src;
@@ -603,10 +703,10 @@ function setupStaticEventListeners() {
             }
         });
         imageModalClose.addEventListener('click', () => imageModal.style.display = 'none');
-        imageModal.addEventListener('click', function(e) { if (e.target === this) this.style.display = 'none'; });
+        imageModal.addEventListener('click', function (e) { if (e.target === this) this.style.display = 'none'; });
     }
 
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             if (imageModal && imageModal.style.display !== 'none') imageModal.style.display = 'none';
             if (stickerPanel && stickerPanel.style.display !== 'none') stickerPanel.style.display = 'none';
@@ -643,8 +743,8 @@ function setupStaticEventListeners() {
 
                 const recorderOptions = { mimeType: 'audio/webm; codecs=opus' };
                 mediaRecorder = MediaRecorder.isTypeSupported(recorderOptions.mimeType)
-                                ? new MediaRecorder(originalStreamForRecorder, recorderOptions)
-                                : new MediaRecorder(originalStreamForRecorder);
+                    ? new MediaRecorder(originalStreamForRecorder, recorderOptions)
+                    : new MediaRecorder(originalStreamForRecorder);
 
                 audioChunks = [];
                 startSoundVisualizer(streamForVisualizer); // Sets isRecording to true
@@ -660,7 +760,7 @@ function setupStaticEventListeners() {
                 mediaRecorder.onstop = () => {
                     // Visualizer and stream stopping is handled by stopSoundVisualizer now if called from there.
                     // If onstop is called directly by mediaRecorder.stop(), ensure visualizer is also stopped.
-                    if(isRecording) stopSoundVisualizer();
+                    if (isRecording) stopSoundVisualizer();
 
 
                     recordBtn.classList.remove('is-recording');
@@ -690,7 +790,7 @@ function setupStaticEventListeners() {
     }
 
     if (conversationWrapper) {
-        conversationWrapper.addEventListener('click', function(e) {
+        conversationWrapper.addEventListener('click', function (e) {
             const dropdownToggle = e.target.closest('.conversation-item-dropdown-toggle');
             if (dropdownToggle) {
                 e.preventDefault();
@@ -715,10 +815,10 @@ function setupStaticEventListeners() {
                 } else if (actionLink.classList.contains('edit-btn')) {
                     console.log("Edit message:", messageId);
                     const textEl = messageItem ? messageItem.querySelector('.conversation-item-text p') : null;
-                    if(textEl) {
+                    if (textEl) {
                         const newText = prompt("Edit:", textEl.textContent);
-                        if(newText !== null && newText.trim() !== "") {
-                             textEl.textContent = newText; // TODO: Server-side update
+                        if (newText !== null && newText.trim() !== "") {
+                            textEl.textContent = newText; // TODO: Server-side update
                         }
                     } else {
                         alert("Solo se pueden editar mensajes de texto.");
@@ -732,17 +832,17 @@ function setupStaticEventListeners() {
                         let originalContent = "Mensaje adjunto";
                         const textP = messageItem.querySelector('.conversation-item-text p');
                         const imgMsg = messageItem.querySelector('.conversation-item-text .message-image');
-                        if (textP) originalContent = textP.textContent.substring(0,50) + (textP.textContent.length > 50 ? "..." : "");
+                        if (textP) originalContent = textP.textContent.substring(0, 50) + (textP.textContent.length > 50 ? "..." : "");
                         else if (imgMsg) originalContent = "Imagen adjunta";
-                        
+
                         replyTextEl.innerHTML = `Respondiendo a: <i>${originalContent}</i>`;
                         replyPreviewEl.style.display = 'flex';
                         replyingToElement = messageId; // Store ID of message being replied to
                         activeReplyPreview = replyPreviewEl; // From original script
                     }
                 }
-                if(actionLink.closest('.conversation-item-dropdown')) {
-                   actionLink.closest('.conversation-item-dropdown').classList.remove('active');
+                if (actionLink.closest('.conversation-item-dropdown')) {
+                    actionLink.closest('.conversation-item-dropdown').classList.remove('active');
                 }
                 return;
             }
@@ -767,7 +867,7 @@ function setupStaticEventListeners() {
                         if (otherAudio !== audio && !otherAudio.paused) {
                             otherAudio.pause();
                             const otherIcon = otherAudio.closest('.voice-message').querySelector('.play-button i');
-                            if(otherIcon) otherIcon.className = 'ri-play-fill';
+                            if (otherIcon) otherIcon.className = 'ri-play-fill';
                         }
                     });
                     audio.play().then(() => {
@@ -784,7 +884,7 @@ function setupStaticEventListeners() {
                     audio.onended = () => {
                         if (playBtnIcon) playBtnIcon.className = 'ri-play-fill';
                         if (progressBar) progressBar.style.width = '0%';
-                         // Optionally reset time display to 00:00 or full duration
+                        // Optionally reset time display to 00:00 or full duration
                         if (timeLabel) timeLabel.textContent = '00:00';
                     };
                 } else {

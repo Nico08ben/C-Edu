@@ -36,7 +36,7 @@ if ($id_usuario) {
 }
 
 // Determinar la URL de la imagen de perfil
-$profile_image_url = '../../assets/avatar_default.png'; // Imagen por defecto
+$profile_image_url = '/C-edu/uploads/profile_pictures/default-avatar.png'; // Imagen por defecto
 if (!empty($user_profile_data['foto_perfil_url'])) {
     // Construir la ruta completa a la imagen.
     // Asumimos que foto_perfil_url guarda algo como "uploads/profile_pictures/image.jpg"

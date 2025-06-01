@@ -34,18 +34,15 @@ if (empty($chatWithUserId)) {
 }
 
 $messages = [];
-$profilePicBasePath = '/C-edu/uploads/'; 
-$defaultAvatar = '/C-edu/Administrador/Chat/assets/images/default-avatar.png';
+// Ruta base web donde se encuentra la carpeta raíz de tu aplicación.
+$webRootPath = '/C-edu/'; 
+// Ruta completa al avatar por defecto.
+$defaultAvatar = '/C-edu/uploads/profile_pictures/default-avatar.png';
 
-// Inside get_messages.php
-
-// ... other code ...
-
-// Make sure this is the SQL query you are using:
 $sql = "
     SELECT m.id_mensaje, m.id_emisor, m.id_receptor, m.contenido_mensaje, m.fecha_envio, m.leido,
            u_emisor.nombre_usuario as emisor_nombre, 
-           u_emisor.foto_perfil_url as emisor_foto_path  -- <<< THIS IS THE CRITICAL CHANGE
+           u_emisor.foto_perfil_url as emisor_foto_path 
     FROM mensaje m
     JOIN usuario u_emisor ON m.id_emisor = u_emisor.id_usuario
     WHERE ((m.id_emisor = ? AND m.id_receptor = ?) OR (m.id_emisor = ? AND m.id_receptor = ?))
@@ -53,10 +50,7 @@ $sql = "
     ORDER BY m.fecha_envio ASC
 ";
 
-// The error occurs on this line (or the line where $conn->prepare is)
-$stmt = $conn->prepare($sql); // This is line 51 or around it
-
-// ... rest of the script ...
+$stmt = $conn->prepare($sql);
 
 if ($stmt) {
     $stmt->bind_param("iiiii", $currentUserId, $chatWithUserId, $chatWithUserId, $currentUserId, $lastMessageId);
@@ -64,14 +58,19 @@ if ($stmt) {
     $result = $stmt->get_result();
 
     while ($row = $result->fetch_assoc()) {
-        // CORRECCIÓN: emisor_fullName ahora solo usa emisor_nombre.
         $row['emisor_fullName'] = trim($row['emisor_nombre']); 
-        if (!empty($row['emisor_foto'])) {
-            $row['emisor_foto_url'] = $profilePicBasePath . htmlspecialchars($row['emisor_foto']);
+        
+        // Construcción de la URL de la foto del emisor
+        if (!empty($row['emisor_foto_path'])) {
+            // $row['emisor_foto_path'] viene de la BD como 'uploads/profile_pictures/nombre_archivo.png'
+            // Se concatena con $webRootPath para formar la URL completa:
+            // '/C-edu/uploads/profile_pictures/nombre_archivo.png'
+            $row['emisor_foto_url'] = $webRootPath . htmlspecialchars($row['emisor_foto_path']);
         } else {
-            $row['emisor_foto_url'] = $defaultAvatar;
+            $row['emisor_foto_url'] = $defaultAvatar; // Ya es una ruta completa
         }
-        unset($row['emisor_foto']);
+        unset($row['emisor_foto_path']); // Elimina la ruta original de la BD del resultado
+        
         $messages[] = $row;
     }
     $stmt->close();
