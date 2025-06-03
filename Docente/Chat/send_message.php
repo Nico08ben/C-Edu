@@ -1,86 +1,79 @@
 <?php
-// Chat/send_message.php
+// Ubicación: /Docente/Chat/send_message.php o similar
 
-// It's good practice to put error reporting at the very top for debugging,
-// but REMOVE or COMMENT OUT for a production environment.
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
+// ini_set('display_errors', 1); // Descomentar para depuración
+// ini_set('display_startup_errors', 1); // Descomentar para depuración
+// error_reporting(E_ALL); // Descomentar para depuración
 
 session_start();
 
-// Check if user is logged in
+// 1. Verificar autenticación del usuario
 if (!isset($_SESSION['id_usuario'])) {
     if (!headers_sent()) {
         header('Content-Type: application/json');
     }
-    echo json_encode(['success' => false, 'message' => 'User not logged in.']);
+    echo json_encode(['success' => false, 'message' => 'Usuario no autenticado.']);
     exit;
 }
 
-// Include database connection
-include '../../conexion.php'; // Correct path: D:\xampp\htdocs\C-Edu\conexion.php
+// 2. Incluir archivos necesarios
+// Conexión a la base de datos (ajusta la ruta si es necesario)
+require_once __DIR__ . '/../../conexion.php';
+// Función para crear notificaciones (ajusta la ruta si es necesario)
+// Si send_message.php está en /C-Edu/Docente/Chat/ y crear_notificacion.php está en /C-Edu/PHP/api/
+require_once __DIR__ . '/../../PHP/api/crear_notificacion.php'; // ¡Verifica esta ruta!
 
-// Check database connection
+// 3. Verificar conexión a la BD
 if ($conn->connect_error) {
     if (!headers_sent()) {
         header('Content-Type: application/json');
     }
-    error_log("Connection failed in send_message.php: " . $conn->connect_error);
-    echo json_encode(['success' => false, 'message' => 'Error: Database connection failed. Details: ' . $conn->connect_error]);
+    error_log("Error de conexión en send_message.php: " . $conn->connect_error);
+    echo json_encode(['success' => false, 'message' => 'Error de conexión a la base de datos. Detalles: ' . $conn->connect_error]);
     exit;
 }
 
-// Set charset
+// Establecer charset para la conexión
 $conn->set_charset("utf8");
 
-// Set content type to JSON for the response
-// This should be called as early as possible, but after session_start and includes.
+// 4. Establecer encabezado de respuesta JSON (hacerlo lo antes posible)
 if (!headers_sent()) {
     header('Content-Type: application/json');
 }
 
-// Get input data
+// 5. Obtener y validar datos de entrada
 $input = json_decode(file_get_contents('php://input'), true);
 
-// Validate input
 if (!$input) {
-    echo json_encode(['success' => false, 'message' => 'Entrada inválida (Invalid input).']);
+    echo json_encode(['success' => false, 'message' => 'Entrada JSON inválida.']);
     exit;
 }
 
-$senderId = $_SESSION['id_usuario'];
-$receiverId = $input['receiver_id'] ?? null;
-$messageContent = $input['message'] ?? null;
-$isFilePlaceholder = isset($input['is_file_placeholder']) && $input['is_file_placeholder'] === true;
+$senderId = (int)$_SESSION['id_usuario']; // ID del remitente (usuario logueado)
+$receiverId = isset($input['receiver_id']) ? (int)$input['receiver_id'] : null; // ID del destinatario
+$messageContent = $input['message'] ?? null; // Contenido del mensaje
 
-// Validate required fields
 if (empty($receiverId)) {
-    echo json_encode(['success' => false, 'message' => 'Falta el ID del receptor (Missing receiver ID).']);
+    echo json_encode(['success' => false, 'message' => 'ID del destinatario no proporcionado.']);
     exit;
 }
 
-if (!isset($messageContent) && !$isFilePlaceholder) {
-    echo json_encode(['success' => false, 'message' => 'Falta el contenido del mensaje (Missing message content).']);
+if ($messageContent === null || $messageContent === "") {
+    echo json_encode(['success' => false, 'message' => 'El contenido del mensaje no puede estar vacío.']);
     exit;
 }
 
-if (isset($messageContent) && $messageContent === "" && !$isFilePlaceholder) {
-    echo json_encode(['success' => false, 'message' => 'El contenido del mensaje de texto no puede estar vacío (Text message content cannot be empty).']);
-    exit;
-}
+// 6. Insertar el mensaje en la base de datos
+$sqlInsertMsg = "INSERT INTO mensaje (id_emisor, id_receptor, contenido_mensaje, fecha_envio, leido) VALUES (?, ?, ?, NOW(), 0)";
+$stmtInsertMsg = $conn->prepare($sqlInsertMsg);
 
-// Prepare SQL for inserting message
-$sql = "INSERT INTO mensaje (id_emisor, id_receptor, contenido_mensaje, fecha_envio, leido) VALUES (?, ?, ?, NOW(), 0)";
-$stmt = $conn->prepare($sql);
+if ($stmtInsertMsg) {
+    $stmtInsertMsg->bind_param("iis", $senderId, $receiverId, $messageContent);
+    if ($stmtInsertMsg->execute()) {
+        $newMessageId = $stmtInsertMsg->insert_id;
+        $db_timestamp = date('Y-m-d H:i:s'); // Usar NOW() es mejor, pero podemos obtenerla si es necesario
 
-if ($stmt) {
-    $stmt->bind_param("iis", $senderId, $receiverId, $messageContent);
-    if ($stmt->execute()) {
-        $newMessageId = $stmt->insert_id;
-        $db_timestamp = date('Y-m-d H:i:s'); // Default timestamp
-
-        // Try to get the exact timestamp from the database for the new message
+        // Opcional: Obtener el timestamp exacto de la BD si es crucial
         $ts_sql = "SELECT fecha_envio FROM mensaje WHERE id_mensaje = ?";
         $ts_stmt = $conn->prepare($ts_sql);
         if ($ts_stmt) {
@@ -90,64 +83,123 @@ if ($stmt) {
                 if ($ts_result && $ts_result->num_rows > 0) {
                     $db_timestamp_row = $ts_result->fetch_assoc();
                     $db_timestamp = $db_timestamp_row['fecha_envio'];
-                } else {
-                    // Log if somehow the inserted message isn't found immediately (should be rare)
-                    error_log("send_message.php: Could not find message ID " . $newMessageId . " to fetch timestamp after insert.");
                 }
-            } else {
-                error_log("send_message.php: Failed to execute timestamp fetch for ID " . $newMessageId . ": " . $ts_stmt->error);
             }
             $ts_stmt->close();
+        }
+
+        // ----- INICIO: LÓGICA PARA CREAR NOTIFICACIÓN -----
+        $nombreEmisor = $_SESSION['nombre_usuario'] ?? 'Alguien'; // Nombre del remitente
+        $tipoNotificacionParaDb = 'nuevo_mensaje_chat'; // Tipo de notificación para la BD
+
+        // Crear un mensaje de notificación descriptivo
+        $mensajeParaNotificacion = '';
+        if (preg_match('/\.(jpeg|jpg|gif|png|webp)$/i', $messageContent) && (strpos($messageContent, '/C-edu/uploads/profile_pictures/') === 0 || strpos($messageContent, 'uploads/profile_pictures/') === 0) ) {
+            $mensajeParaNotificacion = $nombreEmisor . ' te envió una imagen.';
+        } elseif (preg_match('/^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i', $messageContent) && preg_match('/giphy\.com/i', $messageContent)) {
+             $mensajeParaNotificacion = $nombreEmisor . ' te envió un sticker.';
+        } elseif (strpos($messageContent, 'blob:http') === 0) {
+            $mensajeParaNotificacion = $nombreEmisor . ' te envió un mensaje de voz.';
         } else {
-            error_log("send_message.php: Failed to prepare timestamp fetch: " . $conn->error);
+            $previewContenido = htmlspecialchars(substr(strip_tags($messageContent), 0, 30));
+            if (strlen(strip_tags($messageContent)) > 30) {
+                $previewContenido .= '...';
+            }
+            $mensajeParaNotificacion = $nombreEmisor . ' dice: "' . $previewContenido . '"';
         }
 
-        // Construct sender's photo URL for the response
-        $webRootPath = '/C-edu/'; // Define your application's web root path
-        // Define the full path to the default avatar
+        // Construir el enlace para la notificación
+        // Este enlace debe llevar al chat del usuario RECEPTOR, abriendo la conversación con el EMISOR.
+        $fotoEmisorParaURL = ''; // Foto del EMISOR del mensaje
+        // $_SESSION['foto_perfil_url'] es la foto del usuario logueado (el emisor)
+        if (isset($_SESSION['foto_perfil_url']) && !empty($_SESSION['foto_perfil_url'])) {
+            // Asegurarse que la URL sea absoluta desde la raíz del sitio web
+            $fotoEmisorParaURL = '/C-edu/' . ltrim(htmlspecialchars($_SESSION['foto_perfil_url']), '/');
+        } else {
+            $fotoEmisorParaURL = '/C-edu/uploads/profile_pictures/default-avatar.png';
+        }
+
+        // Determinar la ruta base del chat para el RECEPTOR de la notificación
+        // Esto es importante si Admin y Docente tienen rutas de chat diferentes
+        $baseChatPathParaReceptor = '';
+        $rolReceptorId = null;
+
+        // Consultar el rol del RECEPTOR
+        $stmtRolReceptor = $conn->prepare("SELECT id_rol FROM usuario WHERE id_usuario = ?");
+        if ($stmtRolReceptor) {
+            $stmtRolReceptor->bind_param("i", $receiverId);
+            if ($stmtRolReceptor->execute()) {
+                $resultRolReceptor = $stmtRolReceptor->get_result();
+                if ($filaRolReceptor = $resultRolReceptor->fetch_assoc()) {
+                    $rolReceptorId = (int)$filaRolReceptor['id_rol'];
+                }
+            }
+            $stmtRolReceptor->close();
+        }
+
+        if ($rolReceptorId === 0) { // 0 para Admin
+            $baseChatPathParaReceptor = '/C-edu/Administrador/Chat/';
+        } elseif ($rolReceptorId === 1) { // 1 para Docente
+            $baseChatPathParaReceptor = '/C-edu/Docente/Chat/';
+        } else {
+            // Fallback: si no se puede determinar el rol del receptor o es otro rol
+            // Asumir una ruta por defecto o manejar el error. Aquí usamos Docente como fallback.
+            // ¡IMPORTANTE! Ajusta esto si tienes más roles o una estructura diferente.
+            $baseChatPathParaReceptor = '/C-edu/Docente/Chat/';
+            // Podrías también registrar un aviso: error_log("No se pudo determinar la ruta del chat para el receptor ID: $receiverId con rol ID: $rolReceptorId");
+        }
+        
+        $enlaceNotificacion = $baseChatPathParaReceptor . 'index.php?userId=' . $senderId . '&userName=' . urlencode($nombreEmisor) . '&userFoto=' . urlencode($fotoEmisorParaURL);
+
+        // Llamar a la función para crear la notificación
+        // El destinatario de la notificación es $receiverId
+        if (!crearNotificacion($conn, $receiverId, $tipoNotificacionParaDb, $mensajeParaNotificacion, $enlaceNotificacion)) {
+            error_log("send_message.php: Falló la creación de notificación para el usuario $receiverId (mensaje de $senderId).");
+            // No es necesario detener el flujo principal si la notificación falla, pero sí registrarlo.
+        }
+        // ----- FIN: LÓGICA PARA CREAR NOTIFICACIÓN -----
+
+        // Preparar datos del remitente para la respuesta del mensaje actual
+        $webRootPath = '/C-edu/';
         $defaultAvatarPath = $webRootPath . 'uploads/profile_pictures/default-avatar.png';
+        $senderPhotoUrlForResponse = $defaultAvatarPath;
 
-        $senderPhotoUrlForResponse = $defaultAvatarPath; // Assume default first
-        // $_SESSION['foto_perfil_url'] should store the path relative to the web root's uploads directory
-        // e.g., 'uploads/profile_pictures/avatar.jpg'
+        // $_SESSION['foto_perfil_url'] es la foto del usuario logueado (el emisor)
         if (isset($_SESSION['foto_perfil_url']) && !empty($_SESSION['foto_perfil_url']) && is_string($_SESSION['foto_perfil_url'])) {
-            $senderPhotoUrlForResponse = $webRootPath . htmlspecialchars($_SESSION['foto_perfil_url']);
+            $senderPhotoUrlForResponse = $webRootPath . ltrim(htmlspecialchars($_SESSION['foto_perfil_url']), '/');
         }
 
-        // Prepare the successful response data
         $responseData = [
             'success' => true,
             'message_data' => [
                 'id_mensaje' => $newMessageId,
-                'id_emisor' => $senderId,
-                'id_receptor' => intval($receiverId),
+                'id_emisor' => $senderId, // Quién envió este mensaje
+                'id_receptor' => $receiverId, // Quién lo recibió
                 'contenido_mensaje' => $messageContent,
-                'fecha_envio' => $db_timestamp,
-                'leido' => 0,
-                'emisor_foto_url' => $senderPhotoUrlForResponse
+                'fecha_envio' => $db_timestamp, // Timestamp del mensaje
+                'leido' => 0, // Estado inicial del mensaje
+                'emisor_foto_url' => $senderPhotoUrlForResponse // Foto del emisor de este mensaje
             ]
         ];
 
-        // Encode and echo the response
         $jsonResponse = json_encode($responseData);
         if ($jsonResponse === false) {
-            // Log the data that failed to encode for debugging
-            error_log("JSON Encode Error in send_message.php: " . json_last_error_msg() . " - Data: " . print_r($responseData, true));
-            // Echo a valid JSON error message
-            echo json_encode(['success' => false, 'message' => 'Server error: Failed to encode JSON response. Reason: ' . json_last_error_msg()]);
+            error_log("Error de codificación JSON en send_message.php: " . json_last_error_msg() . " - Datos: " . print_r($responseData, true));
+            echo json_encode(['success' => false, 'message' => 'Error del servidor: Fallo al codificar respuesta JSON. Razón: ' . json_last_error_msg()]);
         } else {
             echo $jsonResponse;
         }
 
     } else {
-        error_log("Error in send_message.php al ejecutar INSERT: " . $stmt->error);
-        echo json_encode(['success' => false, 'message' => 'Error al enviar el mensaje (execute): ' . $stmt->error]);
+        error_log("Error en send_message.php al ejecutar INSERT: " . $stmtInsertMsg->error);
+        echo json_encode(['success' => false, 'message' => 'Error al enviar el mensaje (fallo en ejecución): ' . $stmtInsertMsg->error]);
     }
-    $stmt->close();
+    $stmtInsertMsg->close();
 } else {
-    error_log("Error in send_message.php al preparar INSERT: " . $conn->error);
-    echo json_encode(['success' => false, 'message' => 'Error al preparar la consulta de envío (prepare): ' . $conn->error]);
+    error_log("Error en send_message.php al preparar INSERT: " . $conn->error);
+    echo json_encode(['success' => false, 'message' => 'Error al preparar la consulta de envío (fallo en preparación): ' . $conn->error]);
 }
 
+// 7. Cerrar la conexión a la BD
 $conn->close();
 ?>

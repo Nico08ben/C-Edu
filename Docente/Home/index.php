@@ -49,10 +49,14 @@ include '../../conexion.php';
                         <?php
                         if (isset($_SESSION['id_usuario'])) {
                             $id_docente_tareas = $_SESSION['id_usuario'];
-                            $sql_tareas = "SELECT t.instruccion_tarea AS clase, u.nombre_usuario AS asignado_por, t.fecha_fin_tarea AS fecha_limite FROM tarea t JOIN usuario u ON t.id_asignador = u.id_usuario WHERE t.id_usuario = $id_docente_tareas ORDER BY t.fecha_fin_tarea DESC LIMIT 3";
+                            // MODIFICACIÓN: Incluir id_tarea en la consulta
+                            $sql_tareas = "SELECT t.id_tarea, t.instruccion_tarea AS clase, u.nombre_usuario AS asignado_por, t.fecha_fin_tarea AS fecha_limite FROM tarea t JOIN usuario u ON t.id_asignador = u.id_usuario WHERE t.id_usuario = $id_docente_tareas ORDER BY t.fecha_fin_tarea DESC LIMIT 3";
                             $result_tareas = $conn->query($sql_tareas);
                             if ($result_tareas && $result_tareas->num_rows > 0) {
                                 while ($row_tarea = $result_tareas->fetch_assoc()) {
+                                    // Construir la URL para los detalles de la tarea
+                                    $task_detail_url = $webRootPath . 'Docente/Tareas%20Asignadas/TareasDetalles.php?id_tarea=' . htmlspecialchars($row_tarea['id_tarea']);
+                                    echo '<a href="' . $task_detail_url . '" class="task-item-link" style="text-decoration: none; color: inherit;">'; // Enlace para todo el div
                                     echo '<div class="task-item">';
                                     echo '<div>' . htmlspecialchars($row_tarea['clase']) . '</div>';
                                     echo '<div class="task-details">';
@@ -61,6 +65,7 @@ include '../../conexion.php';
                                     echo '</div>';
                                     echo '<span class="red-dot"></span>';
                                     echo '</div>';
+                                    echo '</a>'; // Cerrar el enlace
                                 }
                             } else {
                                 echo '<div>No hay tareas asignadas.</div>';
@@ -70,7 +75,7 @@ include '../../conexion.php';
                         }
                         ?>
                     </div>
-                    <a href="/C-EDU/Docente/Tareas Asignadas/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
+                    <a href="/C-EDU/Docente/Tareas%20Asignadas/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
 
                 <div class="card">
@@ -109,47 +114,47 @@ include '../../conexion.php';
 
                             // SQL MODIFICADA para incluir unreadCount
                             $sql_users = "SELECT
-                                            u_interlocutor.id_usuario,
-                                            u_interlocutor.nombre_usuario AS fullName,
-                                            u_interlocutor.foto_perfil_url,
-                                            m_actual_last.contenido_mensaje AS lastMessageContent,
-                                            m_actual_last.fecha_envio AS last_message_date,
-                                            (
-                                                SELECT COUNT(*)
-                                                FROM mensaje unread_m
-                                                WHERE unread_m.id_emisor = u_interlocutor.id_usuario
-                                                  AND unread_m.id_receptor = {$id_docente_com}
-                                                  AND unread_m.leido = 0
-                                            ) AS unreadCount
-                                        FROM
-                                            (
-                                                SELECT
-                                                    interlocutor_id,
-                                                    MAX(fecha_envio_conv) AS max_fecha_conversacion
-                                                FROM (
-                                                    SELECT id_receptor AS interlocutor_id, fecha_envio AS fecha_envio_conv FROM mensaje WHERE id_emisor = {$id_docente_com}
-                                                    UNION ALL
-                                                    SELECT id_emisor AS interlocutor_id, fecha_envio AS fecha_envio_conv FROM mensaje WHERE id_receptor = {$id_docente_com}
-                                                ) AS conversaciones_con_docente
-                                                WHERE interlocutor_id != {$id_docente_com}
-                                                GROUP BY interlocutor_id
-                                                ORDER BY max_fecha_conversacion DESC
-                                                LIMIT 3
-                                            ) AS interlocutores_recientes
-                                        JOIN
-                                            usuario u_interlocutor ON interlocutores_recientes.interlocutor_id = u_interlocutor.id_usuario
-                                        JOIN
-                                            mensaje m_actual_last ON m_actual_last.id_mensaje = (
-                                                SELECT id_mensaje
-                                                FROM mensaje
-                                                WHERE
-                                                    (id_emisor = {$id_docente_com} AND id_receptor = interlocutores_recientes.interlocutor_id) OR
-                                                    (id_emisor = interlocutores_recientes.interlocutor_id AND id_receptor = {$id_docente_com})
-                                                ORDER BY fecha_envio DESC
-                                                LIMIT 1
-                                            )
-                                        ORDER BY
-                                            m_actual_last.fecha_envio DESC";
+                                                u_interlocutor.id_usuario,
+                                                u_interlocutor.nombre_usuario AS fullName,
+                                                u_interlocutor.foto_perfil_url,
+                                                m_actual_last.contenido_mensaje AS lastMessageContent,
+                                                m_actual_last.fecha_envio AS last_message_date,
+                                                (
+                                                    SELECT COUNT(*)
+                                                    FROM mensaje unread_m
+                                                    WHERE unread_m.id_emisor = u_interlocutor.id_usuario
+                                                      AND unread_m.id_receptor = {$id_docente_com}
+                                                      AND unread_m.leido = 0
+                                                ) AS unreadCount
+                                            FROM
+                                                (
+                                                    SELECT
+                                                        interlocutor_id,
+                                                        MAX(fecha_envio_conv) AS max_fecha_conversacion
+                                                    FROM (
+                                                        SELECT id_receptor AS interlocutor_id, fecha_envio AS fecha_envio_conv FROM mensaje WHERE id_emisor = {$id_docente_com}
+                                                        UNION ALL
+                                                        SELECT id_emisor AS interlocutor_id, fecha_envio AS fecha_envio_conv FROM mensaje WHERE id_receptor = {$id_docente_com}
+                                                    ) AS conversaciones_con_docente
+                                                    WHERE interlocutor_id != {$id_docente_com}
+                                                    GROUP BY interlocutor_id
+                                                    ORDER BY max_fecha_conversacion DESC
+                                                    LIMIT 3
+                                                ) AS interlocutores_recientes
+                                            JOIN
+                                                usuario u_interlocutor ON interlocutores_recientes.interlocutor_id = u_interlocutor.id_usuario
+                                            JOIN
+                                                mensaje m_actual_last ON m_actual_last.id_mensaje = (
+                                                    SELECT id_mensaje
+                                                    FROM mensaje
+                                                    WHERE
+                                                        (id_emisor = {$id_docente_com} AND id_receptor = interlocutores_recientes.interlocutor_id) OR
+                                                        (id_emisor = interlocutores_recientes.interlocutor_id AND id_receptor = {$id_docente_com})
+                                                    ORDER BY fecha_envio DESC
+                                                    LIMIT 1
+                                                )
+                                            ORDER BY
+                                                m_actual_last.fecha_envio DESC";
 
                             $result_users = $conn->query($sql_users);
 
@@ -222,7 +227,7 @@ include '../../conexion.php';
                                             error_log("Error parsing date in Inicio/index.php: " . $user['last_message_date'] . " - " . $e->getMessage());
                                         }
                                     }
-                        
+                                
                                     $chatPageUrl = "/C-EDU/Docente/Chat/index.php";
                                     $linkParamsArray = [
                                         'userId' => $userId,
@@ -234,9 +239,9 @@ include '../../conexion.php';
 
                                     echo '<li>';
                                     echo '    <a href="' . htmlspecialchars($fullLink) . '" 
-                                                    data-user-id="' . $userId . '"
-                                                    data-user-name="' . $userName . '"
-                                                    data-user-foto="' . htmlspecialchars($userPhotoUrl) . '">';
+                                                      data-user-id="' . $userId . '"
+                                                      data-user-name="' . $userName . '"
+                                                      data-user-foto="' . htmlspecialchars($userPhotoUrl) . '">';
                                     echo '        <img class="content-message-image" src="' . htmlspecialchars($userPhotoUrl) . '" alt="' . $userName . '">';
                                     echo '        <span class="content-message-info">';
                                     echo '            <span class="content-message-name">' . $userName . '</span>';

@@ -24,7 +24,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 25px;
+    margin: 20px 25px ;
     padding-right: 30px;
     padding-left: 30px;
     box-sizing: border-box;
@@ -84,6 +84,26 @@
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+/* --- NUEVOS ESTILOS PARA EL ENLACE DE LA TAREA --- */
+.task-item-link {
+    text-decoration: none; /* Quita el subrayado del enlace */
+    color: inherit; /* Hereda el color de texto del elemento padre */
+    display: block; /* Hace que el enlace ocupe todo el espacio del div.task-item */
+    /* Puedes añadir una transición o efecto de hover aquí si quieres que todo el bloque de la tarea reaccione al hover */
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.task-item-link:hover .task-item {
+    background-color: var(--hover-color); /* Cambia el fondo del item al pasar el ratón */
+    transform: translateY(-2px); /* Un ligero levantamiento */
+}
+
+.task-item-link:active .task-item {
+    transform: translateY(0); /* Vuelve a la posición original al hacer clic */
+}
+/* --- FIN DE NUEVOS ESTILOS PARA EL ENLACE DE LA TAREA --- */
+
+
 .task-item,
 .event-item,
 .chat-item {
@@ -99,7 +119,7 @@
 .task-item:last-child,
 .event-item:last-child,
 .chat-item:last-child {
-    margin-bottom: 0;
+    margin-bottom: 5px;
 }
 
 .task-item {
