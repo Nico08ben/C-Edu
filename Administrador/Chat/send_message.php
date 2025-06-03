@@ -105,7 +105,7 @@ if ($stmt) {
         // Construct sender's photo URL for the response
         $webRootPath = '/C-edu/'; // Define your application's web root path
         // Define the full path to the default avatar
-        $defaultAvatarPath = $webRootPath . 'Administrador/Chat/assets/images/default-avatar.png';
+        $defaultAvatarPath = $webRootPath . 'uploads/profile_pictures/default-avatar.png';
 
         $senderPhotoUrlForResponse = $defaultAvatarPath; // Assume default first
         // $_SESSION['foto_perfil_url'] should store the path relative to the web root's uploads directory

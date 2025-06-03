@@ -416,15 +416,15 @@ function renderMessageToDOM(msg, container) {
     let messageContentHTML = '';
     const content = msg.contenido_mensaje;
 
-    const chatContentImageBasePath = '/C-edu/Administrador/Chat/';
+    const chatContentImageBasePath = '/C-edu/uploads/profile_pictures/';
 
     if (content && (content.toLowerCase().endsWith('.jpg') || content.toLowerCase().endsWith('.jpeg') || content.toLowerCase().endsWith('.png') || content.toLowerCase().endsWith('.gif') || content.toLowerCase().endsWith('.webp'))) {
         if (content.startsWith('http://') || content.startsWith('https://')) {
             messageContentHTML = `<img class="message-image sticker-image" src="${escapeHTML(content)}" alt="Sticker" style="max-width: 180px; height: auto; border-radius: 8px;" />`;
-        } else if (content.startsWith('uploads/')) {
+        } else if (content.startsWith('/C-edu/uploads/profile_pictures/')) {
             messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
         } else {
-            messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + 'uploads/' + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
+            messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + '/C-edu/uploads/profile_pictures/' + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
         }
     } else if (content && content.startsWith('blob:http')) {
         messageContentHTML = `
@@ -608,7 +608,7 @@ function setupMessageSendingAndInput() {
                 .then(data => {
                     if (data.success && data.imageUrl) {
                         // data.imageUrl is like "uploads/img_uniqueid.jpg"
-                        // This path is relative to where upload.php saved it (Administrador/Chat/uploads/)
+                        // This path is relative to where upload.php saved it (/C-edu/uploads/profile_pictures/)
                         sendMessageToServer(data.imageUrl, false, 'image');
                     } else {
                         throw new Error(data.message || 'Image upload failed (server response).');
