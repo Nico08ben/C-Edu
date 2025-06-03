@@ -1,5 +1,5 @@
 <?php
-// Ubicación: /Docente/Chat/send_message.php o similar
+// Ubicación: /Administrador/Chat/send_message.php o similar
 
 // ini_set('display_errors', 1); // Descomentar para depuración
 // ini_set('display_startup_errors', 1); // Descomentar para depuración
@@ -20,7 +20,7 @@ if (!isset($_SESSION['id_usuario'])) {
 // Conexión a la base de datos (ajusta la ruta si es necesario)
 require_once __DIR__ . '/../../conexion.php';
 // Función para crear notificaciones (ajusta la ruta si es necesario)
-// Si send_message.php está en /C-Edu/Docente/Chat/ y crear_notificacion.php está en /C-Edu/PHP/api/
+// Si send_message.php está en /C-Edu/Administrador/Chat/ y crear_notificacion.php está en /C-Edu/PHP/api/
 require_once __DIR__ . '/../../PHP/api/crear_notificacion.php'; // ¡Verifica esta ruta!
 
 // 3. Verificar conexión a la BD
