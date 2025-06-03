@@ -44,7 +44,7 @@
     box-sizing: border-box;
     box-shadow: 0 4px 12px var(--shadow-color); /* Usar --shadow-color para la sombra */
     border-radius: 12px; /* Añadido para consistencia */
-    margin-bottom: 30px; /* Añadido para dar espacio, similar a iniciodocentess.css */
+    margin: 25px; /* Añadido para dar espacio, similar a iniciodocentess.css */
 }
 
 /* Estilos del título principal en el encabezado */
