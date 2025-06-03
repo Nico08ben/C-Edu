@@ -1,70 +1,107 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Obtener eventos guardados en localStorage
+    function getSavedEvents() {
+        const savedEvents = localStorage.getItem('calendarEvents');
+        return savedEvents ? JSON.parse(savedEvents) : [];
+    }
+
+    // Guardar eventos en localStorage
+    function saveEvents(events) {
+        localStorage.setItem('calendarEvents', JSON.stringify(events));
+    }
+
+    // Inicializar FullCalendar
     const calendarEl = document.getElementById('calendar');
-    const defaultEventColorDocente = '#3eb489'; // Verde para Docente
-    const defaultEventColorAdmin = '#e7bb41';   // Amarillo para Admin
-
-    // Determinar el color por defecto basado en la URL (simple heurística)
-    // Puedes mejorarlo pasando una variable desde PHP a JS si es necesario.
-    const isUserAdmin = window.location.pathname.includes('/Administrador/');
-    const defaultEventColor = isUserAdmin ? defaultEventColorAdmin : defaultEventColorDocente;
-    const defaultEventTextColor = getContrastYIQ(defaultEventColor);
-
-
     const calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'es',
         initialView: 'dayGridMonth',
-        headerToolbar: false,
-        firstDay: 1,
-        editable: true, // Permite arrastrar y redimensionar eventos
-        selectable: true, // Permite seleccionar fechas para crear eventos (opcional)
-
-        // Cargar eventos desde el backend
-        events: 'get-events.php', // URL al script PHP
-
+        headerToolbar: false, // Ocultamos la barra de herramientas nativa
+        firstDay: 1, // Lunes como primer día de la semana
+        events: function(fetchInfo, successCallback, failureCallback) {
+            // Cargar eventos desde get-events.php
+            fetch('get-events.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error del servidor al obtener eventos: ${response.status} ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Comprobar si la respuesta es un array (incluso vacío)
+                    if (Array.isArray(data)) {
+                        successCallback(data);
+                        saveEvents(data); // Guardar en localStorage también
+                    } else {
+                        console.error('Respuesta de get-events.php no es un array:', data);
+                        failureCallback(new Error('Formato de respuesta inesperado al obtener eventos.'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar eventos desde get-events.php:', error);
+                    // Intentar cargar desde localStorage como fallback
+                    const localEvents = getSavedEvents();
+                    console.log('Cargando eventos desde localStorage como fallback:', localEvents);
+                    successCallback(localEvents);
+                    alert('No se pudieron cargar los eventos del servidor. Mostrando eventos guardados localmente, si existen.');
+                    failureCallback(error);
+                });
+        },
         eventDisplay: 'block',
+        eventColor: '#3eb489', // Color por defecto
+        eventTextColor: '#333', // Texto más oscuro para mejor contraste con colores claros
         eventTimeFormat: {
             hour: '2-digit',
             minute: '2-digit',
-            hour12: true
+            hour12: true // O false si prefieres formato de 24 horas
         },
-
-        // Al hacer clic en una fecha/hora del calendario
-        select: function(selectionInfo) {
-            // El modal se abrirá con valores por defecto o la fecha seleccionada
-            document.getElementById('event-form').reset(); // Limpiar formulario
-            document.getElementById('event-start').value = formatDateTimeLocal(selectionInfo.start);
-            if (selectionInfo.allDay) {
-                 // Si es allDay, la hora final podría ser el inicio del día siguiente.
-                 // Para un evento de día completo, a menudo no se especifica hora final o es la misma fecha.
-                document.getElementById('event-end').value = formatDateTimeLocal(selectionInfo.start); // O dejar vacío si se maneja en backend
-            } else {
-                document.getElementById('event-end').value = selectionInfo.end ? formatDateTimeLocal(selectionInfo.end) : '';
-            }
-            document.getElementById('event-color').value = defaultEventColor;
+        dateClick: function(info) {
+            // Abrir modal para nuevo evento al hacer clic en una fecha
+            const startDate = new Date(info.date);
+            // Establecer hora por defecto (ej. 09:00 AM del día clickeado)
+            startDate.setHours(9, 0, 0, 0); 
+            
+            document.getElementById('event-start').value = formatDateTimeLocal(startDate);
+            document.getElementById('event-end').value = ''; // Limpiar fecha de fin
+            document.getElementById('event-name').value = ''; // Limpiar campos del formulario
+            document.getElementById('event-description').value = '';
+            document.getElementById('event-color').value = '#3eb489'; // Color por defecto
+            
             document.getElementById('new-event-modal').style.display = 'block';
         },
-        
-        // Al hacer clic en un evento existente
         eventClick: function(info) {
+            // Mostrar detalles del evento al hacer clic en él
             const event = info.event;
             document.getElementById('event-title').textContent = event.title;
-
+            
             let dateStr = '';
-            if (event.allDay) {
-                dateStr = event.start.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            if (event.allDay) { // FullCalendar a veces no establece allDay explícitamente
+                const start = event.start;
+                if (start) {
+                   dateStr = start.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                }
             } else {
-                dateStr = event.start.toLocaleString('es-ES', {
-                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
-                });
-                if (event.end) {
-                    dateStr += ' - ' + event.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                const start = event.start;
+                const end = event.end;
+                if (start) {
+                    dateStr = start.toLocaleString('es-ES', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                }
+                if (end) {
+                    dateStr += ' - ' + end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                } else if (start && !end) { // Si solo hay start, mostrar solo la hora de inicio
+                     // La fecha ya está incluida, solo asegurar que se muestre
                 }
             }
-            document.getElementById('event-date').innerHTML = `<span>${dateStr}</span>`;
-            const descriptionText = event.extendedProps.description || 'Sin descripción';
-            document.getElementById('event-description').innerHTML = `<span>${descriptionText.replace(/\n/g, '<br>')}</span>`;
-
-
+            
+            document.getElementById('event-date').innerHTML = `<span>${dateStr || 'Fecha no especificada'}</span>`;
+            document.getElementById('event-description').innerHTML = `<span>${event.extendedProps.description || 'Sin descripción'}</span>`;
+            
             // Configurar botón de eliminar
             document.getElementById('delete-event').onclick = function() {
                 if (confirm('¿Estás seguro de eliminar este evento?')) {
@@ -76,169 +113,63 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            info.event.remove(); // Eliminar del UI
+                            event.remove();
+                            // Actualizar localStorage
+                            const savedEvents = getSavedEvents().filter(e => e.id !== event.id);
+                            saveEvents(savedEvents);
                             document.getElementById('event-modal').style.display = 'none';
-                            alert('Evento eliminado correctamente.');
                         } else {
-                            alert('Error al eliminar el evento: ' + (data.message || 'Error desconocido'));
+                            alert('Error al eliminar el evento: ' + (data.message || 'Error desconocido.'));
                         }
                     })
                     .catch(error => {
-                        console.error('Error en fetch (delete):', error);
+                        console.error('Error al eliminar evento (AJAX):', error);
                         alert('Error de conexión al eliminar el evento.');
                     });
                 }
             };
+            
             document.getElementById('event-modal').style.display = 'block';
         },
-
-        // Cuando un evento se arrastra a una nueva fecha/hora
-        eventDrop: function(info) {
-            if (!confirm("¿Estás seguro de mover este evento?")) {
-                info.revert(); // Revertir el cambio en la UI si el usuario cancela
-                return;
-            }
-            const eventData = {
-                id: info.event.id,
-                title: info.event.title,
-                start: info.event.start.toISOString(), // Enviar en formato ISO
-                end: info.event.end ? info.event.end.toISOString() : null,
-                description: info.event.extendedProps.description || "",
-                // Aquí podrías enviar el color si lo tienes y lo quieres actualizar
-                // backgroundColor: info.event.backgroundColor
-            };
-
-            fetch('update-event.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(eventData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.success) {
-                    alert('Error al actualizar el evento: ' + (data.message || 'Error desconocido'));
-                    info.revert(); // Revertir si la actualización falla en el backend
-                } else {
-                    alert('Evento actualizado correctamente.');
-                    calendar.refetchEvents(); // Opcional: Refrescar todos los eventos
-                }
-            })
-            .catch(error => {
-                console.error('Error en fetch (update on drop):', error);
-                alert('Error de conexión al actualizar el evento.');
-                info.revert();
-            });
-        },
-        
-        // (Opcional) Cuando un evento se redimensiona
-        // eventResize: function(info) { ... similar a eventDrop ... },
-
-        // ... dentro de la configuración de FullCalendar.Calendar en calendario.js ...
         eventDidMount: function(info) {
-            const eventColor = info.event.backgroundColor || defaultEventColor; // Usa color del evento o el default de la sección
-            const eventTextColor = getContrastYIQ(eventColor);
-
-            info.el.style.backgroundColor = eventColor;
-            info.el.style.borderLeft = `4px solid ${eventColor}`;
-            info.el.style.color = eventTextColor;
+            // Establecer color del evento
+            if (info.event.backgroundColor) {
+                info.el.style.backgroundColor = info.event.backgroundColor;
+                info.el.style.borderLeft = `4px solid ${info.event.backgroundColor}`;
+            }
+             // Asegurar que el texto del evento sea visible si el color de fondo es oscuro
+            const bgColor = info.event.backgroundColor || '#3eb489'; // Color por defecto si no está definido
+            const brightness = chroma(bgColor).luminance(); // Usando Chroma.js si está disponible, o una función simple
+            if (brightness < 0.5) { // Si el fondo es oscuro
+                info.el.style.color = 'white'; // Poner texto en blanco
+            } else {
+                info.el.style.color = '#333'; // Poner texto oscuro por defecto
+            }
         },
-// ...
+        editable: true, // Permitir arrastrar y redimensionar eventos
+        eventDrop: function(info) { // Cuando un evento es arrastrado a una nueva fecha/hora
+            updateEventOnServer(info.event);
+        },
+        eventResize: function(info) { // Cuando un evento es redimensionado
+            updateEventOnServer(info.event);
+        }
     });
 
     calendar.render();
     updateMonthYear(calendar);
 
-    function formatDateTimeLocal(date) {
-        if (!date) return '';
-        const d = new Date(date);
-        // Ajustar a la zona horaria local para la visualización en el input datetime-local
-        const offset = d.getTimezoneOffset() * 60000;
-        const localDate = new Date(d.getTime() - offset);
-        return localDate.toISOString().slice(0, 16);
-    }
-
-    function updateMonthYear(calInstance) {
-        const view = calInstance.view;
-        document.getElementById('month-year').textContent = view.title;
-    }
-
-    function getContrastYIQ(hexcolor){
-        if (!hexcolor) return '#333333'; // Color de texto por defecto si no hay color de fondo
-        hexcolor = hexcolor.replace("#", "");
-        var r = parseInt(hexcolor.substr(0,2),16);
-        var g = parseInt(hexcolor.substr(2,2),16);
-        var b = parseInt(hexcolor.substr(4,2),16);
-        var yiq = ((r*299)+(g*587)+(b*114))/1000;
-        return (yiq >= 135) ? '#333333' : '#FFFFFF'; // Umbral ajustado ligeramente
-    }
-
-    document.getElementById('today-btn').addEventListener('click', function() {
-        calendar.today();
-        updateMonthYear(calendar);
-    });
-    document.getElementById('prev-btn').addEventListener('click', function() {
-        calendar.prev();
-        updateMonthYear(calendar);
-    });
-    document.getElementById('next-btn').addEventListener('click', function() {
-        calendar.next();
-        updateMonthYear(calendar);
-    });
-    document.getElementById('day-view').addEventListener('click', function() {
-        calendar.changeView('timeGridDay');
-        setActiveView('day');
-    });
-    document.getElementById('week-view').addEventListener('click', function() {
-        calendar.changeView('timeGridWeek');
-        setActiveView('week');
-    });
-    document.getElementById('month-view').addEventListener('click', function() {
-        calendar.changeView('dayGridMonth');
-        setActiveView('month');
-    });
-
-    function setActiveView(view) {
-        document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`${view}-view`).classList.add('active');
-    }
-
-    document.getElementById('new-event-btn').addEventListener('click', function() {
-        document.getElementById('event-form').reset(); // Limpiar formulario
-        const now = new Date();
-        document.getElementById('event-start').value = formatDateTimeLocal(now);
-        document.getElementById('event-color').value = defaultEventColor; // Color por defecto de la sección
-        // El ID del textarea de descripción en Admin es 'event-description-admin' y en Docente 'event-description'
-        const descriptionTextareaId = isUserAdmin ? 'event-description-admin' : 'event-description';
-        if (document.getElementById(descriptionTextareaId)) { //Verificar que el elemento existe
-             document.getElementById(descriptionTextareaId).value = '';
-        }
-        document.getElementById('new-event-modal').style.display = 'block';
-    });
-
-    document.getElementById('event-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const title = document.getElementById('event-name').value;
-        const start = document.getElementById('event-start').value;
-        const end = document.getElementById('event-end').value || null; // Enviar null si está vacío
-        const descriptionTextareaId = isUserAdmin ? 'event-description-admin' : 'event-description';
-        const description = document.getElementById(descriptionTextareaId) ? document.getElementById(descriptionTextareaId).value : "";
-        const backgroundColor = document.getElementById('event-color').value;
-
-        if (!title || !start) {
-            alert("El título y la fecha de inicio son obligatorios.");
-            return;
-        }
-        
+    // Función para actualizar evento en el servidor (y localStorage)
+    function updateEventOnServer(event) {
         const eventData = {
-            title: title,
-            start: start, // YYYY-MM-DDTHH:MM
-            end: end,     // YYYY-MM-DDTHH:MM o null
-            description: description,
-            backgroundColor: backgroundColor // Se envía al backend
+            id: event.id,
+            title: event.title,
+            start: event.start.toISOString(), // Formato ISO para el backend
+            end: event.end ? event.end.toISOString() : null,
+            description: event.extendedProps.description || ''
+            // No enviamos color aquí, ya que no parece ser parte de la tabla `evento`
         };
 
-        fetch('add-event.php', {
+        fetch('update-event.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(eventData)
@@ -246,62 +177,279 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // El backend debería devolver el evento completo, incluyendo el nuevo ID y color si se guardó.
-                // Si add-event.php devuelve el evento con su ID de la BD:
-                calendar.addEvent({
-                    id: data.id, // ID de la base de datos
-                    title: title,
-                    start: start,
-                    end: end,
-                    description: description,
-                    backgroundColor: backgroundColor,
-                    textColor: getContrastYIQ(backgroundColor)
-                });
-                document.getElementById('new-event-modal').style.display = 'none';
-                this.reset();
-                alert('Evento añadido correctamente.');
+                console.log('Evento actualizado en el servidor');
+                // Actualizar en localStorage
+                const savedEvents = getSavedEvents().map(e => e.id === event.id ? {
+                    ...e, // Mantener propiedades existentes como el color
+                    id: event.id, // Asegurar que el id sea el correcto (string o int según DB)
+                    title: event.title,
+                    start: event.start.toISOString(),
+                    end: event.end ? event.end.toISOString() : undefined, // FullCalendar usa undefined para eventos sin fin
+                    description: event.extendedProps.description,
+                    // backgroundColor y borderColor ya deberían estar en el evento de FullCalendar
+                    backgroundColor: event.backgroundColor, 
+                    borderColor: event.borderColor 
+                } : e);
+                saveEvents(savedEvents);
             } else {
-                alert('Error al añadir el evento: ' + (data.message || 'Error desconocido'));
+                alert('Error al actualizar el evento en el servidor: ' + (data.message || 'Error desconocido.'));
+                info.revert(); // Revertir el cambio en el calendario si falla la actualización
             }
         })
         .catch(error => {
-            console.error('Error en fetch (add):', error);
-            alert('Error de conexión al añadir el evento.');
+            console.error('Error al actualizar evento (AJAX):', error);
+            alert('Error de conexión al actualizar el evento.');
+            info.revert();
+        });
+    }
+
+
+    // Función para formatear fecha para input datetime-local
+    function formatDateTimeLocal(date) {
+        const d = new Date(date);
+        // Ajustar a la zona horaria local para la visualización en el input
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        return d.toISOString().slice(0, 16);
+    }
+
+    // Actualizar el mes y año mostrado
+    function updateMonthYear(calendarInstance) {
+        const view = calendarInstance.view;
+        if (view && view.title) {
+            document.getElementById('month-year').textContent = view.title;
+        }
+    }
+
+    // Configurar botones de navegación
+    document.getElementById('today-btn').addEventListener('click', function() {
+        calendar.today();
+        updateMonthYear(calendar);
+    });
+
+    document.getElementById('prev-btn').addEventListener('click', function() {
+        calendar.prev();
+        updateMonthYear(calendar);
+    });
+
+    document.getElementById('next-btn').addEventListener('click', function() {
+        calendar.next();
+        updateMonthYear(calendar);
+    });
+
+    // Configurar botones de vista
+    document.getElementById('day-view').addEventListener('click', function() {
+        calendar.changeView('timeGridDay');
+        setActiveView('day');
+        updateMonthYear(calendar);
+    });
+
+    document.getElementById('week-view').addEventListener('click', function() {
+        calendar.changeView('timeGridWeek');
+        setActiveView('week');
+        updateMonthYear(calendar);
+    });
+
+    document.getElementById('month-view').addEventListener('click', function() {
+        calendar.changeView('dayGridMonth');
+        setActiveView('month');
+        updateMonthYear(calendar);
+    });
+
+    // Función para marcar la vista activa
+    function setActiveView(view) {
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        const activeBtn = document.getElementById(`${view}-view`);
+        if (activeBtn) {
+            activeBtn.classList.add('active');
+        }
+    }
+
+    // Configurar modal de nuevo evento
+    document.getElementById('new-event-btn').addEventListener('click', function() {
+        const now = new Date();
+        now.setHours(9,0,0,0); // Hora por defecto: 09:00 AM
+
+        document.getElementById('event-start').value = formatDateTimeLocal(now);
+        document.getElementById('event-end').value = '';
+        document.getElementById('event-name').value = '';
+        document.getElementById('event-description').value = '';
+        document.getElementById('event-color').value = '#3eb489';
+        
+        document.getElementById('new-event-modal').style.display = 'block';
+    });
+
+    // Manejar envío del formulario de nuevo evento
+    document.getElementById('event-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const title = document.getElementById('event-name').value;
+        const start = document.getElementById('event-start').value;
+        const end = document.getElementById('event-end').value;
+        const description = document.getElementById('event-description').value;
+        const color = document.getElementById('event-color').value;
+        
+        const newEventDataForFullCalendar = {
+            id: 'event_' + Date.now(), 
+            title: title,
+            start: start,
+            end: end || undefined,
+            description: description,
+            backgroundColor: color,
+            borderColor: color
+        };
+
+        const eventDataForBackend = {
+            title: title,
+            start: start, // Se dividirá en fecha y hora en PHP
+            // 'end' podría enviarse si tu backend lo maneja
+            description: description
+            // El color se maneja en el frontend con FullCalendar, pero podrías guardarlo si quieres
+            // 'categoria_evento' o 'enlace_recurso' si los recolectas del form
+        };
+        
+        fetch('add-event.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(eventDataForBackend),
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    throw new Error(`Error del servidor: ${response.status} ${response.statusText}. Respuesta: ${text}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.id) { // Asegurarse que data.id existe
+                newEventDataForFullCalendar.id = data.id; // Usa el ID de la base de datos
+                calendar.addEvent(newEventDataForFullCalendar);
+
+                const savedEvents = getSavedEvents();
+                // Asegurarse de no duplicar si el evento ya fue añadido por la carga inicial
+                if (!savedEvents.find(ev => ev.id === newEventDataForFullCalendar.id)) {
+                    savedEvents.push(newEventDataForFullCalendar); 
+                    saveEvents(savedEvents);
+                }
+                
+                document.getElementById('new-event-modal').style.display = 'none';
+                this.reset();
+                alert(data.message || 'Evento guardado exitosamente.');
+            } else {
+                alert('Error al guardar el evento: ' + (data.message || 'Respuesta de error no especificada o ID faltante.'));
+                console.error('Error from backend:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Error en la solicitud AJAX o al procesar la respuesta:', error);
+            alert('Error de conexión o respuesta inválida al guardar el evento. Revise la consola del navegador para más detalles.\nDetalle: ' + error.message);
         });
     });
 
+    // Cerrar modales
     document.querySelectorAll('.close').forEach(button => {
         button.addEventListener('click', function() {
-            this.closest('.modal').style.display = 'none';
+            const modal = this.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
         });
     });
+
+    // Cerrar modal al hacer clic fuera del contenido
     window.addEventListener('click', function(event) {
         if (event.target.classList.contains('modal')) {
             event.target.style.display = 'none';
         }
     });
 
+    // Mini calendario
     const miniCalendarEl = document.getElementById('mini-calendar');
-    if (miniCalendarEl) { // Verificar que el mini-calendario existe
-        const miniCalendar = new FullCalendar.Calendar(miniCalendarEl, {
+    let miniCalendarInstance = null; // Para evitar re-renderizar si no es necesario
+
+    if (miniCalendarEl) {
+        miniCalendarInstance = new FullCalendar.Calendar(miniCalendarEl, {
             locale: 'es',
             initialView: 'dayGridMonth',
-            headerToolbar: { start: 'title', center: '', end: 'today prev,next' },
-            height: 'auto',
+            headerToolbar: {
+                start: 'title',
+                center: '',
+                end: 'prev,next' // Simplificado, 'today' puede ser redundante
+            },
+            height: 'auto', // Para que se ajuste al contenido
             dateClick: function(info) {
-                calendar.gotoDate(info.date);
+                calendar.gotoDate(info.date); // El calendario principal va a la fecha clickeada
                 updateMonthYear(calendar);
+            },
+            datesSet: function(dateInfo) { // Cuando la vista del mini calendario cambia
+                // Esto podría causar un bucle si no se maneja con cuidado.
+                // calendar.gotoDate(miniCalendarInstance.getDate());
+                // updateMonthYear(calendar);
             }
         });
-        miniCalendar.render();
+        miniCalendarInstance.render();
+    }
+    
+    // Sincronización entre calendarios (simplificada para evitar bucles)
+    let syncing = false;
+    calendar.on('datesSet', function(dateInfo) { // Cuando el calendario principal cambia de vista/fecha
+        if (!syncing && miniCalendarInstance) {
+            syncing = true;
+            miniCalendarInstance.gotoDate(calendar.getDate());
+            updateMonthYear(calendar); // Asegurarse que el título principal se actualiza
+            setTimeout(() => syncing = false, 50); // Pequeño delay para evitar bucles
+        }
+    });
 
-        let syncing = false;
-        calendar.on('datesSet', function() {
-            if (!syncing) {
+    if (miniCalendarInstance) {
+        miniCalendarInstance.on('dateClick', function(info) { // Cuando se hace clic en una fecha del mini calendario
+             if (!syncing) {
                 syncing = true;
-                miniCalendar.gotoDate(calendar.getDate());
+                calendar.gotoDate(info.date);
+                // `datesSet` del calendario principal se encargará de `updateMonthYear`
                 setTimeout(() => syncing = false, 50);
             }
         });
     }
+    
+    // Para la librería de color (si la usas, asegúrate de incluirla)
+    // Ejemplo de función simple para brillo (0 oscuro, 1 claro)
+    function getBrightness(hexColor) {
+        if (!hexColor || hexColor.length < 4) return 0.5; // Default si el color es inválido
+        hexColor = hexColor.replace('#', '');
+        let r, g, b;
+        if (hexColor.length === 3) {
+            r = parseInt(hexColor[0] + hexColor[0], 16);
+            g = parseInt(hexColor[1] + hexColor[1], 16);
+            b = parseInt(hexColor[2] + hexColor[2], 16);
+        } else if (hexColor.length === 6) {
+            r = parseInt(hexColor.substring(0, 2), 16);
+            g = parseInt(hexColor.substring(2, 4), 16);
+            b = parseInt(hexColor.substring(4, 6), 16);
+        } else {
+            return 0.5; // Default
+        }
+        // Fórmula de luminosidad relativa (YIQ)
+        return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    }
+
+    // FullCalendar eventDidMount para ajustar color de texto basado en el fondo
+    // (reemplaza la función simple de chroma con la de arriba o incluye Chroma.js)
+    calendar.setOption('eventDidMount', function(info) {
+        if (info.event.backgroundColor) {
+            info.el.style.backgroundColor = info.event.backgroundColor;
+            info.el.style.borderLeft = `4px solid ${info.event.backgroundColor}`;
+        }
+        const bgColor = info.event.backgroundColor || '#3eb489';
+        const brightness = getBrightness(bgColor);
+        info.el.style.color = brightness < 0.55 ? 'white' : '#333'; // Ajusta el umbral 0.55 según sea necesario
+    });
+
+    // Asegurar que la vista activa se marque al cargar
+    setActiveView(calendar.view.type.replace(/dayGrid|timeGrid/, '').toLowerCase() || 'month');
+
 });
