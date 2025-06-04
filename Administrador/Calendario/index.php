@@ -25,7 +25,9 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
     <title>Calendario Administrador</title>
 
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
-    <link rel="stylesheet" href="calendario.css"> </head>
+    <link rel="stylesheet" href="calendario.css">
+    <link rel="stylesheet" href="style.css">
+</head>
 
 <body>
     <?php include "../../SIDEBAR/Admin/sidebar.php"; // Ruta al sidebar de Admin ?>
@@ -117,7 +119,19 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
         </div>
     </div>
 
+    <div class="toast">
+        <div class="toast-content">
+            <i class="fas fa-solid fa-check check"></i>
+            <div class="message">
+                <span class="text text-1">Evento añadido</span>
+            </div>
+        </div>
+        <i class="fa-solid fa-xmark close"></i>
+        <div class="progress"></div>
+    </div>
+
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js'></script>
-    <script src="calendario.js"></script> </body>
+    <script src="calendario.js"></script>
+    </body>
 </html>

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('calendarEvents', JSON.stringify(events));
     }
 
-    // Inicializar FullCalendar
+    // FullCalendar variables (unchanged)
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'es',
@@ -58,21 +58,21 @@ document.addEventListener('DOMContentLoaded', function() {
             // Abrir modal para nuevo evento al hacer clic en una fecha
             const startDate = new Date(info.date);
             // Establecer hora por defecto (ej. 09:00 AM del día clickeado)
-            startDate.setHours(9, 0, 0, 0); 
-            
+            startDate.setHours(9, 0, 0, 0);
+
             document.getElementById('event-start').value = formatDateTimeLocal(startDate);
             document.getElementById('event-end').value = ''; // Limpiar fecha de fin
             document.getElementById('event-name').value = ''; // Limpiar campos del formulario
-            document.getElementById('event-description').value = '';
-            document.getElementById('event-color').value = '#3eb489'; // Color por defecto
-            
+            document.getElementById('event-description-admin').value = ''; // Usar el ID correcto para la descripción del admin
+            document.getElementById('event-color').value = '#e7bb41'; // Color por defecto (Amarillo Admin)
+
             document.getElementById('new-event-modal').style.display = 'block';
         },
         eventClick: function(info) {
             // Mostrar detalles del evento al hacer clic en él
             const event = info.event;
             document.getElementById('event-title').textContent = event.title;
-            
+
             let dateStr = '';
             if (event.allDay) { // FullCalendar a veces no establece allDay explícitamente
                 const start = event.start;
@@ -83,13 +83,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const start = event.start;
                 const end = event.end;
                 if (start) {
-                    dateStr = start.toLocaleString('es-ES', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric', 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
+                    dateStr = start.toLocaleString('es-ES', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
                     });
                 }
                 if (end) {
@@ -98,10 +98,10 @@ document.addEventListener('DOMContentLoaded', function() {
                      // La fecha ya está incluida, solo asegurar que se muestre
                 }
             }
-            
+
             document.getElementById('event-date').innerHTML = `<span>${dateStr || 'Fecha no especificada'}</span>`;
             document.getElementById('event-description').innerHTML = `<span>${event.extendedProps.description || 'Sin descripción'}</span>`;
-            
+
             // Configurar botón de eliminar
             document.getElementById('delete-event').onclick = function() {
                 if (confirm('¿Estás seguro de eliminar este evento?')) {
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
             };
-            
+
             document.getElementById('event-modal').style.display = 'block';
         },
         eventDidMount: function(info) {
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
              // Asegurar que el texto del evento sea visible si el color de fondo es oscuro
             const bgColor = info.event.backgroundColor || '#3eb489'; // Color por defecto si no está definido
-            const brightness = chroma(bgColor).luminance(); // Usando Chroma.js si está disponible, o una función simple
+            const brightness = getBrightness(bgColor); // Usando nuestra función simple
             if (brightness < 0.5) { // Si el fondo es oscuro
                 info.el.style.color = 'white'; // Poner texto en blanco
             } else {
@@ -187,8 +187,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     end: event.end ? event.end.toISOString() : undefined, // FullCalendar usa undefined para eventos sin fin
                     description: event.extendedProps.description,
                     // backgroundColor y borderColor ya deberían estar en el evento de FullCalendar
-                    backgroundColor: event.backgroundColor, 
-                    borderColor: event.borderColor 
+                    backgroundColor: event.backgroundColor,
+                    borderColor: event.borderColor
                 } : e);
                 saveEvents(savedEvents);
             } else {
@@ -274,41 +274,62 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('event-start').value = formatDateTimeLocal(now);
         document.getElementById('event-end').value = '';
         document.getElementById('event-name').value = '';
-        document.getElementById('event-description').value = '';
-        document.getElementById('event-color').value = '#3eb489';
-        
+        document.getElementById('event-description-admin').value = ''; // Usar el ID correcto
+        document.getElementById('event-color').value = '#e7bb41'; // Color por defecto (Amarillo Admin)
+
         document.getElementById('new-event-modal').style.display = 'block';
     });
+
+    // ******************************************************************
+    // INICIO DE LA INTEGRACIÓN DE LA NOTIFICACIÓN
+    // ******************************************************************
+
+    // Definir las variables de la notificación fuera del listener, pero dentro del DOMContentLoaded
+    // para que sean accesibles. Estas vienen de tu script.js original.
+    const toast = document.querySelector(".toast");
+    const closeIcon = document.querySelector(".toast .close"); // Más específico para evitar colisiones
+    const progress = document.querySelector(".progress");
+
+    // Lógica para cerrar la notificación al hacer clic en la "x"
+    if (closeIcon) { // Asegurarse de que el elemento existe antes de añadir el listener
+        closeIcon.addEventListener("click", () => {
+            if (toast) toast.classList.remove("active");
+            // Dar un pequeño retraso para que la barra de progreso se oculte correctamente
+            setTimeout(() => {
+                if (progress) progress.classList.remove("active");
+            }, 300);
+        });
+    }
 
     // Manejar envío del formulario de nuevo evento
     document.getElementById('event-form').addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         const title = document.getElementById('event-name').value;
         const start = document.getElementById('event-start').value;
         const end = document.getElementById('event-end').value;
-        const description = document.getElementById('event-description').value;
+        // Asegúrate de usar el ID correcto para la descripción si es `event-description-admin`
+        const description = document.getElementById('event-description-admin').value;
         const color = document.getElementById('event-color').value;
-        
+
         const newEventDataForFullCalendar = {
-            id: 'event_' + Date.now(), 
+            id: 'event_' + Date.now(), // Un ID temporal antes de obtener el de la BD
             title: title,
             start: start,
-            end: end || undefined,
+            end: end || undefined, // undefined si no hay fecha de fin
             description: description,
             backgroundColor: color,
-            borderColor: color
+            borderColor: color // Usa el mismo color para el borde
         };
 
         const eventDataForBackend = {
             title: title,
-            start: start, // Se dividirá en fecha y hora en PHP
-            // 'end' podría enviarse si tu backend lo maneja
+            start: start,
+            end: end, // Enviar también el end al backend si tu DB lo soporta
             description: description
-            // El color se maneja en el frontend con FullCalendar, pero podrías guardarlo si quieres
-            // 'categoria_evento' o 'enlace_recurso' si los recolectas del form
+            // El color se maneja en el frontend con FullCalendar, no se envía al backend si tu tabla 'evento' no lo guarda.
         };
-        
+
         fetch('add-event.php', {
             method: 'POST',
             headers: {
@@ -318,6 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => {
             if (!response.ok) {
+                // Leer la respuesta como texto para depuración si no es JSON o hay un error HTTP
                 return response.text().then(text => {
                     throw new Error(`Error del servidor: ${response.status} ${response.statusText}. Respuesta: ${text}`);
                 });
@@ -326,19 +348,49 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             if (data.success && data.id) { // Asegurarse que data.id existe
-                newEventDataForFullCalendar.id = data.id; // Usa el ID de la base de datos
+                newEventDataForFullCalendar.id = data.id; // Usa el ID de la base de datos para el evento en FullCalendar
                 calendar.addEvent(newEventDataForFullCalendar);
 
                 const savedEvents = getSavedEvents();
-                // Asegurarse de no duplicar si el evento ya fue añadido por la carga inicial
+                // Asegurarse de no duplicar si el evento ya fue añadido por la carga inicial,
+                // aunque con el ID de la BD debería ser único.
                 if (!savedEvents.find(ev => ev.id === newEventDataForFullCalendar.id)) {
-                    savedEvents.push(newEventDataForFullCalendar); 
+                    savedEvents.push(newEventDataForFullCalendar);
                     saveEvents(savedEvents);
                 }
-                
+
                 document.getElementById('new-event-modal').style.display = 'none';
-                this.reset();
-                alert(data.message || 'Evento guardado exitosamente.');
+                this.reset(); // Limpiar el formulario
+
+                // ******************************************************************
+                // REEMPLAZO DE LA ALERTA POR LA NOTIFICACIÓN TOAST
+                // ******************************************************************
+                if (toast && progress) { // Asegurarse de que los elementos del toast existen
+                    // Actualizar el texto del mensaje si es necesario (el tuyo ya dice "Evento añadido")
+                    const messageText1 = document.querySelector(".toast-content .message .text.text-1");
+                    if (messageText1) {
+                        messageText1.textContent = "Evento añadido"; // O "Evento guardado exitosamente."
+                    }
+
+                    toast.classList.add("active");
+                    progress.classList.add("active");
+
+                    // Ocultar la notificación después de 5 segundos (matching progress bar duration)
+                    setTimeout(() => {
+                        toast.classList.remove("active");
+                        // Opcional: remover la clase active del progreso con un pequeño delay extra
+                        setTimeout(() => {
+                            progress.classList.remove("active");
+                        }, 300);
+                    }, 5000);
+                } else {
+                    // Fallback a la alerta si el toast no se encuentra (en caso de error en el HTML)
+                    alert(data.message || 'Evento guardado exitosamente.');
+                }
+                // ******************************************************************
+                // FIN DEL REEMPLAZO
+                // ******************************************************************
+
             } else {
                 alert('Error al guardar el evento: ' + (data.message || 'Respuesta de error no especificada o ID faltante.'));
                 console.error('Error from backend:', data);
@@ -350,8 +402,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Cerrar modales
-    document.querySelectorAll('.close').forEach(button => {
+    // Cerrar modales (mantén esta lógica, aplica a todos los elementos con clase 'close')
+    document.querySelectorAll('.modal .close').forEach(button => { // Más específico ".modal .close"
         button.addEventListener('click', function() {
             const modal = this.closest('.modal');
             if (modal) {
@@ -393,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         miniCalendarInstance.render();
     }
-    
+
     // Sincronización entre calendarios (simplificada para evitar bucles)
     let syncing = false;
     calendar.on('datesSet', function(dateInfo) { // Cuando el calendario principal cambia de vista/fecha
@@ -415,7 +467,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Para la librería de color (si la usas, asegúrate de incluirla)
     // Ejemplo de función simple para brillo (0 oscuro, 1 claro)
     function getBrightness(hexColor) {
