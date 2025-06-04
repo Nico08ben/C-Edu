@@ -5,16 +5,16 @@ header('Content-Type: application/json');
 // Definir la respuesta base
 $response = ['success' => false, 'message' => '', 'imageUrl' => null];
 
-// 1. Verificar el mÈtodo de la solicitud
+// 1. Verificar el mÔøΩtodo de la solicitud
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    $response['message'] = 'MÈtodo no permitido. Solo se aceptan solicitudes POST.';
+    $response['message'] = 'MÔøΩtodo no permitido. Solo se aceptan solicitudes POST.';
     echo json_encode($response);
     exit;
 }
 
 // 2. Verificar si el archivo fue subido y no hay errores iniciales
 if (!isset($_FILES['image']) || !is_uploaded_file($_FILES['image']['tmp_name'])) {
-    $response['message'] = 'No se ha subido ning˙n archivo o el archivo no es v·lido.';
+    $response['message'] = 'No se ha subido ningÔøΩn archivo o el archivo no es vÔøΩlido.';
     echo json_encode($response);
     exit;
 }
@@ -25,31 +25,31 @@ if ($fileError !== UPLOAD_ERR_OK) {
     $phpUploadErrors = [
         UPLOAD_ERR_INI_SIZE   => 'El archivo excede la directiva upload_max_filesize en php.ini.',
         UPLOAD_ERR_FORM_SIZE  => 'El archivo excede la directiva MAX_FILE_SIZE especificada en el formulario HTML.',
-        UPLOAD_ERR_PARTIAL    => 'El archivo se subiÛ solo parcialmente.',
-        UPLOAD_ERR_NO_FILE    => 'No se subiÛ ning˙n archivo.',
+        UPLOAD_ERR_PARTIAL    => 'El archivo se subiÔøΩ solo parcialmente.',
+        UPLOAD_ERR_NO_FILE    => 'No se subiÔøΩ ningÔøΩn archivo.',
         UPLOAD_ERR_NO_TMP_DIR => 'Falta una carpeta temporal.',
         UPLOAD_ERR_CANT_WRITE => 'No se pudo escribir el archivo en el disco.',
-        UPLOAD_ERR_EXTENSION  => 'Una extensiÛn de PHP detuvo la subida del archivo.',
+        UPLOAD_ERR_EXTENSION  => 'Una extensiÔøΩn de PHP detuvo la subida del archivo.',
     ];
     $response['message'] = $phpUploadErrors[$fileError] ?? 'Error desconocido al subir el archivo.';
     echo json_encode($response);
     exit;
 }
 
-// 4. Definir par·metros y validaciones
-$uploadDir = 'uploads/';
+// 4. Definir parÔøΩmetros y validaciones
+$uploadDir = '../../uploads/';
 $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 $maxFileSize = 5 * 1024 * 1024; // 5 MB
 
-// 5. Validar tamaÒo del archivo
+// 5. Validar tamaÔøΩo del archivo
 if ($_FILES['image']['size'] > $maxFileSize) {
-    $response['message'] = 'El archivo es demasiado grande. El tamaÒo m·ximo permitido es de ' . ($maxFileSize / 1024 / 1024) . ' MB.';
+    $response['message'] = 'El archivo es demasiado grande. El tamaÔøΩo mÔøΩximo permitido es de ' . ($maxFileSize / 1024 / 1024) . ' MB.';
     echo json_encode($response);
     exit;
 }
 
-// 6. Validar tipo MIME y extensiÛn del archivo
+// 6. Validar tipo MIME y extensiÔøΩn del archivo
 $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
 $detectedMimeType = finfo_file($fileInfo, $_FILES['image']['tmp_name']);
 finfo_close($fileInfo);
@@ -58,41 +58,41 @@ $originalFileName = basename($_FILES['image']['name']); // Para obtener el nombr
 $fileExtension = strtolower(pathinfo($originalFileName, PATHINFO_EXTENSION));
 
 if (!in_array($detectedMimeType, $allowedMimeTypes) || !in_array($fileExtension, $allowedExtensions)) {
-    $response['message'] = 'Tipo de archivo no permitido. Solo se aceptan im·genes JPG, JPEG, PNG, GIF o WEBP.';
+    $response['message'] = 'Tipo de archivo no permitido. Solo se aceptan imÔøΩgenes JPG, JPEG, PNG, GIF o WEBP.';
     echo json_encode($response);
     exit;
 }
 
-// 7. Crear un nombre de archivo ˙nico y seguro
-// Usar $fileExtension (obtenida de forma segura) en lugar de extraerla de nuevo
-$safeFileName = preg_replace("/[^A-Za-z0-9_.-]/", "_", $originalFileName); // Sanitizar nombre original
-$newName = uniqid('img_', true) . '.' . $fileExtension; // uniqid con m·s entropÌa
-$uploadPath = $uploadDir . $newName;
+$safeFileName = preg_replace("/[^A-Za-z0-9_.-]/", "_", $originalFileName);
+$newName = uniqid('img_', true) . '.' . $fileExtension;
+$targetPhysicalPath = $uploadDir . $newName; // Ruta f√≠sica donde se guardar√° en el servidor
 
 // 8. Verificar y crear el directorio de subida si no existe
 if (!file_exists($uploadDir)) {
-    if (!mkdir($uploadDir, 0755, true)) { // 0755 es un permiso com˙n para directorios
+    // Aseg√∫rate de que el directorio f√≠sico exista y tenga permisos de escritura.
+    if (!mkdir($uploadDir, 0755, true)) {
         $response['message'] = 'Error al crear el directorio de subida.';
-        error_log('Fallo al crear el directorio: ' . $uploadDir); // Registrar error en el servidor
+        error_log('Fallo al crear el directorio: ' . $uploadDir);
         echo json_encode($response);
         exit;
     }
 } elseif (!is_dir($uploadDir) || !is_writable($uploadDir)) {
-    $response['message'] = 'El directorio de subida no es v·lido o no tiene permisos de escritura.';
-    error_log('Directorio de subida no v·lido o sin permisos: ' . $uploadDir);
+    $response['message'] = 'El directorio de subida no es v√°lido o no tiene permisos de escritura.';
+    error_log('Directorio de subida no v√°lido o sin permisos: ' . $uploadDir);
     echo json_encode($response);
     exit;
 }
 
 // 9. Mover el archivo subido
-if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadPath)) {
+if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPhysicalPath)) {
     $response['success'] = true;
     $response['message'] = 'Imagen subida correctamente.';
-    $response['imageUrl'] = $uploadPath; // Devolver la ruta relativa
+    // CAMBIO CR√çTICO AQU√ç: Devolver la ruta web *absoluta* desde la ra√≠z del dominio
+    // Esto es lo que el frontend usar√° directamente.
+    $response['imageUrl'] = '/C-Edu/uploads/' . $newName;
 } else {
     $response['message'] = 'Error al mover el archivo subido.';
-    // PodrÌas aÒadir un registro de error aquÌ tambiÈn si es necesario
-    // error_log('Error al mover archivo subido: de ' . $_FILES['image']['tmp_name'] . ' a ' . $uploadPath);
+    error_log('Error al mover archivo subido: de ' . $_FILES['image']['tmp_name'] . ' a ' . $targetPhysicalPath);
 }
 
 echo json_encode($response);

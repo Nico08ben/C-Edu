@@ -416,15 +416,13 @@ function renderMessageToDOM(msg, container) {
     let messageContentHTML = '';
     const content = msg.contenido_mensaje;
 
-    const chatContentImageBasePath = '/C-edu/uploads/profile_pictures/';
-
     if (content && (content.toLowerCase().endsWith('.jpg') || content.toLowerCase().endsWith('.jpeg') || content.toLowerCase().endsWith('.png') || content.toLowerCase().endsWith('.gif') || content.toLowerCase().endsWith('.webp'))) {
         if (content.startsWith('http://') || content.startsWith('https://')) {
             messageContentHTML = `<img class="message-image sticker-image" src="${escapeHTML(content)}" alt="Sticker" style="max-width: 180px; height: auto; border-radius: 8px;" />`;
-        } else if (content.startsWith('/C-edu/uploads/profile_pictures/')) {
-            messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
+        } else if (content.startsWith('/C-Edu/uploads/')) {
+            messageContentHTML = `<img class="message-image" src="${escapeHTML(content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
         } else {
-            messageContentHTML = `<img class="message-image" src="${escapeHTML(chatContentImageBasePath + '/C-edu/uploads/profile_pictures/' + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
+            messageContentHTML = `<img class="message-image" src="${escapeHTML('/C-edu/uploads/profile_pictures/' + content)}" alt="Image" style="max-width: 300px; border-radius: 8px; height: auto;" />`;
         }
     } else if (content && content.startsWith('blob:http')) {
         messageContentHTML = `
