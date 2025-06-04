@@ -115,7 +115,7 @@ $stmt_insert = null;
     <style>
         /* Estilos específicos para el formulario de creación de tarea ... (sin cambios) */
         .create-task-container {
-            background-color: var(--sidebar-color);
+            background-color: var(--bg-content);
             padding: 25px;
             margin-top: 20px;
             border-radius: 8px;
@@ -126,9 +126,9 @@ $stmt_insert = null;
         }
 
         .create-task-container h2 {
-            color: var(--primary-color);
+            color: var(--text-primary);
             margin-bottom: 20px;
-            border-bottom: 2px solid var(--primary-color-ligth);
+            border-bottom: 2px solid var(--bg-input);
             padding-bottom: 10px;
         }
 
@@ -140,7 +140,7 @@ $stmt_insert = null;
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            color: var(--text-color);
+            color: var(--text-primary);
         }
 
         .form-group input[type="text"],
@@ -152,17 +152,17 @@ $stmt_insert = null;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            color: var(--text-color);
-            background-color: var(--body-color);
+            color: var(--text-primary);
+            background-color: var(--border-color);
         }
 
         body.dark .form-group input[type="text"],
         body.dark .form-group input[type="date"],
         body.dark .form-group select,
         body.dark .form-group textarea {
-            background-color: var(--primary-color-ligth);
+            background-color: var(--bg-input);
             border-color: #555;
-            color: var(--text-color);
+            color: var(--text-primary);
         }
 
         .form-group textarea {
@@ -177,7 +177,7 @@ $stmt_insert = null;
 
         .btn-submit-task {
             padding: 10px 20px;
-            background: var(--primary-color);
+            background: var(--role-primary-color);
             color: white;
             border: none;
             font-size: 16px;
@@ -189,7 +189,7 @@ $stmt_insert = null;
         }
 
         .btn-submit-task:hover {
-            background-color: #d4a738;
+            background-color: var(--role-primary-dark-color);
         }
 
         .btn-cancel {
