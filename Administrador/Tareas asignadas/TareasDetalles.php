@@ -248,10 +248,10 @@ $stmt = null;
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        /* Estilos CSS (sin cambios, son los mismos que ya tenías) */
+        <style>
+        /* Estilos adicionales para la página de detalles */
         .task-detail-container {
-            background-color: var(--sidebar-color); /* Usando color de sidebar */
+            background-color: var(--bg-content); /* Usando color de sidebar */
             padding: 30px; /* Aumentar padding */
             margin-top: 20px;
             border-radius: 8px;
@@ -262,9 +262,9 @@ $stmt = null;
         }
 
         .task-detail-container h2 {
-            color: var(--primary-color);
+            color: var(--text-primary);
             margin-bottom: 25px; /* Aumentar margen */
-            border-bottom: 2px solid var(--primary-color-ligth); /* Usando la variable light */
+            border-bottom: 2px solid var(--text-disabled); /* Usando la variable light */
             padding-bottom: 15px; /* Aumentar padding */
             font-size: 1.8rem; /* Aumentar tamaño de fuente */
         }
@@ -272,13 +272,13 @@ $stmt = null;
         .task-detail-item {
             margin-bottom: 20px; /* Aumentar margen */
             font-size: 1.1rem; /* Aumentar tamaño de fuente */
-            color: var(--text-color); /* Usando la variable de texto */
+            color: var(--text-secondary); /* Usando la variable de texto */
             display: flex; /* Usar flexbox para alinear label y valor */
             align-items: flex-start; /* Alinear al inicio */
         }
 
         .task-detail-item strong {
-            color: var(--title-color); /* Usando la variable de título */
+            color: var(--text-primary); /* Usando la variable de título */
             min-width: 180px; /* Aumentar ancho mínimo para las etiquetas */
             display: inline-block;
             margin-right: 10px; /* Espacio entre label y valor */
@@ -331,30 +331,30 @@ $stmt = null;
 
         .status-update-form label {
             font-weight: bold;
-            color: var(--title-color);
+            color: var(--text-primary);
         }
 
         .status-update-form select {
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            background-color: var(--body-color); /* Fondo del select */
-            color: var(--text-color); /* Color de texto del select */
+            background-color: var(--bg-body); /* Fondo del select */
+            color: var(--text-primary); /* Color de texto del select */
             cursor: pointer;
             outline: none;
             transition: border-color 0.3s ease;
         }
 
          body.dark .status-update-form select {
-             background-color: var(--primary-color-ligth); /* Fondo oscuro para select en modo oscuro */
+             background-color: var(--scrollbar-thumb); /* Fondo oscuro para select en modo oscuro */
              border-color: #555; /* Borde más oscuro en modo oscuro */
-             color: var(--text-color); /* Color de texto en modo oscuro */
+             color: var(--text-primary); /* Color de texto en modo oscuro */
          }
 
 
         .status-update-form button {
             padding: 10px 20px;
-            background: var(--primary-color);
+            background: var(--role-button-primary-bg);
             color: white;
             border: none;
             font-size: 1rem;
@@ -370,7 +370,7 @@ $stmt = null;
         .btn-volver {
             display: inline-block; /* Asegurar que padding y margin funcionen */
             padding: 10px 20px;
-            background: var(--primary-color); /* Usando la variable primary */
+            background: var(--role-button-primary-bg); /* Usando la variable primary */
             color: white;
             border: none;
             font-size: 16px;
