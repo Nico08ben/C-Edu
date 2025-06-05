@@ -103,6 +103,9 @@
 }
 /* --- FIN DE NUEVOS ESTILOS PARA EL ENLACE DE LA TAREA --- */
 
+.task-item{
+    font-weight: bold;
+}
 
 .task-item,
 .event-item,
@@ -151,8 +154,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     /* Usar --text-secondary para el texto de eventos */
+}
+
+.event-item small{
+    color: var(--text-secondary);
 }
 
 .event-item span i {

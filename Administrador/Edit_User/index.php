@@ -27,12 +27,14 @@ $csrf_token = $_SESSION['csrf_token'];
 
 
 // Consulta ajustada para nueva estructura de roles
-$sql = "SELECT 
+// Consulta ajustada para nueva estructura de roles
+$sql = "SELECT
     u.id_usuario,
     u.email_usuario,
     u.nombre_usuario,
     u.telefono_usuario,
     u.id_institucion,
+    u.foto_perfil_url,
     m.id_materia,
     u.id_rol,
     r.tipo_rol AS nombre_rol,
@@ -68,7 +70,8 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
     <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
 
     <section class="home">
-        <?php include '../../PHP/user_info.php'; ?>
+        <div class="user-profile-display"><?php include '../../PHP/user_info.php'; ?></div>
+        
 
         <div class="container">
             <div class="header">
@@ -98,7 +101,32 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
                                 data-institucion="<?= $fila['id_institucion'] ?>" data-rol="<?= $fila['id_rol'] ?>"
                                 data-materia="<?= $fila['id_materia'] ?>">
 
-                                <td><img src="../../assets/avatar<?= ($fila['id_usuario'] % 4) + 1 ?>.jpg" alt="Avatar"></td>
+                                <?php
+// Define la ruta del avatar por defecto
+$defaultAvatar = '../../uploads/profile_pictures/default-avatar.png';
+$avatarPath = $defaultAvatar; // Usar el avatar por defecto inicialmente
+
+// Verifica si hay una URL de foto de perfil y no está vacía
+if (!empty($fila['foto_perfil_url'])) {
+    // Construye la ruta a la foto de perfil del usuario.
+    // Se asume que 'foto_perfil_url' guarda una ruta como 'uploads/profile_pictures/nombre_archivo.png'
+    // y que tu archivo index.php está dos niveles por debajo de la raíz del proyecto
+    // (ej. RaizProyecto/Admin/Usuarios/index.php)
+    // y la carpeta 'uploads' está en la raíz del proyecto (ej. RaizProyecto/uploads/).
+    $userProfilePic = '../../' . $fila['foto_perfil_url'];
+
+    // Opcional: Podrías verificar si el archivo existe en el servidor aquí,
+    // pero para simplificar, asumiremos que si la URL está, la imagen existe.
+    // Ejemplo de verificación (requiere ajustar la ruta base según tu estructura):
+    // if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/ruta_base_proyecto/' . $fila['foto_perfil_url'])) {
+    //     $avatarPath = $userProfilePic;
+    // } else {
+    //     // Si el archivo no existe, puedes registrar un log o mantener el avatar por defecto.
+    // }
+    $avatarPath = $userProfilePic; // Si no haces la verificación de existencia, usa directamente la foto del usuario.
+}
+?>
+<td><img src="<?= htmlspecialchars($avatarPath) ?>" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;"></td>
                                 <td><?= htmlspecialchars($fila['nombre_usuario']) ?></td>
                                 <td><?= htmlspecialchars($fila['nombre_materia'] ?? 'Sin asignar') ?></td>
                                 <td><?= htmlspecialchars($fila['email_usuario']) ?></td>
@@ -123,7 +151,6 @@ $materias = $conn->query("SELECT id_materia, nombre_materia FROM materia");
 
             <div class="buttons">
                 <button id="newUser">Crear nuevo usuario</button>
-                <button id="save">Guardar</button>
             </div>
         </div>
 

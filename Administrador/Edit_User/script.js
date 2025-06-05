@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Elementos del DOM
     const userTable = document.querySelector("table tbody");
     const newUserButton = document.getElementById("newUser");
-    const saveButton = document.getElementById("save");
     const userModal = document.getElementById("userModal");
     const editUserModal = document.getElementById("editUserModal");
     const closeButtons = document.querySelectorAll(".close-button");
@@ -90,6 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const materiaSelect = document.getElementById("id_materia");
         const materiaNombre = materiaSelect.options[materiaSelect.selectedIndex].text;
 
+        const rolSelect = document.getElementById("id_rol"); // El <select> para el rol en newUserForm
+        const rolNombre = rolSelect.options[rolSelect.selectedIndex].text; // El texto visible, ej: "Administrador"
+
+
         try {
             const response = await fetch("procesar_usuario.php", {
                 method: "POST",
@@ -109,8 +112,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
 
-                // Elegir avatar aleatorio
-                const avatarNum = Math.floor(Math.random() * 4) + 1;
 
                 // Agregar a la tabla solo si el usuario fue insertado correctamente
                 const newRow = document.createElement("tr");
@@ -121,10 +122,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 newRow.dataset.materia = formData.get("id_materia"); // ID de la materia
 
                 newRow.innerHTML = `
-                    <td><img src="../../assets/avatar${avatarNum}.jpg" alt="Avatar"></td>
+                    <td><img src="/C-edu/uploads/profile_pictures/default-avatar.png" alt="Avatar"></td>
                     <td>${formData.get("nombre_usuario")}</td>
                     <td>${materiaNombre}</td>
                     <td>${formData.get("email_usuario")}</td>
+                    <td>${rolNombre}</td>
                     <td class="action-buttons">
                         <button class="edit"><i class="fas fa-edit"></i></button>
                         <button class="delete"><i class="fas fa-trash"></i></button>
@@ -386,11 +388,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Configurar los event listeners iniciales
     setupActionButtons();
-
-    // Botón de guardar
-    saveButton.addEventListener("click", function () {
-        alert("Cambios guardados correctamente");
-    });
 
     // Modificación de la carga inicial de usuarios desde PHP
     document.querySelectorAll("table tbody tr").forEach((row, index) => {
