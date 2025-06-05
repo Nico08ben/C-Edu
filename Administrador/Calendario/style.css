@@ -24,7 +24,7 @@ body{
 .toast{
     position: fixed; /* CAMBIO: usar fixed para que se posicione respecto a la ventana del navegador */
     top: 25px;
-    right: 35px;
+    right: 25px;
     border-radius: 12px;
     background-color: var(--role-primary-light-color);
     padding: 20px 35px 20px 25px;
