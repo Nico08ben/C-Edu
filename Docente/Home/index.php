@@ -84,14 +84,66 @@ include '../../conexion.php';
                     </div>
                     <div class="div-card">
                         <?php
-                        $sql_eventos = "SELECT asignacion_evento AS nombre_evento FROM evento WHERE fecha_evento >= CURDATE() ORDER BY fecha_evento ASC LIMIT 3";
+                        // MODIFIED: Select id_evento, tipo_evento, and enlace_recurso
+                        $sql_eventos = "SELECT id_evento, asignacion_evento AS nombre_evento, fecha_evento, tipo_evento, enlace_recurso FROM evento WHERE fecha_evento >= CURDATE() ORDER BY fecha_evento ASC LIMIT 3";
                         $result_eventos = $conn->query($sql_eventos);
                         if ($result_eventos && $result_eventos->num_rows > 0) {
                             while ($row_evento = $result_eventos->fetch_assoc()) {
+                                $event_link = '';
+                                // Use C-EDU casing for consistency with other links in the file
+                                $baseCalendarUrl = '/C-EDU/Docente/Calendario/index.php'; 
+
+                                // Prioritize enlace_recurso if it's a valid absolute URL
+                                if (!empty($row_evento['enlace_recurso']) && filter_var($row_evento['enlace_recurso'], FILTER_VALIDATE_URL)) {
+                                    $event_link = htmlspecialchars($row_evento['enlace_recurso']);
+                                } else {
+                                    // Otherwise, link to the calendar page with the event ID
+                                    $event_link = $baseCalendarUrl . '?id_evento=' . htmlspecialchars($row_evento['id_evento']);
+                                }
+
+                                // Format event date (e.g., "04 Jun")
+                                $displayDate = '';
+                                if (!empty($row_evento['fecha_evento'])) {
+                                    try {
+                                        $dateObj = new DateTime($row_evento['fecha_evento']);
+                                        if (extension_loaded('intl')) {
+                                            $formatter = new IntlDateFormatter('es_ES', IntlDateFormatter::NONE, IntlDateFormatter::NONE, null, null, 'd MMM');
+                                            // Ensuring month is capitalized and no period if intl provides one with abbreviation
+                                            $formattedMonth = $formatter->format($dateObj);
+                                            // Some locales might add a period (e.g., "jun."), remove it.
+                                            $formattedMonth = str_replace('.', '', $formattedMonth);
+                                            // Ensure month starts with a capital letter, handle multi-word months if any (though 'MMM' is usually short)
+                                            $parts = explode(' ', $formattedMonth);
+                                            $parts[count($parts)-1] = ucfirst($parts[count($parts)-1]); // Capitalize the month part
+                                            $displayDate = implode(' ', $parts);
+
+                                        } else {
+                                            $displayDate = $dateObj->format('d M'); // Fallback: '04 Jun'
+                                        }
+                                    } catch (Exception $e) {
+                                        error_log("Error parsing event date: " . $row_evento['fecha_evento'] . " - " . $e->getMessage());
+                                        // Fallback to a simple format if DateTime or Intl fails
+                                        $displayDate = date('d M', strtotime($row_evento['fecha_evento']));
+                                    }
+                                }
+                                
+                                echo '<a href="' . $event_link . '" class="event-item-link" style="text-decoration: none; color: inherit;">';
                                 echo '<div class="event-item">';
-                                echo '<div>' . htmlspecialchars($row_evento['nombre_evento']) . '</div>';
+                                echo '<div>';
+                                echo '<strong>' . htmlspecialchars($row_evento['nombre_evento']) . '</strong><br>';
+                                echo '<small>';
+                                if (!empty($row_evento['tipo_evento'])) {
+                                    echo htmlspecialchars($row_evento['tipo_evento']);
+                                }
+                                if (!empty($displayDate)) {
+                                    if (!empty($row_evento['tipo_evento'])) echo ' - '; // Separator
+                                    echo htmlspecialchars($displayDate);
+                                }
+                                echo '</small>';
+                                echo '</div>';
                                 echo '<span><i class="fa-solid fa-arrow-right"></i></span>';
                                 echo '</div>';
+                                echo '</a>';
                             }
                         } else {
                             echo '<div>No hay eventos pendientes.</div>';

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Obtener eventos guardados en localStorage
     function getSavedEvents() {
         const savedEvents = localStorage.getItem('calendarEvents');
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initialView: 'dayGridMonth',
         headerToolbar: false, // Ocultamos la barra de herramientas nativa
         firstDay: 1, // Lunes como primer día de la semana
-        events: function(fetchInfo, successCallback, failureCallback) {
+        events: function (fetchInfo, successCallback, failureCallback) {
             // Cargar eventos desde get-events.php
             fetch('get-events.php')
                 .then(response => {
@@ -54,90 +54,90 @@ document.addEventListener('DOMContentLoaded', function() {
             minute: '2-digit',
             hour12: true // O false si prefieres formato de 24 horas
         },
-        dateClick: function(info) {
+        dateClick: function (info) {
             // Abrir modal para nuevo evento al hacer clic en una fecha
             const startDate = new Date(info.date);
             // Establecer hora por defecto (ej. 09:00 AM del día clickeado)
-            startDate.setHours(9, 0, 0, 0); 
-            
+            startDate.setHours(9, 0, 0, 0);
+
             document.getElementById('event-start').value = formatDateTimeLocal(startDate);
             document.getElementById('event-end').value = ''; // Limpiar fecha de fin
             document.getElementById('event-name').value = ''; // Limpiar campos del formulario
             document.getElementById('event-description').value = '';
             document.getElementById('event-color').value = '#3eb489'; // Color por defecto
-            
+
             document.getElementById('new-event-modal').style.display = 'block';
         },
-        eventClick: function(info) {
+        eventClick: function (info) {
             // Mostrar detalles del evento al hacer clic en él
             const event = info.event;
             document.getElementById('event-title').textContent = event.title;
-            
+
             let dateStr = '';
             if (event.allDay) { // FullCalendar a veces no establece allDay explícitamente
                 const start = event.start;
                 if (start) {
-                   dateStr = start.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    dateStr = start.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 }
             } else {
                 const start = event.start;
                 const end = event.end;
                 if (start) {
-                    dateStr = start.toLocaleString('es-ES', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric', 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
+                    dateStr = start.toLocaleString('es-ES', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
                     });
                 }
                 if (end) {
                     dateStr += ' - ' + end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
                 } else if (start && !end) { // Si solo hay start, mostrar solo la hora de inicio
-                     // La fecha ya está incluida, solo asegurar que se muestre
+                    // La fecha ya está incluida, solo asegurar que se muestre
                 }
             }
-            
+
             document.getElementById('event-date').innerHTML = `<span>${dateStr || 'Fecha no especificada'}</span>`;
             document.getElementById('event-description').innerHTML = `<span>${event.extendedProps.description || 'Sin descripción'}</span>`;
-            
+
             // Configurar botón de eliminar
-            document.getElementById('delete-event').onclick = function() {
+            document.getElementById('delete-event').onclick = function () {
                 if (confirm('¿Estás seguro de eliminar este evento?')) {
                     fetch('delete-event.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id: event.id })
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            event.remove();
-                            // Actualizar localStorage
-                            const savedEvents = getSavedEvents().filter(e => e.id !== event.id);
-                            saveEvents(savedEvents);
-                            document.getElementById('event-modal').style.display = 'none';
-                        } else {
-                            alert('Error al eliminar el evento: ' + (data.message || 'Error desconocido.'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al eliminar evento (AJAX):', error);
-                        alert('Error de conexión al eliminar el evento.');
-                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                event.remove();
+                                // Actualizar localStorage
+                                const savedEvents = getSavedEvents().filter(e => e.id !== event.id);
+                                saveEvents(savedEvents);
+                                document.getElementById('event-modal').style.display = 'none';
+                            } else {
+                                alert('Error al eliminar el evento: ' + (data.message || 'Error desconocido.'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al eliminar evento (AJAX):', error);
+                            alert('Error de conexión al eliminar el evento.');
+                        });
                 }
             };
-            
+
             document.getElementById('event-modal').style.display = 'block';
         },
-        eventDidMount: function(info) {
+        eventDidMount: function (info) {
             // Establecer color del evento
             if (info.event.backgroundColor) {
                 info.el.style.backgroundColor = info.event.backgroundColor;
                 info.el.style.borderLeft = `4px solid ${info.event.backgroundColor}`;
             }
-             // Asegurar que el texto del evento sea visible si el color de fondo es oscuro
+            // Asegurar que el texto del evento sea visible si el color de fondo es oscuro
             const bgColor = info.event.backgroundColor || '#3eb489'; // Color por defecto si no está definido
             const brightness = chroma(bgColor).luminance(); // Usando Chroma.js si está disponible, o una función simple
             if (brightness < 0.5) { // Si el fondo es oscuro
@@ -147,10 +147,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         editable: true, // Permitir arrastrar y redimensionar eventos
-        eventDrop: function(info) { // Cuando un evento es arrastrado a una nueva fecha/hora
+        eventDrop: function (info) { // Cuando un evento es arrastrado a una nueva fecha/hora
             updateEventOnServer(info.event);
         },
-        eventResize: function(info) { // Cuando un evento es redimensionado
+        eventResize: function (info) { // Cuando un evento es redimensionado
             updateEventOnServer(info.event);
         }
     });
@@ -174,33 +174,33 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(eventData)
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log('Evento actualizado en el servidor');
-                // Actualizar en localStorage
-                const savedEvents = getSavedEvents().map(e => e.id === event.id ? {
-                    ...e, // Mantener propiedades existentes como el color
-                    id: event.id, // Asegurar que el id sea el correcto (string o int según DB)
-                    title: event.title,
-                    start: event.start.toISOString(),
-                    end: event.end ? event.end.toISOString() : undefined, // FullCalendar usa undefined para eventos sin fin
-                    description: event.extendedProps.description,
-                    // backgroundColor y borderColor ya deberían estar en el evento de FullCalendar
-                    backgroundColor: event.backgroundColor, 
-                    borderColor: event.borderColor 
-                } : e);
-                saveEvents(savedEvents);
-            } else {
-                alert('Error al actualizar el evento en el servidor: ' + (data.message || 'Error desconocido.'));
-                info.revert(); // Revertir el cambio en el calendario si falla la actualización
-            }
-        })
-        .catch(error => {
-            console.error('Error al actualizar evento (AJAX):', error);
-            alert('Error de conexión al actualizar el evento.');
-            info.revert();
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Evento actualizado en el servidor');
+                    // Actualizar en localStorage
+                    const savedEvents = getSavedEvents().map(e => e.id === event.id ? {
+                        ...e, // Mantener propiedades existentes como el color
+                        id: event.id, // Asegurar que el id sea el correcto (string o int según DB)
+                        title: event.title,
+                        start: event.start.toISOString(),
+                        end: event.end ? event.end.toISOString() : undefined, // FullCalendar usa undefined para eventos sin fin
+                        description: event.extendedProps.description,
+                        // backgroundColor y borderColor ya deberían estar en el evento de FullCalendar
+                        backgroundColor: event.backgroundColor,
+                        borderColor: event.borderColor
+                    } : e);
+                    saveEvents(savedEvents);
+                } else {
+                    alert('Error al actualizar el evento en el servidor: ' + (data.message || 'Error desconocido.'));
+                    info.revert(); // Revertir el cambio en el calendario si falla la actualización
+                }
+            })
+            .catch(error => {
+                console.error('Error al actualizar evento (AJAX):', error);
+                alert('Error de conexión al actualizar el evento.');
+                info.revert();
+            });
     }
 
 
@@ -221,35 +221,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Configurar botones de navegación
-    document.getElementById('today-btn').addEventListener('click', function() {
+    document.getElementById('today-btn').addEventListener('click', function () {
         calendar.today();
         updateMonthYear(calendar);
     });
 
-    document.getElementById('prev-btn').addEventListener('click', function() {
+    document.getElementById('prev-btn').addEventListener('click', function () {
         calendar.prev();
         updateMonthYear(calendar);
     });
 
-    document.getElementById('next-btn').addEventListener('click', function() {
+    document.getElementById('next-btn').addEventListener('click', function () {
         calendar.next();
         updateMonthYear(calendar);
     });
 
     // Configurar botones de vista
-    document.getElementById('day-view').addEventListener('click', function() {
+    document.getElementById('day-view').addEventListener('click', function () {
         calendar.changeView('timeGridDay');
         setActiveView('day');
         updateMonthYear(calendar);
     });
 
-    document.getElementById('week-view').addEventListener('click', function() {
+    document.getElementById('week-view').addEventListener('click', function () {
         calendar.changeView('timeGridWeek');
         setActiveView('week');
         updateMonthYear(calendar);
     });
 
-    document.getElementById('month-view').addEventListener('click', function() {
+    document.getElementById('month-view').addEventListener('click', function () {
         calendar.changeView('dayGridMonth');
         setActiveView('month');
         updateMonthYear(calendar);
@@ -267,31 +267,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Configurar modal de nuevo evento
-    document.getElementById('new-event-btn').addEventListener('click', function() {
+    document.getElementById('new-event-btn').addEventListener('click', function () {
         const now = new Date();
-        now.setHours(9,0,0,0); // Hora por defecto: 09:00 AM
+        now.setHours(9, 0, 0, 0); // Hora por defecto: 09:00 AM
 
         document.getElementById('event-start').value = formatDateTimeLocal(now);
         document.getElementById('event-end').value = '';
         document.getElementById('event-name').value = '';
         document.getElementById('event-description').value = '';
         document.getElementById('event-color').value = '#3eb489';
-        
+
         document.getElementById('new-event-modal').style.display = 'block';
     });
 
     // Manejar envío del formulario de nuevo evento
-    document.getElementById('event-form').addEventListener('submit', function(e) {
+    document.getElementById('event-form').addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         const title = document.getElementById('event-name').value;
         const start = document.getElementById('event-start').value;
         const end = document.getElementById('event-end').value;
         const description = document.getElementById('event-description').value;
         const color = document.getElementById('event-color').value;
-        
+
         const newEventDataForFullCalendar = {
-            id: 'event_' + Date.now(), 
+            id: 'event_' + Date.now(),
             title: title,
             start: start,
             end: end || undefined,
@@ -304,11 +304,11 @@ document.addEventListener('DOMContentLoaded', function() {
             title: title,
             start: start, // Se dividirá en fecha y hora en PHP
             // 'end' podría enviarse si tu backend lo maneja
-            description: description
-            // El color se maneja en el frontend con FullCalendar, pero podrías guardarlo si quieres
+            description: description,
+            color: color // <<< --- ADD THIS LINE
             // 'categoria_evento' o 'enlace_recurso' si los recolectas del form
         };
-        
+
         fetch('add-event.php', {
             method: 'POST',
             headers: {
@@ -316,43 +316,43 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify(eventDataForBackend),
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => {
-                    throw new Error(`Error del servidor: ${response.status} ${response.statusText}. Respuesta: ${text}`);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success && data.id) { // Asegurarse que data.id existe
-                newEventDataForFullCalendar.id = data.id; // Usa el ID de la base de datos
-                calendar.addEvent(newEventDataForFullCalendar);
-
-                const savedEvents = getSavedEvents();
-                // Asegurarse de no duplicar si el evento ya fue añadido por la carga inicial
-                if (!savedEvents.find(ev => ev.id === newEventDataForFullCalendar.id)) {
-                    savedEvents.push(newEventDataForFullCalendar); 
-                    saveEvents(savedEvents);
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`Error del servidor: ${response.status} ${response.statusText}. Respuesta: ${text}`);
+                    });
                 }
-                
-                document.getElementById('new-event-modal').style.display = 'none';
-                this.reset();
-                alert(data.message || 'Evento guardado exitosamente.');
-            } else {
-                alert('Error al guardar el evento: ' + (data.message || 'Respuesta de error no especificada o ID faltante.'));
-                console.error('Error from backend:', data);
-            }
-        })
-        .catch(error => {
-            console.error('Error en la solicitud AJAX o al procesar la respuesta:', error);
-            alert('Error de conexión o respuesta inválida al guardar el evento. Revise la consola del navegador para más detalles.\nDetalle: ' + error.message);
-        });
+                return response.json();
+            })
+            .then(data => {
+                if (data.success && data.id) { // Asegurarse que data.id existe
+                    newEventDataForFullCalendar.id = data.id; // Usa el ID de la base de datos
+                    calendar.addEvent(newEventDataForFullCalendar);
+
+                    const savedEvents = getSavedEvents();
+                    // Asegurarse de no duplicar si el evento ya fue añadido por la carga inicial
+                    if (!savedEvents.find(ev => ev.id === newEventDataForFullCalendar.id)) {
+                        savedEvents.push(newEventDataForFullCalendar);
+                        saveEvents(savedEvents);
+                    }
+
+                    document.getElementById('new-event-modal').style.display = 'none';
+                    this.reset();
+                    alert(data.message || 'Evento guardado exitosamente.');
+                } else {
+                    alert('Error al guardar el evento: ' + (data.message || 'Respuesta de error no especificada o ID faltante.'));
+                    console.error('Error from backend:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error en la solicitud AJAX o al procesar la respuesta:', error);
+                alert('Error de conexión o respuesta inválida al guardar el evento. Revise la consola del navegador para más detalles.\nDetalle: ' + error.message);
+            });
     });
 
     // Cerrar modales
     document.querySelectorAll('.close').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const modal = this.closest('.modal');
             if (modal) {
                 modal.style.display = 'none';
@@ -361,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Cerrar modal al hacer clic fuera del contenido
-    window.addEventListener('click', function(event) {
+    window.addEventListener('click', function (event) {
         if (event.target.classList.contains('modal')) {
             event.target.style.display = 'none';
         }
@@ -381,11 +381,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 end: 'prev,next' // Simplificado, 'today' puede ser redundante
             },
             height: 'auto', // Para que se ajuste al contenido
-            dateClick: function(info) {
+            dateClick: function (info) {
                 calendar.gotoDate(info.date); // El calendario principal va a la fecha clickeada
                 updateMonthYear(calendar);
             },
-            datesSet: function(dateInfo) { // Cuando la vista del mini calendario cambia
+            datesSet: function (dateInfo) { // Cuando la vista del mini calendario cambia
                 // Esto podría causar un bucle si no se maneja con cuidado.
                 // calendar.gotoDate(miniCalendarInstance.getDate());
                 // updateMonthYear(calendar);
@@ -393,10 +393,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         miniCalendarInstance.render();
     }
-    
+
     // Sincronización entre calendarios (simplificada para evitar bucles)
     let syncing = false;
-    calendar.on('datesSet', function(dateInfo) { // Cuando el calendario principal cambia de vista/fecha
+    calendar.on('datesSet', function (dateInfo) { // Cuando el calendario principal cambia de vista/fecha
         if (!syncing && miniCalendarInstance) {
             syncing = true;
             miniCalendarInstance.gotoDate(calendar.getDate());
@@ -406,8 +406,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     if (miniCalendarInstance) {
-        miniCalendarInstance.on('dateClick', function(info) { // Cuando se hace clic en una fecha del mini calendario
-             if (!syncing) {
+        miniCalendarInstance.on('dateClick', function (info) { // Cuando se hace clic en una fecha del mini calendario
+            if (!syncing) {
                 syncing = true;
                 calendar.gotoDate(info.date);
                 // `datesSet` del calendario principal se encargará de `updateMonthYear`
@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Para la librería de color (si la usas, asegúrate de incluirla)
     // Ejemplo de función simple para brillo (0 oscuro, 1 claro)
     function getBrightness(hexColor) {
@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // FullCalendar eventDidMount para ajustar color de texto basado en el fondo
     // (reemplaza la función simple de chroma con la de arriba o incluye Chroma.js)
-    calendar.setOption('eventDidMount', function(info) {
+    calendar.setOption('eventDidMount', function (info) {
         if (info.event.backgroundColor) {
             info.el.style.backgroundColor = info.event.backgroundColor;
             info.el.style.borderLeft = `4px solid ${info.event.backgroundColor}`;

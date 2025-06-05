@@ -94,7 +94,7 @@
 }
 
 .task-item-link:hover .task-item {
-    background-color: var(--hover-color); /* Cambia el fondo del item al pasar el ratón */
+    background-color: var(--scrollbar-track); /* Cambia el fondo del item al pasar el ratón */
     transform: translateY(-2px); /* Un ligero levantamiento */
 }
 
@@ -181,14 +181,6 @@
     /* Puedes cambiar esto por la fuente de tu proyecto */
 }
 
-.content-messages-list li {
-    border-bottom: 1px solid #eeeeee;
-}
-
-.content-messages-list li:last-child {
-    border-bottom: none;
-}
-
 .content-messages-list li a {
     display: flex;
     align-items: center;
@@ -197,10 +189,13 @@
     text-decoration: none;
     color: inherit;
     transition: background-color 0.2s ease-in-out;
+    background-color: var(--bg-sidebar);
+    border-radius: 8px;
+    margin: 5px 0;
 }
 
 .content-messages-list li a:hover {
-    background-color: #f5f5f5;
+    background-color: var(--scrollbar-track);
 }
 
 .content-message-image {
