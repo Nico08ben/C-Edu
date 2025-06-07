@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-06-2025 a las 02:45:23
+-- Tiempo de generación: 07-06-2025 a las 23:42:52
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -53,12 +53,22 @@ CREATE TABLE `evento` (
   `id_evento` int(11) NOT NULL,
   `fecha_evento` date NOT NULL,
   `hora_evento` time NOT NULL,
-  `tipo_evento` varchar(100) DEFAULT NULL,
-  `asignacion_evento` varchar(255) DEFAULT NULL,
+  `fecha_fin_evento` date DEFAULT NULL,
+  `hora_fin_evento` time DEFAULT NULL,
+  `titulo_evento` varchar(100) DEFAULT NULL,
+  `descripcion_evento` text DEFAULT NULL,
   `categoria_evento` enum('Reunión','Semillero','Club','Capacitación','Otro') DEFAULT 'Otro',
   `id_responsable` int(11) DEFAULT NULL,
-  `enlace_recurso` varchar(255) DEFAULT NULL
+  `color_evento` varchar(20) DEFAULT NULL COMMENT 'Color del evento en formato hexadecimal o nombre de color'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `evento`
+--
+
+INSERT INTO `evento` (`id_evento`, `fecha_evento`, `hora_evento`, `fecha_fin_evento`, `hora_fin_evento`, `titulo_evento`, `descripcion_evento`, `categoria_evento`, `id_responsable`, `color_evento`) VALUES
+(8, '2025-06-07', '09:00:00', '2025-06-14', '16:28:00', 'Semillero de investigacion.', 'Hay un semillero pendiente.', 'Semillero', 4, '#9C27B0'),
+(9, '2025-05-31', '09:00:00', '2025-06-01', '16:35:00', 'Tarea mañana', '', 'Reunión', 4, '#3eb489');
 
 -- --------------------------------------------------------
 
@@ -125,20 +135,6 @@ CREATE TABLE `mensaje` (
   `leido` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `mensaje`
---
-
-INSERT INTO `mensaje` (`id_mensaje`, `id_emisor`, `id_receptor`, `contenido_mensaje`, `fecha_envio`, `leido`) VALUES
-(2, 3, 4, 'Hola', '2025-05-28 02:31:32', 1),
-(4, 3, 4, 'uploads/img_68367783e52737.26627023.webp', '2025-05-28 02:40:03', 1),
-(5, 3, 4, 'Hola', '2025-05-28 02:57:16', 1),
-(6, 3, 4, 'Hola', '2025-05-28 03:01:16', 1),
-(7, 3, 4, 'Hpña', '2025-05-28 03:09:26', 1),
-(8, 4, 3, 'Hola', '2025-05-28 03:26:51', 1),
-(9, 3, 6, 'Hola', '2025-05-28 03:27:27', 1),
-(10, 4, 6, 'Hola', '2025-06-01 00:24:59', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -161,7 +157,8 @@ CREATE TABLE `notificacion` (
 
 INSERT INTO `notificacion` (`id_notificacion`, `id_usuario`, `tipo_notificacion`, `mensaje`, `enlace`, `fecha_notificacion`, `estado_notificacion`) VALUES
 (1, 4, 'nueva_tarea_personal', 'Has creado una nueva tarea para ti: PruebaFinal', '/C-Edu/Docente/Tareas asignadas/TareasDetalles.php?id_tarea=7', '2025-05-14 15:55:34', 'leída'),
-(2, 6, 'nueva_tarea_asignada', 'Un administrador te ha asignado una nueva tarea: Prueba Definitiva', '/C-Edu/Docente/Tareas asignadas/TareasDetalles.php?id_tarea=8', '2025-05-14 16:00:39', 'leída');
+(2, 6, 'nueva_tarea_asignada', 'Un administrador te ha asignado una nueva tarea: Prueba Definitiva', '/C-Edu/Docente/Tareas asignadas/TareasDetalles.php?id_tarea=8', '2025-05-14 16:00:39', 'leída'),
+(3, 4, 'nueva_tarea_asignada', 'Administrador Principal te ha asignado una nueva tarea: Detalles de exposiciones', '/C-Edu/Docente/Tareas asignadas/TareasDetalles.php?id_tarea=9', '2025-06-01 01:34:10', 'leída');
 
 -- --------------------------------------------------------
 
@@ -212,7 +209,8 @@ INSERT INTO `tarea` (`id_tarea`, `fecha_inicio_tarea`, `fecha_fin_tarea`, `instr
 (5, '2025-05-06', '2025-05-14', 'Subir notas finales de alumnos', 'Pendiente', 6, 'Alta', 0, 4),
 (6, '2025-05-06', '2025-05-17', 'XD', 'Pendiente', 4, 'Alta', 0, 6),
 (7, '2025-05-14', '2025-05-15', 'PruebaFinal', 'Completada', 4, 'Media', 0, 4),
-(8, '2025-05-14', '2025-05-17', 'Prueba Definitiva', 'Completada', 6, 'Alta', 0, 3);
+(8, '2025-05-14', '2025-05-17', 'Prueba Definitiva', 'Completada', 6, 'Alta', 0, 3),
+(9, '2025-05-31', '2025-06-02', 'Detalles de exposiciones', 'Pendiente', 4, 'Alta', 0, 3);
 
 -- --------------------------------------------------------
 
@@ -238,7 +236,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `email_usuario`, `contrasena_usuario`, `nombre_usuario`, `telefono_usuario`, `id_institucion`, `id_rol`, `id_materia`, `grupo_cargo_usuario`, `foto_perfil_url`) VALUES
-(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, NULL, NULL, 'uploads/profile_pictures/user_3_683b842cc4a4b.png'),
+(3, 'admin@cedu.com', '$2y$10$AeM0rWoEu8Ma1H/hs8Xw/uEkndmBrOL9zNI0rNHw.gR9bVxe2sJ4S', 'Administrador Principal', '', 1, 0, 1, NULL, 'uploads/profile_pictures/user_3_683b842cc4a4b.png'),
 (4, 'maestro@cedu.com', '$2y$10$lLNqY/cEfhJyAuXaxhOJ8OyumVrA434f5Ifp1uzTxbz0nKhkhwNpe', 'Maestro Ejemplo', '', 1, 1, NULL, NULL, 'uploads/profile_pictures/user_4_68264a90e9889.png'),
 (6, 'juliancho@gmail.com', '$2y$10$vhMQvQXhjPC8Nn3TKUCS4OHj9TjjYSiZhGfKA3t4U/RxnC0w5LJzS', 'Julian Ospina', '2433232323', 1, 1, 4, NULL, '');
 
@@ -343,7 +341,7 @@ ALTER TABLE `asignacion_academica`
 -- AUTO_INCREMENT de la tabla `evento`
 --
 ALTER TABLE `evento`
-  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_evento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `institucion`
@@ -361,19 +359,19 @@ ALTER TABLE `materia`
 -- AUTO_INCREMENT de la tabla `mensaje`
 --
 ALTER TABLE `mensaje`
-  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `notificacion`
 --
 ALTER TABLE `notificacion`
-  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_notificacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tarea`
 --
 ALTER TABLE `tarea`
-  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_tarea` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`

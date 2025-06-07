@@ -1,7 +1,6 @@
 <?php
-session_start(); // Debe estar AL INICIO del archivo
-// include "../../conexion.php"; // Si es necesario para lógica PHP en esta página (user_info.php ya lo incluye)
-
+session_start(); // Must be at the VERY TOP
+include "../../conexion.php";
 $theme_class = '';
 if (isset($_SESSION['rol'])) {
     if ($_SESSION['rol'] == 0) { // 0 para Admin
@@ -18,19 +17,21 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
 }
 ?>
 <!DOCTYPE html>
-<html lang="es" class="<?php echo $theme_class;?>">
-<head>
-    <?php include "../../SIDEBAR/Admin/head.php"; // Ruta al head de Admin ?>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <title>Calendario Administrador</title>
+<html lang="es" class="<?php echo $theme_class; ?>">
 
+<head>
+    <?php include "../../SIDEBAR/Docente/head.php" ?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <title>Calendario</title>
+
+    <!-- FullCalendar CSS -->
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
     <link rel="stylesheet" href="calendario.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <?php include "../../SIDEBAR/Admin/sidebar.php"; // Ruta al sidebar de Admin ?>
+    <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
     <section class="home">
         <div class="container">
             <header class="header-calendario">
@@ -45,7 +46,7 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
                     <div id="month-year" class="month-year"></div>
                 </div>
                 <div class="header-right">
-                <?php include '../../PHP/user_info.php'; // Ruta a user_info.php ?>
+                    <?php include '../../PHP/user_info.php'; ?>
                 </div>
             </header>
 
@@ -70,18 +71,20 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
         </div>
     </section>
 
+    <!-- Modal para eventos -->
     <div id="event-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2 id="event-title"></h2>
             <p><i class="fas fa-clock"></i> <span id="event-date"></span></p>
-            <p><i class="fas fa-align-left"></i> <span id="event-description"></span></p>
+            <p><i class="fas fa-align-left"></i> <span id="view-event-description"></span></p>
             <button id="delete-event" class="btn-danger">
                 <i class="fas fa-trash"></i> Eliminar
             </button>
         </div>
     </div>
 
+    <!-- Modal para nuevo evento -->
     <div id="new-event-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -102,7 +105,8 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
                 <div class="form-group">
                     <label for="event-color"><i class="fas fa-palette"></i> Color:</label>
                     <select id="event-color">
-                        <option value="#e7bb41">Amarillo (Admin)</option> <option value="#2196F3">Azul</option>
+                        <option value="#3eb489">Verde</option>
+                        <option value="#2196F3">Azul</option>
                         <option value="#9C27B0">Morado</option>
                         <option value="#FF9800">Naranja</option>
                         <option value="#F44336">Rojo</option>
@@ -110,7 +114,18 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="event-description-admin"><i class="fas fa-align-left"></i> Descripción:</label> <textarea id="event-description-admin" rows="3"></textarea>
+                    <label for="event-category"><i class="fas fa-tags"></i> Categoría:</label>
+                    <select id="event-category" required>
+                        <option value="Reunión">Reunión</option>
+                        <option value="Semillero">Semillero</option>
+                        <option value="Club">Club</option>
+                        <option value="Capacitación">Capacitación</option>
+                        <option value="Otro" selected>Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="form-event-description"><i class="fas fa-align-left"></i> Descripción:</label>
+                    <textarea id="form-event-description" rows="3"></textarea>
                 </div>
                 <button type="submit" class="btn-primary">
                     <i class="fas fa-save"></i> Guardar
@@ -119,19 +134,10 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
         </div>
     </div>
 
-    <div class="toast">
-        <div class="toast-content">
-            <i class="fas fa-solid fa-check check"></i>
-            <div class="message">
-                <span class="text text-1">Evento añadido</span>
-            </div>
-        </div>
-        <i class="fa-solid fa-xmark close"></i>
-        <div class="progress"></div>
-    </div>
-
+    <!-- FullCalendar JS -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js'></script>
     <script src="calendario.js"></script>
-    </body>
+</body>
+
 </html>

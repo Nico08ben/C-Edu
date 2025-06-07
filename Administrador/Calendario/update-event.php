@@ -1,89 +1,97 @@
 <?php
 session_start();
-include "db.php"; // Tu conexión PDO
-
+include "db.php";
 header('Content-Type: application/json');
+$response = ["success" => false, "message" => "Error desconocido."];
 
 if (!isset($_SESSION['id_usuario'])) {
-    echo json_encode(["success" => false, "message" => "Error: Usuario no autenticado."]);
+    $response["message"] = "No autenticado.";
+    echo json_encode($response);
+    exit;
+}
+
+if ($conn === null) {
+    $response["message"] = "Error de conexión a la base de datos.";
+    error_log("update-event.php: La conexión a la BD es nula.");
+    echo json_encode($response);
     exit;
 }
 
 $data = json_decode(file_get_contents("php://input"), true);
-
-if (!$data || !isset($data["id"]) || !isset($data["start"])) {
-    echo json_encode(["success" => false, "message" => "Error: Datos incompletos (ID o fecha de inicio faltantes)."]);
+if (empty($data['id']) || empty($data['start'])) {
+    $response["message"] = "Datos incompletos.";
+    echo json_encode($response);
     exit;
 }
 
+// Recolectar todos los datos del evento
 $id_evento = $data["id"];
-$titulo = $data["title"] ?? null; // FullCalendar podría no enviar el título si solo se movió
+$titulo = $data["title"] ?? null;
+$descripcion = $data["description"] ?? null;
 $start_datetime_str = $data["start"];
-// $end_datetime_str = $data["end"] ?? null; // Si manejas fecha de fin
-$descripcion = $data["description"] ?? null; // Si se envía descripción
-$color_evento = $data["backgroundColor"] ?? null; // Recibir el color
-
+$end_datetime_str = $data["end"] ?? null;
+$color_evento = $data["backgroundColor"] ?? '#3eb489';
 $current_user_id = $_SESSION['id_usuario'];
 
-// Validar formato de color hexadecimal (opcional)
-if ($color_evento && !preg_match('/^#(?:[0-9a-fA-F]{3}){1,2}$/', $color_evento)) {
-    $color_evento = null;
-}
+// Procesar fecha/hora de inicio
+list($fecha_inicio, $time_part_start) = explode("T", $start_datetime_str);
+$hora_inicio = substr($time_part_start, 0, 8); // Formato HH:MM:SS
 
-// Procesar fecha y hora de inicio
-if (strpos($start_datetime_str, 'T') !== false) {
-    list($fecha, $time_part) = explode("T", $start_datetime_str);
-    $hora = substr($time_part, 0, 5) . ":00"; // Asegurar HH:MM:SS
-} else {
-    $fecha = $start_datetime_str;
-    $hora = "00:00:00"; // Asumir evento de todo el día
+// Procesar fecha/hora de fin (puede ser null)
+$fecha_fin = null;
+$hora_fin = null;
+if ($end_datetime_str) {
+    list($fecha_fin, $time_part_end) = explode("T", $end_datetime_str);
+    $hora_fin = substr($time_part_end, 0, 8); // Formato HH:MM:SS
 }
 
 try {
-    // Construir la consulta dinámicamente basada en los campos proporcionados
-    $sql_parts = [];
-    $params = [];
-
-    if ($titulo !== null) {
-        $sql_parts[] = "tipo_evento = ?";
-        $params[] = $titulo;
-    }
-    if ($descripcion !== null) {
-        $sql_parts[] = "asignacion_evento = ?";
-        $params[] = $descripcion;
-    }
-    if ($color_evento !== null) {
-        $sql_parts[] = "color_evento = ?";
-        $params[] = $color_evento;
-    }
-    
-    // Siempre actualizamos fecha y hora de inicio
-    $sql_parts[] = "fecha_evento = ?";
-    $params[] = $fecha;
-    $sql_parts[] = "hora_evento = ?";
-    $params[] = $hora;
-
-    if (empty($sql_parts)) {
-        echo json_encode(["success" => true, "message" => "No hay campos para actualizar."]); // O false si se considera un error
-        exit;
-    }
-
-    $sql = "UPDATE evento SET " . implode(", ", $sql_parts) . " WHERE id_evento = ? AND id_responsable = ?";
-    $params[] = $id_evento;
-    $params[] = $current_user_id; // Asegurar que el usuario solo actualice sus propios eventos
+    $sql = "UPDATE evento SET 
+                titulo_evento = :titulo,
+                descripcion_evento = :descripcion,
+                fecha_evento = :fecha_inicio, 
+                hora_evento = :hora_inicio,
+                fecha_fin_evento = :fecha_fin,
+                hora_fin_evento = :hora_fin,
+                color_evento = :color
+            WHERE id_evento = :id AND id_responsable = :user_id";
 
     $stmt = $conn->prepare($sql);
-    $stmt->execute($params);
 
-    if ($stmt->rowCount() > 0) {
-        echo json_encode(["success" => true, "message" => "Evento actualizado correctamente."]);
+    // --- ESTA ES LA MEJORA CLAVE ---
+    // Verificar si la preparación de la consulta fue exitosa antes de ejecutarla.
+    if ($stmt) {
+        $stmt->execute([
+            ':titulo' => $titulo,
+            ':descripcion' => $descripcion,
+            ':fecha_inicio' => $fecha_inicio,
+            ':hora_inicio' => $hora_inicio,
+            ':fecha_fin' => $fecha_fin,
+            ':hora_fin' => $hora_fin,
+            ':color' => $color_evento,
+            ':id' => $id_evento,
+            ':user_id' => $current_user_id
+        ]);
+
+        if ($stmt->rowCount() > 0) {
+            $response["success"] = true;
+            $response["message"] = "Evento actualizado correctamente.";
+        } else {
+            // No se afectaron filas, puede ser porque no hubo cambios o el evento no pertenece al usuario.
+            $response["success"] = true; // Se considera éxito para no mostrar un error al usuario si no cambió nada.
+            $response["message"] = "No se realizaron cambios.";
+        }
     } else {
-        // Esto puede pasar si el evento no pertenece al usuario o el ID no existe, o no hubo cambios reales.
-        echo json_encode(["success" => false, "message" => "No se actualizó el evento (puede que no pertenezca al usuario, no exista o no haya cambios)."]);
+        // La preparación de la consulta falló.
+        $errorInfo = $conn->errorInfo();
+        error_log("Error de preparación de SQL en update-event.php: " . ($errorInfo[2] ?? 'Error desconocido.'));
+        $response["message"] = "Error de base de datos: La consulta no se pudo preparar. Verifique la estructura de la tabla 'evento'.";
     }
 
 } catch (PDOException $e) {
-    error_log("Error al actualizar evento: " . $e->getMessage());
-    echo json_encode(["success" => false, "message" => "Error al actualizar el evento en la base de datos: " . $e->getMessage()]);
+    error_log("Error en update-event.php: " . $e->getMessage());
+    $response["message"] = "Excepción de base de datos al actualizar.";
 }
+
+echo json_encode($response);
 ?>

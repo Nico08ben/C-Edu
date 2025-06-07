@@ -28,7 +28,8 @@ include '../../conexion.php';
         integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Inicio</title>
-    <link rel="stylesheet" href="inciodocentess.css"> </head>
+    <link rel="stylesheet" href="inciodocentess.css">
+</head>
 
 <body>
     <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
@@ -49,7 +50,7 @@ include '../../conexion.php';
                         <?php
                         // No necesitas $id_Admin aquí a menos que quieras filtrar por tareas creadas por el admin
                         // $id_Admin = $_SESSION['id_usuario']; // Ajusta según tu sesión
-                        
+
                         // MODIFICACIÓN: Incluir t.id_tarea en la consulta para el administrador
                         $sql = "SELECT
                                     t.id_tarea, -- Añadido id_tarea aquí
@@ -102,17 +103,80 @@ include '../../conexion.php';
                     </div>
                     <div class="div-card">
                         <?php
-                        $sql_eventos = "SELECT asignacion_evento AS nombre_evento FROM evento WHERE fecha_evento >= CURDATE() ORDER BY fecha_evento ASC LIMIT 3";
-                        $result_eventos = $conn->query($sql_eventos);
-                        if ($result_eventos && $result_eventos->num_rows > 0) {
-                            while ($row_evento = $result_eventos->fetch_assoc()) {
-                                echo '<div class="event-item">';
-                                echo '<div>' . htmlspecialchars($row_evento['nombre_evento']) . '</div>';
-                                echo '<span><i class="fa-solid fa-arrow-right"></i></span>';
-                                echo '</div>';
+                        // 1. Asegurarnos de que el usuario ha iniciado sesión
+                        if (isset($_SESSION['id_usuario'])) {
+
+                            // 2. Obtenemos el ID del docente actual de forma segura
+                            $id_docente_eventos = (int)$_SESSION['id_usuario'];
+
+                            // 3. Consulta SQL MODIFICADA para filtrar por el usuario actual
+                            // Se une la tabla 'evento' con 'usuario_evento'
+                            $sql_eventos = "SELECT e.id_evento, e.titulo_evento, e.descripcion_evento, e.fecha_evento
+                            FROM evento e
+                            JOIN usuario_evento ue ON e.id_evento = ue.id_evento
+                            WHERE ue.id_usuario = {$id_docente_eventos}
+                              AND e.fecha_evento >= CURDATE()
+                            ORDER BY e.fecha_evento ASC
+                            LIMIT 3";
+
+                            $result_eventos = $conn->query($sql_eventos);
+
+                            if ($result_eventos && $result_eventos->num_rows > 0) {
+                                while ($row_evento = $result_eventos->fetch_assoc()) {
+                                    $event_link = '';
+                                    $baseCalendarUrl = '/C-EDU/Docente/Calendario/index.php';
+                                    $event_link = $baseCalendarUrl . '?id_evento=' . htmlspecialchars($row_evento['id_evento']);
+
+
+                                    $displayDate = '';
+                                    if (!empty($row_evento['fecha_evento'])) {
+                                        try {
+                                            $dateObj = new DateTime($row_evento['fecha_evento']);
+                                            if (extension_loaded('intl')) {
+                                                $formatter = new IntlDateFormatter('es_ES', IntlDateFormatter::NONE, IntlDateFormatter::NONE, null, null, 'd MMM');
+                                                $formattedMonth = str_replace('.', '', $formatter->format($dateObj));
+                                                $parts = explode(' ', $formattedMonth);
+                                                $parts[count($parts) - 1] = ucfirst($parts[count($parts) - 1]);
+                                                $displayDate = implode(' ', $parts);
+                                            } else {
+                                                $displayDate = $dateObj->format('d M');
+                                            }
+                                        } catch (Exception $e) {
+                                            error_log("Error parsing event date: " . $row_evento['fecha_evento'] . " - " . $e->getMessage());
+                                            $displayDate = date('d M', strtotime($row_evento['fecha_evento']));
+                                        }
+                                    }
+
+                                    echo '<a href="' . $event_link . '" class="event-item-link" style="text-decoration: none; color: inherit;">';
+                                    echo '<div class="event-item">';
+                                    echo '<div>';
+                                    echo '<strong>' . htmlspecialchars($row_evento['titulo_evento']) . '</strong><br>';
+                                    echo '<small>';
+
+                                    $preview = mb_substr($row_evento['descripcion_evento'], 0, 30);
+                                    if (mb_strlen($row_evento['descripcion_evento']) > 30) {
+                                        $preview .= "...";
+                                    }
+                                    if (!empty($preview)) {
+                                        echo htmlspecialchars($preview);
+                                    }
+
+                                    if (!empty($displayDate)) {
+                                        if (!empty($preview)) echo ' - ';
+                                        echo htmlspecialchars($displayDate);
+                                    }
+                                    echo '</small>';
+                                    echo '</div>';
+                                    echo '<span><i class="fa-solid fa-arrow-right"></i></span>';
+                                    echo '</div>';
+                                    echo '</a>';
+                                }
+                            } else {
+                                // Mensaje más específico si no hay eventos para este usuario
+                                echo '<div>No tienes eventos pendientes asignados.</div>';
                             }
                         } else {
-                            echo '<div>No hay eventos pendientes.</div>';
+                            echo '<div>Error: No se pudo identificar al usuario para cargar los eventos.</div>';
                         }
                         ?>
                     </div>
@@ -127,7 +191,7 @@ include '../../conexion.php';
                         <?php
                         if (isset($_SESSION['id_usuario'])) {
                             $id_Administrador_com = $_SESSION['id_usuario'];
-                        
+
                             echo '<ul class="content-messages-list">';
 
                             // SQL MODIFICADA para incluir unreadCount
@@ -187,7 +251,7 @@ include '../../conexion.php';
 
                                     $userName = htmlspecialchars($user['fullName']);
                                     $userId = htmlspecialchars($user['id_usuario']);
-                                    
+
                                     $lastMessageRaw = $user['lastMessageContent'] ?? '';
                                     $lastMessagePreview = 'Conversación iniciada.';
                                     if (!empty($lastMessageRaw)) {
@@ -205,7 +269,7 @@ include '../../conexion.php';
                                             $lastMessagePreview = htmlspecialchars($tempPreview);
                                         }
                                     }
-                                    
+
                                     // Procesar unreadCount
                                     $unreadCount = isset($user['unreadCount']) ? intval($user['unreadCount']) : 0;
                                     $unreadIndicatorHTML = '';
@@ -222,7 +286,7 @@ include '../../conexion.php';
                                         try {
                                             $dateObj = new DateTime($user['last_message_date']);
                                             $today = new DateTime('today'); // Para comparar si es hoy
-                                            
+
                                             if ($dateObj->format('Y-m-d') == $today->format('Y-m-d')) {
                                                 // Formato: HH:MM p.m./a.m. (ej: 07:24<br>p.m.)
                                                 $timeStr = $dateObj->format('h:i');
@@ -245,7 +309,7 @@ include '../../conexion.php';
                                             error_log("Error parsing date in Inicio/index.php: " . $user['last_message_date'] . " - " . $e->getMessage());
                                         }
                                     }
-                                
+
                                     $chatPageUrl = "/C-EDU/Administrador/Chat/index.php";
                                     $linkParamsArray = [
                                         'userId' => $userId,
@@ -288,4 +352,5 @@ include '../../conexion.php';
         </main>
     </section>
 </body>
+
 </html>

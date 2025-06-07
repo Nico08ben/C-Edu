@@ -11,12 +11,13 @@ if (isset($_SESSION['rol'])) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="es" class="<?php echo $theme_class;?>">
+<html lang="es" class="<?php echo $theme_class; ?>">
+
 <head>
     <?php include "../../SIDEBAR/Docente/head.php" ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <title>Calendario</title>
-    
+
     <!-- FullCalendar CSS -->
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
     <link rel="stylesheet" href="calendario.css">
@@ -38,10 +39,10 @@ if (isset($_SESSION['rol'])) {
                     <div id="month-year" class="month-year"></div>
                 </div>
                 <div class="header-right">
-                <?php include '../../PHP/user_info.php'; ?>
+                    <?php include '../../PHP/user_info.php'; ?>
                 </div>
             </header>
-            
+
             <div class="action-bar">
                 <button id="new-event-btn" class="new-event-btn">
                     <i class="fas fa-plus"></i> NUEVO EVENTO
@@ -52,10 +53,10 @@ if (isset($_SESSION['rol'])) {
                     <button id="month-view" class="view-btn active">Mes</button>
                 </div>
             </div>
-            
+
             <div class="calendar-container">
                 <div class="mini-calendar" id="mini-calendar"></div>
-                
+
                 <div class="main-calendar">
                     <div id="calendar"></div>
                 </div>
@@ -69,7 +70,7 @@ if (isset($_SESSION['rol'])) {
             <span class="close">&times;</span>
             <h2 id="event-title"></h2>
             <p><i class="fas fa-clock"></i> <span id="event-date"></span></p>
-            <p><i class="fas fa-align-left"></i> <span id="event-description"></span></p>
+            <p><i class="fas fa-align-left"></i> <span id="view-event-description"></span></p>
             <button id="delete-event" class="btn-danger">
                 <i class="fas fa-trash"></i> Eliminar
             </button>
@@ -105,8 +106,18 @@ if (isset($_SESSION['rol'])) {
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="event-description"><i class="fas fa-align-left"></i> Descripción:</label>
-                    <textarea id="event-description" rows="3"></textarea>
+                    <label for="event-category"><i class="fas fa-tags"></i> Categoría:</label>
+                    <select id="event-category" required>
+                        <option value="Reunión">Reunión</option>
+                        <option value="Semillero">Semillero</option>
+                        <option value="Club">Club</option>
+                        <option value="Capacitación">Capacitación</option>
+                        <option value="Otro" selected>Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="form-event-description"><i class="fas fa-align-left"></i> Descripción:</label>
+                    <textarea id="form-event-description" rows="3"></textarea>
                 </div>
                 <button type="submit" class="btn-primary">
                     <i class="fas fa-save"></i> Guardar
@@ -120,4 +131,5 @@ if (isset($_SESSION['rol'])) {
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js'></script>
     <script src="calendario.js"></script>
 </body>
+
 </html>
