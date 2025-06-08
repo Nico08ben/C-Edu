@@ -121,35 +121,122 @@ $stmt_insert = null;
     <link rel="stylesheet" href="tareascss.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <style>
-        /* Estilos CSS (sin cambios) */
-        .create-task-container { background-color: var(--sidebar-color); padding: 25px; margin-top: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); max-width: 600px; margin-left: auto; margin-right: auto; }
-        .create-task-container h2 { color: var(--primary-color); margin-bottom: 20px; border-bottom: 2px solid var(--primary-color-ligth); padding-bottom: 10px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-color); }
-        .form-group input[type="text"], .form-group input[type="date"], .form-group textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; color: var(--text-color); background-color: var(--body-color); }
-        body.dark .form-group input[type="text"], body.dark .form-group input[type="date"], body.dark .form-group textarea { background-color: var(--primary-color-ligth); border-color: #555; color: var(--text-color); }
-        .form-group textarea { resize: vertical; min-height: 100px; }
-        .form-actions { margin-top: 20px; text-align: right; }
-        .btn-submit-task { padding: 10px 20px; background: var(--primary-color); color: white; border: none; font-size: 16px; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; transition: background-color 0.3s ease; }
-        .btn-submit-task:hover { background-color: #d4a738; }
-        .btn-cancel { padding: 10px 20px; background: #ccc; color: var(--title-color); border: none; font-size: 16px; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; margin-left: 10px; transition: background-color 0.3s ease; }
-        .btn-cancel:hover { background-color: #bbb; }
-        .alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: .25rem; }
-        .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: .25rem; }
-        .select2-container--default .select2-selection--single { height: 38px; border: 1px solid #ccc; border-radius: 4px; padding: 6px 12px; background-color: var(--body-color); }
-        .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 24px; color: var(--text-color); }
-        .select2-container--default .select2-selection--single .select2-selection__arrow { height: 36px; }
-        .select2-dropdown { border: 1px solid #ccc; border-radius: 4px; background-color: var(--sidebar-color); }
-        .select2-results__option { padding: 8px 12px; color: var(--text-color); }
-        .select2-results__option--highlighted[aria-selected] { background-color: var(--primary-color-ligth); color: var(--title-color); }
-        .select2-search--dropdown .select2-search__field { border: 1px solid #ccc; padding: 8px; background-color: var(--body-color); color: var(--text-color); }
-        body.dark .select2-container--default .select2-selection--single { background-color: var(--primary-color-ligth); border-color: #555; }
-        body.dark .select2-container--default .select2-selection--single .select2-selection__rendered { color: var(--text-color); }
-        body.dark .select2-dropdown { background-color: var(--sidebar-color); border-color: #555; }
-        body.dark .select2-results__option { color: var(--text-color); }
-        body.dark .select2-results__option--highlighted[aria-selected] { background-color: var(--primary-color); color: white; }
-        body.dark .select2-search--dropdown .select2-search__field { background-color: var(--body-color); color: var(--text-color); border-color: #555; }
-        @media (max-width: 768px) { .create-task-container { padding: 15px; margin-top: 15px; } .create-task-container h2 { font-size: 1.3rem; margin-bottom: 15px; padding-bottom: 8px; } .form-group { margin-bottom: 10px; } .form-group label { font-size: 0.9rem; margin-bottom: 3px; } .form-group input[type="text"], .form-group input[type="date"], .form-group textarea { padding: 6px; font-size: 0.9rem; } .select2-container--default .select2-selection--single { height: 32px; padding: 4px 8px; } .select2-container--default .select2-selection--single .select2-selection__rendered { line-height: 24px; } .select2-container--default .select2-selection--single .select2-selection__arrow { height: 30px; } .form-actions { text-align: center; } .btn-submit-task, .btn-cancel { width: auto; margin-left: 5px; margin-right: 5px; } }
+        /* Estilos específicos para el formulario de creación de tarea ... (sin cambios) */
+        .create-task-container {
+            background-color: var(--bg-content);
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .create-task-container h2 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--bg-input);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            color: var(--text-primary);
+            background-color: var(--border-color);
+        }
+
+        body.dark .form-group input[type="text"],
+        body.dark .form-group input[type="date"],
+        body.dark .form-group select,
+        body.dark .form-group textarea {
+            background-color: var(--bg-input);
+            border-color: #555;
+            color: var(--text-primary);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .btn-submit-task {
+            padding: 10px 20px;
+            background: var(--role-primary-color);
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit-task:hover {
+            background-color: var(--role-primary-dark-color);
+        }
+
+        .btn-cancel {
+            padding: 10px 20px;
+            background: #ccc;
+            color: var(--title-color);
+            border: none;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background-color: #bbb;
+        }
+
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: .25rem;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: .25rem;
+        }
     </style>
 </head>
 

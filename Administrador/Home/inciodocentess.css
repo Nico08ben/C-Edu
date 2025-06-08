@@ -94,7 +94,7 @@
 }
 
 .task-item-link:hover .task-item {
-    background-color: var(--hover-color); /* Cambia el fondo del item al pasar el ratón */
+    background-color: var(--scrollbar-track); /* Cambia el fondo del item al pasar el ratón */
     transform: translateY(-2px); /* Un ligero levantamiento */
 }
 
@@ -102,7 +102,10 @@
     transform: translateY(0); /* Vuelve a la posición original al hacer clic */
 }
 /* --- FIN DE NUEVOS ESTILOS PARA EL ENLACE DE LA TAREA --- */
-
+.task-item{
+    font-weight: bold;
+    color: var(--text-primary);
+}
 
 .task-item,
 .event-item,
@@ -197,10 +200,13 @@
     text-decoration: none;
     color: inherit;
     transition: background-color 0.2s ease-in-out;
+    background-color: var(--bg-sidebar);
+    border-radius: 8px;
+    margin: 5px 0;
 }
 
 .content-messages-list li a:hover {
-    background-color: #f5f5f5;
+    background-color: var(--scrollbar-track);
 }
 
 .content-message-image {
