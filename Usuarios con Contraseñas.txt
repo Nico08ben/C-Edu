@@ -1,0 +1,8 @@
+admin@cedu.com admin123
+maestro@cedu.com maestro1234
+juliancho@gmail.com Julian123
+ana.rodriguez@cedu.com 12321
+carlos.sanchez@cedu.com 12321
+beatriz.flores@cedu.com 12321
+david.mendoza@cedu.com 12321
+elena.gomez@cedu.com 12321

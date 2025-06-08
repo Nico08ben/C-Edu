@@ -117,9 +117,6 @@ if (!empty($user_profile_data['foto_perfil_url'])) {
 
                                 <label>Teléfono</label>
                                 <input type="text" name="telefono" value="<?= htmlspecialchars($user_profile_data['telefono_usuario'] ?? '') ?>" readonly>
-
-                                <label>Grupo a Cargo</label>
-                                <input type="text" name="grupo_cargo" value="<?= htmlspecialchars($user_profile_data['grupo_cargo_usuario'] ?? 'No asignado') ?>" readonly>
                             </div>
                         </div>
                     </div>

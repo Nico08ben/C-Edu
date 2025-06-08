@@ -48,53 +48,35 @@ include '../../conexion.php';
                     </div>
                     <div class="div-card">
                         <?php
-                        // No necesitas $id_Admin aquí a menos que quieras filtrar por tareas creadas por el admin
-                        // $id_Admin = $_SESSION['id_usuario']; // Ajusta según tu sesión
-
-                        // MODIFICACIÓN: Incluir t.id_tarea en la consulta para el administrador
-                        $sql = "SELECT
-                                    t.id_tarea, -- Añadido id_tarea aquí
-                                    t.instruccion_tarea AS clase,
-                                    u_asignador.nombre_usuario AS asignado_por,
-                                    u_asignado.nombre_usuario AS asignado_a,
-                                    t.fecha_fin_tarea AS fecha_limite
-                                FROM
-                                    tarea t
-                                JOIN
-                                    usuario u_asignador ON t.id_asignador = u_asignador.id_usuario
-                                JOIN
-                                    usuario u_asignado ON t.id_usuario = u_asignado.id_usuario
-                                ORDER BY
-                                    t.fecha_fin_tarea DESC
-                                LIMIT 3";
-                        $result = $conn->query($sql);
-                        if ($result && $result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                // Construir la URL para los detalles de la tarea
-                                // Asumo que el administrador tiene una página de detalles similar
-                                // o que las tareas de los docentes se ven desde la página de detalles del docente.
-                                // Si hay una página de detalles específica para el administrador, ajusta la ruta.
-                                // Para este ejemplo, usaré la misma lógica de TareasDetalles.php que subiste.
-                                $task_detail_url = $webRootPath . 'Administrador/Tareas%20Asignadas/TareasDetalles.php?id_tarea=' . htmlspecialchars($row['id_tarea']);
-
-                                echo '<a href="' . $task_detail_url . '" class="task-item-link" style="text-decoration: none; color: inherit;">'; // Enlace para todo el div
-                                echo '<div class="task-item">';
-                                echo '<div>' . htmlspecialchars($row['clase']) . '</div>';
-                                echo '<div class="task-details">';
-                                echo 'Asignado por: ' . htmlspecialchars($row['asignado_por']) . '<br>';
-                                echo 'Asignado a: ' . htmlspecialchars($row['asignado_a']) . '<br>'; // Mostrar también a quién fue asignada
-                                echo 'Fecha Límite: ' . htmlspecialchars($row['fecha_limite']);
-                                echo '</div>';
-                                echo '<span class="red-dot"></span>';
-                                echo '</div>';
-                                echo '</a>'; // Cerrar el enlace
+                        if (isset($_SESSION['id_usuario'])) {
+                            $id_docente_tareas = $_SESSION['id_usuario'];
+                            // MODIFICACIÓN: Incluir id_tarea en la consulta
+                            $sql_tareas = "SELECT t.id_tarea, t.instruccion_tarea AS clase, u.nombre_usuario AS asignado_por, t.fecha_fin_tarea AS fecha_limite FROM tarea t JOIN usuario u ON t.id_asignador = u.id_usuario WHERE t.id_usuario = $id_docente_tareas ORDER BY t.fecha_fin_tarea DESC LIMIT 3";
+                            $result_tareas = $conn->query($sql_tareas);
+                            if ($result_tareas && $result_tareas->num_rows > 0) {
+                                while ($row_tarea = $result_tareas->fetch_assoc()) {
+                                    // Construir la URL para los detalles de la tarea
+                                    $task_detail_url = $webRootPath . 'Docente/Tareas%20Asignadas/TareasDetalles.php?id_tarea=' . htmlspecialchars($row_tarea['id_tarea']);
+                                    echo '<a href="' . $task_detail_url . '" class="task-item-link" style="text-decoration: none; color: inherit;">'; // Enlace para todo el div
+                                    echo '<div class="task-item">';
+                                    echo '<div>' . htmlspecialchars($row_tarea['clase']) . '</div>';
+                                    echo '<div class="task-details">';
+                                    echo 'Asignado por: ' . htmlspecialchars($row_tarea['asignado_por']) . '<br>';
+                                    echo 'Fecha Límite: ' . htmlspecialchars($row_tarea['fecha_limite']);
+                                    echo '</div>';
+                                    echo '<span class="red-dot"></span>';
+                                    echo '</div>';
+                                    echo '</a>'; // Cerrar el enlace
+                                }
+                            } else {
+                                echo '<div>No hay tareas asignadas.</div>';
                             }
                         } else {
-                            echo '<div>No hay tareas asignadas.</div>';
+                            echo '<div>Error: No se pudo identificar al docente.</div>';
                         }
                         ?>
                     </div>
-                    <a href="/C-EDU/Administrador/Tareas%20Asignadas/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
+                    <a href="/C-EDU/Docente/Tareas%20Asignadas/index.php" style="text-decoration: none;"><button class="btn-ingresar">INGRESAR</button></a>
                 </div>
 
                 <div class="card">
