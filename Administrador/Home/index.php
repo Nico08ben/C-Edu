@@ -109,14 +109,12 @@ include '../../conexion.php';
                             // 2. Obtenemos el ID del docente actual de forma segura
                             $id_docente_eventos = (int)$_SESSION['id_usuario'];
 
-                            // 3. Consulta SQL MODIFICADA para filtrar por el usuario actual
-                            // Se une la tabla 'evento' con 'usuario_evento'
-                            $sql_eventos = "SELECT e.id_evento, e.titulo_evento, e.descripcion_evento, e.fecha_evento
-                            FROM evento e
-                            JOIN usuario_evento ue ON e.id_evento = ue.id_evento
-                            WHERE ue.id_usuario = {$id_docente_eventos}
-                              AND e.fecha_evento >= CURDATE()
-                            ORDER BY e.fecha_evento ASC
+                            // 3. Consulta SQL MODIFICADA para filtrar por 'id_responsable' en la misma tabla 'evento'
+                            $sql_eventos = "SELECT id_evento, titulo_evento, descripcion_evento, fecha_evento, enlace_recurso 
+                            FROM evento
+                            WHERE id_responsable = {$id_docente_eventos}
+                              AND fecha_evento >= CURDATE()
+                            ORDER BY fecha_evento ASC
                             LIMIT 3";
 
                             $result_eventos = $conn->query($sql_eventos);
@@ -125,8 +123,12 @@ include '../../conexion.php';
                                 while ($row_evento = $result_eventos->fetch_assoc()) {
                                     $event_link = '';
                                     $baseCalendarUrl = '/C-EDU/Docente/Calendario/index.php';
-                                    $event_link = $baseCalendarUrl . '?id_evento=' . htmlspecialchars($row_evento['id_evento']);
 
+                                    if (!empty($row_evento['enlace_recurso']) && filter_var($row_evento['enlace_recurso'], FILTER_VALIDATE_URL)) {
+                                        $event_link = htmlspecialchars($row_evento['enlace_recurso']);
+                                    } else {
+                                        $event_link = $baseCalendarUrl . '?id_evento=' . htmlspecialchars($row_evento['id_evento']);
+                                    }
 
                                     $displayDate = '';
                                     if (!empty($row_evento['fecha_evento'])) {
@@ -172,8 +174,8 @@ include '../../conexion.php';
                                     echo '</a>';
                                 }
                             } else {
-                                // Mensaje más específico si no hay eventos para este usuario
-                                echo '<div>No tienes eventos pendientes asignados.</div>';
+                                // Mensaje más específico
+                                echo '<div>No tienes eventos pendientes de los que seas responsable.</div>';
                             }
                         } else {
                             echo '<div>Error: No se pudo identificar al usuario para cargar los eventos.</div>';

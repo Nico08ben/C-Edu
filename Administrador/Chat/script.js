@@ -65,7 +65,58 @@ function clearActiveReplyPreviewGlobal() { // Renamed
     activeReplyPreview = null; // From original script
     replyingToElement = null; // From original script
 }
+// Nueva función para manejar el modal de información del usuario
+function openUserInfoModal(userId) {
+    const modal = document.getElementById('userInfoModal');
+    const modalBody = document.getElementById('userInfoModalBody');
+    const modalLoading = document.getElementById('userInfoModalLoading');
 
+    if (!modal || !userId) return;
+
+    // Mostrar modal y estado de carga
+    modal.style.display = 'flex';
+    modalBody.style.display = 'none';
+    modalLoading.style.display = 'block';
+
+    // Resetear campos
+    document.getElementById('userInfoModalName').textContent = 'Cargando...';
+    document.getElementById('userInfoModalImage').src = ''; // default avatar path if you have one
+    document.getElementById('userInfoModalEmail').textContent = '...';
+    document.getElementById('userInfoModalRole').textContent = '...';
+    document.getElementById('userInfoModalPhone').textContent = '...';
+    document.getElementById('userInfoModalSubject').textContent = '...';
+
+    fetch(`get_user_details.php?user_id=${userId}`)
+        .then(response => {
+            if (!response.ok) throw new Error('La respuesta del servidor no fue exitosa.');
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.user) {
+                const user = data.user;
+                document.getElementById('userInfoModalName').textContent = user.nombre_usuario || 'No disponible';
+                document.getElementById('userInfoModalImage').src = user.foto_perfil_url_full;
+                document.getElementById('userInfoModalEmail').textContent = user.email_usuario || 'No disponible';
+                document.getElementById('userInfoModalRole').textContent = user.nombre_rol || 'No disponible';
+                document.getElementById('userInfoModalPhone').textContent = user.telefono_usuario || 'No disponible';
+                document.getElementById('userInfoModalSubject').textContent = user.nombre_materia || 'No asignada';
+
+                // Ocultar carga y mostrar contenido
+                modalLoading.style.display = 'none';
+                modalBody.style.display = 'block';
+            } else {
+                throw new Error(data.message || 'No se pudieron cargar los datos del usuario.');
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener detalles del usuario:', error);
+            document.getElementById('userInfoModalName').textContent = 'Error';
+            document.getElementById('userInfoModalBody').innerHTML += `<p style="color:red; text-align:center;">${error.message}</p>`;
+            // Ocultar carga y mostrar contenido (con error)
+            modalLoading.style.display = 'none';
+            modalBody.style.display = 'block';
+        });
+}
 // Sound visualizer functions (ensure these are complete implementations from your original script)
 function initializeVisualizerNodes(streamForVisualizer) {
     // This is a placeholder. Ensure you have the full implementation from your original script.js.
@@ -232,7 +283,7 @@ function loadUserList() {
                 data.users.forEach(user => {
                     const userLi = document.createElement('li');
                     // user.foto_perfil_url_url ya es la URL completa o el avatar por defecto
-                    const userPhoto = user.foto_perfil_url_url; 
+                    const userPhoto = user.foto_perfil_url_url;
 
                     // Preparar texto del último mensaje y hora
                     let lastMessageText = 'Conversación no iniciada';
@@ -314,11 +365,11 @@ function loadUserList() {
         .catch(error => {
             console.error('Error fetching users:', error);
             if (userListElement) {
-                 const errorLi = document.createElement('li');
-                 errorLi.textContent = `Error al cargar usuarios: ${error.message}`;
-                 errorLi.style.textAlign = 'center';
-                 errorLi.style.padding = '10px';
-                 userListElement.appendChild(errorLi);
+                const errorLi = document.createElement('li');
+                errorLi.textContent = `Error al cargar usuarios: ${error.message}`;
+                errorLi.style.textAlign = 'center';
+                errorLi.style.padding = '10px';
+                userListElement.appendChild(errorLi);
             }
         });
 }
@@ -412,7 +463,7 @@ function renderMessageToDOM(msg, container) {
     }
 
     // Profile photo for the sender of this message
-    const senderMessagePhoto = msg.emisor_foto_url; 
+    const senderMessagePhoto = msg.emisor_foto_url;
     let messageContentHTML = '';
     const content = msg.contenido_mensaje;
 
@@ -641,6 +692,76 @@ function setupStaticEventListeners() {
     const modalImage = document.getElementById('modalImage');
     const imageModalClose = document.querySelector('.image-modal-close');
     const conversationBackBtn = document.querySelector('#conversation-active-chat .conversation-back');
+    
+    // --- INICIO: CÓDIGO PARA FILTRADO DE BÚSQUEDA ---
+    const searchInput = document.querySelector('.content-sidebar-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', function (e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const userListItems = document.querySelectorAll('.content-messages-list li:not(.content-message-title)');
+
+            userListItems.forEach(item => {
+                const userNameElement = item.querySelector('.content-message-name');
+                const lastMessageElement = item.querySelector('.content-message-text');
+
+                const userName = userNameElement ? userNameElement.textContent.toLowerCase() : '';
+                const lastMessage = lastMessageElement ? lastMessageElement.textContent.toLowerCase() : '';
+
+                // Comprueba si el nombre de usuario o el último mensaje incluyen el término de búsqueda
+                if (userName.includes(searchTerm) || lastMessage.includes(searchTerm)) {
+                    item.style.display = ''; // Muestra el elemento si coincide
+                } else {
+                    item.style.display = 'none'; // Oculta el elemento si no coincide
+                }
+            });
+        });
+    }
+    // --- FIN: CÓDIGO PARA FILTRADO DE BÚSQUEDA ---
+
+
+    // --- INICIO: NUEVO CÓDIGO PARA EL MODAL DE INFO ---
+    const userInfoBtn = document.getElementById('view-user-info-btn');
+    const userInfoModal = document.getElementById('userInfoModal');
+    const userInfoModalClose = userInfoModal.querySelector('.user-info-modal-close');
+
+    if (userInfoBtn) {
+        userInfoBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (activeChatUserId) {
+                openUserInfoModal(activeChatUserId);
+            } else {
+                alert('Por favor, selecciona un chat primero.');
+            }
+        });
+    }
+
+    if (userInfoModal && userInfoModalClose) {
+        // Cerrar al hacer clic en la 'X'
+        userInfoModalClose.addEventListener('click', () => {
+            userInfoModal.style.display = 'none';
+        });
+
+        // Cerrar al hacer clic fuera del modal (en el overlay)
+        userInfoModal.addEventListener('click', (e) => {
+            if (e.target === userInfoModal) {
+                userInfoModal.style.display = 'none';
+            }
+        });
+
+        // También asegúrate que la tecla Escape cierre este modal
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                // ... (tu código existente para cerrar otros modales)
+                if (userInfoModal && userInfoModal.style.display !== 'none') {
+                    userInfoModal.style.display = 'none';
+                }
+            }
+        });
+
+        // --- FIN: NUEVO CÓDIGO PARA EL MODAL DE INFO ---
+
+        // ... (el resto de tu código existente en esta función)
+    }
 
     if (conversationBackBtn) {
         conversationBackBtn.addEventListener('click', function (e) {

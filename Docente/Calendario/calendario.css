@@ -544,3 +544,53 @@ body {
 #mini-calendar .fc-button-group > .fc-button {
     margin: 0;
 }
+
+/* --- ESTILOS PARA EL INDICADOR DE EVENTO EN EL MINI-CALENDARIO --- */
+
+/* Es importante que el contenedor del día tenga posición relativa */
+#mini-calendar .fc-daygrid-day {
+    position: relative;
+}
+
+/* Estilo del punto indicador de evento */
+.event-dot {
+    position: absolute;
+    bottom: 4px; /* Posición desde abajo */
+    left: 50%; /* Centrado horizontalmente */
+    transform: translateX(-50%);
+    width: 6px; /* Tamaño del punto */
+    height: 6px; /* Tamaño del punto */
+    border-radius: 50%;
+    background-color: var(--role-primary-color); /* Usa un color del tema */
+}
+/* --- ESTILOS PARA EL FILTRO DE CATEGORÍAS --- */
+
+.actions-right {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espacio entre el filtro y las vistas */
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-disabled);
+    border-radius: 4px;
+    padding: 0 12px;
+}
+
+.filter-container label {
+    color: var(--text-secondary);
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+#category-filter {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    padding: 10px 5px;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+}

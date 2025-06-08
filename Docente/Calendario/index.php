@@ -47,10 +47,24 @@ if (isset($_SESSION['rol'])) {
                 <button id="new-event-btn" class="new-event-btn">
                     <i class="fas fa-plus"></i> NUEVO EVENTO
                 </button>
-                <div class="view-options">
-                    <button id="day-view" class="view-btn">Día</button>
-                    <button id="week-view" class="view-btn">Semana</button>
-                    <button id="month-view" class="view-btn active">Mes</button>
+
+                <div class="actions-right">
+                    <div class="filter-container">
+                        <label for="category-filter" title="Filtrar por categoría"><i class="fas fa-filter"></i></label>
+                        <select id="category-filter">
+                            <option value="all">Todas las categorías</option>
+                            <option value="Reunión">Reunión</option>
+                            <option value="Semillero">Semillero</option>
+                            <option value="Club">Club</option>
+                            <option value="Capacitación">Capacitación</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="view-options">
+                        <button id="day-view" class="view-btn">Día</button>
+                        <button id="week-view" class="view-btn">Semana</button>
+                        <button id="month-view" class="view-btn active">Mes</button>
+                    </div>
                 </div>
             </div>
 

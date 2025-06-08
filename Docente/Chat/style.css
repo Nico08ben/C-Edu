@@ -1343,3 +1343,96 @@ body {
     text-align: right;
     line-height: 1.3;
 }
+
+
+/* ================================== */
+/* == ESTILOS MODAL INFO DE USUARIO == */
+/* ================================== */
+
+.user-info-modal-overlay {
+    position: fixed;
+    z-index: 10000; /* Más alto que el resto */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex; /* Usar flex para centrar */
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px); /* Efecto de desenfoque bonito */
+}
+
+.user-info-modal-content {
+    background-color: var(--sidebar-color);
+    color: var(--text-color);
+    margin: auto;
+    padding: 25px 35px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+    position: relative;
+    animation: fadeInModal 0.4s ease-out;
+}
+
+@keyframes fadeInModal {
+    from { transform: scale(0.9) translateY(-20px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.user-info-modal-close {
+    color: var(--slate-400);
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.user-info-modal-close:hover {
+    color: var(--slate-600);
+}
+
+.user-info-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--slate-200);
+    padding-bottom: 20px;
+}
+
+#userInfoModalImage {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 4px solid var(--sidebar-color);
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+}
+
+#userInfoModalName {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--title-color);
+}
+
+.user-info-details p {
+    font-size: 15px;
+    margin-bottom: 12px;
+    color: var(--text-color);
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-info-details strong {
+    font-weight: 500;
+    color: var(--title-color);
+    margin-right: 15px;
+}

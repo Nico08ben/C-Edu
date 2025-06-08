@@ -9,29 +9,22 @@ if (isset($_SESSION['rol'])) {
         $theme_class = 'theme-docente';
     }
 }
-
-// Redirigir si no es admin o no ha iniciado sesión (ejemplo)
-if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que el rol 0 es Administrador
-    // header('Location: ../../index.php'); // Ajusta la ruta a tu login si es necesario
-    // exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="es" class="<?php echo $theme_class; ?>">
 
 <head>
-    <?php include "../../SIDEBAR/Docente/head.php" ?>
+    <?php include "../../SIDEBAR/Admin/head.php" ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <title>Calendario</title>
 
     <!-- FullCalendar CSS -->
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
     <link rel="stylesheet" href="calendario.css">
-    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <?php include "../../SIDEBAR/Docente/sidebar.php" ?>
+    <?php include "../../SIDEBAR/Admin/sidebar.php" ?>
     <section class="home">
         <div class="container">
             <header class="header-calendario">
@@ -54,10 +47,24 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
                 <button id="new-event-btn" class="new-event-btn">
                     <i class="fas fa-plus"></i> NUEVO EVENTO
                 </button>
-                <div class="view-options">
-                    <button id="day-view" class="view-btn">Día</button>
-                    <button id="week-view" class="view-btn">Semana</button>
-                    <button id="month-view" class="view-btn active">Mes</button>
+
+                <div class="actions-right">
+                    <div class="filter-container">
+                        <label for="category-filter" title="Filtrar por categoría"><i class="fas fa-filter"></i></label>
+                        <select id="category-filter">
+                            <option value="all">Todas las categorías</option>
+                            <option value="Reunión">Reunión</option>
+                            <option value="Semillero">Semillero</option>
+                            <option value="Club">Club</option>
+                            <option value="Capacitación">Capacitación</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="view-options">
+                        <button id="day-view" class="view-btn">Día</button>
+                        <button id="week-view" class="view-btn">Semana</button>
+                        <button id="month-view" class="view-btn active">Mes</button>
+                    </div>
                 </div>
             </div>
 
@@ -110,7 +117,6 @@ if (!isset($_SESSION['id_usuario']) || $_SESSION['rol'] != 0) { // Asumiendo que
                         <option value="#9C27B0">Morado</option>
                         <option value="#FF9800">Naranja</option>
                         <option value="#F44336">Rojo</option>
-                        <option value="#4CAF50">Verde Alternativo</option>
                     </select>
                 </div>
                 <div class="form-group">

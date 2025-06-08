@@ -7,12 +7,44 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateMonthYear(calendarInstance) {
-        document.getElementById('month-year').textContent = calendarInstance.view.title;
+        if (calendarInstance && calendarInstance.view.title) {
+            document.getElementById('month-year').textContent = calendarInstance.view.title;
+        }
     }
 
-    // --- CALENDARIO PRINCIPAL ---
+    // --- OBTENCIÓN DE ELEMENTOS Y DECLARACIÓN DE INSTANCIAS ---
     const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
+    const miniCalendarEl = document.getElementById('mini-calendar');
+    let calendar = null;
+    let miniCalendarInstance = null;
+    let syncing = false;
+
+    // --- INICIALIZACIÓN DEL MINI-CALENDARIO ---
+    // Es crucial crearlo ANTES que el calendario principal.
+    if (miniCalendarEl) {
+        miniCalendarInstance = new FullCalendar.Calendar(miniCalendarEl, {
+            locale: 'es',
+            initialView: 'dayGridMonth',
+            headerToolbar: { start: 'title', center: '', end: 'prev,next' },
+            height: 'auto',
+            dayCellDidMount: function(arg) {
+                if (calendar) {
+                    const events = calendar.getEvents();
+                    const dayHasEvent = events.some(event => 
+                        event.start && event.start.toISOString().split('T')[0] === arg.date.toISOString().split('T')[0]
+                    );
+                    if (dayHasEvent) {
+                        let dot = document.createElement('div');
+                        dot.className = 'event-dot';
+                        arg.el.appendChild(dot);
+                    }
+                }
+            }
+        });
+    }
+
+    // --- INICIALIZACIÓN DEL CALENDARIO PRINCIPAL ---
+    calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'es',
         initialView: 'dayGridMonth',
         headerToolbar: false,
@@ -24,6 +56,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     if (Array.isArray(data)) {
                         successCallback(data);
+                        if (miniCalendarInstance) {
+                            miniCalendarInstance.render(); // Re-render para mostrar puntos en carga inicial
+                        }
                     } else {
                         console.error('La respuesta de get-events.php no es un array:', data);
                         failureCallback(new Error('Formato de respuesta inesperado.'));
@@ -36,11 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         },
         eventDisplay: 'block',
-        eventTimeFormat: {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        },
+        eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: true },
         dateClick: function (info) {
             document.getElementById('event-form').reset();
             const startDate = new Date(info.date);
@@ -51,26 +82,16 @@ document.addEventListener('DOMContentLoaded', function () {
         eventClick: function (info) {
             const event = info.event;
             document.getElementById('event-title').textContent = event.title;
-
-            let dateStr = event.start.toLocaleString('es-ES', {
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-                hour: '2-digit', minute: '2-digit'
-            });
+            let dateStr = event.start.toLocaleString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
             if (event.end) {
                 dateStr += ' - ' + event.end.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
             }
             document.getElementById('event-date').innerHTML = `<span>${dateStr}</span>`;
-            
             const descriptionHtml = event.extendedProps.description ? `<span>${event.extendedProps.description}</span>` : '<span>Sin descripción</span>';
             document.getElementById('view-event-description').innerHTML = descriptionHtml;
-            
             document.getElementById('delete-event').onclick = function () {
                 if (confirm('¿Estás seguro de eliminar este evento?')) {
-                    fetch('delete-event.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id: event.id })
-                    })
+                    fetch('delete-event.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: event.id }) })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
@@ -88,9 +109,14 @@ document.addEventListener('DOMContentLoaded', function () {
         eventResize: function (info) { updateEventOnServer(info.event); }
     });
 
+    // --- RENDERIZADO INICIAL ---
     calendar.render();
+    if (miniCalendarInstance) {
+        miniCalendarInstance.render();
+    }
     updateMonthYear(calendar);
 
+    // --- LÓGICA DE ACTUALIZACIÓN (DRAG & DROP) ---
     function updateEventOnServer(event) {
         const eventData = {
             id: event.id,
@@ -100,11 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
             end: event.end ? event.end.toISOString() : null,
             backgroundColor: event.backgroundColor
         };
-        fetch('update-event.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(eventData)
-        })
+        fetch('update-event.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(eventData) })
         .then(response => response.json())
         .then(data => {
             if (!data.success) {
@@ -124,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('day-view').addEventListener('click', () => calendar.changeView('timeGridDay'));
     document.getElementById('week-view').addEventListener('click', () => calendar.changeView('timeGridWeek'));
     document.getElementById('month-view').addEventListener('click', () => calendar.changeView('dayGridMonth'));
+    
     document.getElementById('new-event-btn').addEventListener('click', () => {
         document.getElementById('event-form').reset();
         const now = new Date();
@@ -131,8 +154,20 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('event-start').value = formatDateTimeLocal(now);
         document.getElementById('new-event-modal').style.display = 'block';
     });
+    
+    document.getElementById('category-filter').addEventListener('change', function(e) {
+        const selectedCategory = e.target.value;
+        const allEvents = calendar.getEvents();
+        allEvents.forEach(event => {
+            const eventCategory = (event.extendedProps.category || "").trim();
+            if (selectedCategory === 'all' || eventCategory === selectedCategory) {
+                event.setProp('display', 'auto');
+            } else {
+                event.setProp('display', 'none');
+            }
+        });
+    });
 
-    // CIERRE DE MODALES
     document.querySelectorAll('.modal .close').forEach(button => {
         button.onclick = () => { button.closest('.modal').style.display = 'none'; };
     });
@@ -142,11 +177,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // --- MANEJADOR DEL FORMULARIO DE NUEVO EVENTO ---
+    // --- FORMULARIO DE NUEVO EVENTO ---
     document.getElementById('event-form').addEventListener('submit', function (e) {
         e.preventDefault();
-
-        // Esta sección recolecta TODOS los datos del formulario.
         const eventDataForBackend = {
             title: document.getElementById('event-name').value,
             description: document.getElementById('form-event-description').value,
@@ -155,13 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
             color: document.getElementById('event-color').value,
             categoria_evento: document.getElementById('event-category').value
         };
-
-        // Esta sección envía los datos al servidor.
-        fetch('add-event.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(eventDataForBackend),
-        })
+        fetch('add-event.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(eventDataForBackend) })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -178,31 +205,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // --- MINI-CALENDARIO ---
-    const miniCalendarEl = document.getElementById('mini-calendar');
-    let miniCalendarInstance = null;
-
-    if (miniCalendarEl) {
-        miniCalendarInstance = new FullCalendar.Calendar(miniCalendarEl, {
-            locale: 'es',
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                start: 'title',
-                center: '',
-                end: 'prev,next'
-            },
-            height: 'auto',
-            dateClick: function (info) {
-                calendar.gotoDate(info.date);
-                updateMonthYear(calendar);
-            }
-        });
-        miniCalendarInstance.render();
-    }
-
     // --- SINCRONIZACIÓN ENTRE CALENDARIOS ---
-    let syncing = false;
-    calendar.on('datesSet', function (dateInfo) {
+    calendar.on('datesSet', function () {
         if (!syncing && miniCalendarInstance) {
             syncing = true;
             miniCalendarInstance.gotoDate(calendar.getDate());
@@ -216,40 +220,34 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!syncing) {
                 syncing = true;
                 calendar.gotoDate(info.date);
+                updateMonthYear(calendar);
+                setTimeout(() => syncing = false, 50);
+            }
+        });
+        miniCalendarInstance.on('datesSet', function() {
+            if (!syncing) {
+                syncing = true;
+                calendar.gotoDate(miniCalendarInstance.getDate());
+                updateMonthYear(calendar);
                 setTimeout(() => syncing = false, 50);
             }
         });
     }
-    // ... todo tu código existente de calendario.js ...
 
-    // --- INICIO DEL NUEVO CÓDIGO ---
-    // Este código se ejecuta cuando la página carga para abrir un evento desde la URL
+    // --- ABRIR EVENTO DESDE URL ---
     function abrirEventoDesdeUrl() {
         const urlParams = new URLSearchParams(window.location.search);
         const eventIdFromUrl = urlParams.get('id_evento');
-
         if (eventIdFromUrl) {
-            // Esperamos un momento para que FullCalendar cargue los eventos desde el servidor.
-            // 1000 milisegundos (1 segundo) suele ser suficiente.
             setTimeout(() => {
                 const eventToOpen = calendar.getEventById(eventIdFromUrl);
-                
                 if (eventToOpen) {
-                    // Si encontramos el evento, simulamos un clic en él para abrir el modal.
-                    calendar.trigger('eventClick', {
-                        event: eventToOpen,
-                        el: eventToOpen.el, // Elemento HTML del evento
-                        jsEvent: new MouseEvent('click'), // Simula un evento de clic
-                        view: calendar.view
-                    });
+                    calendar.trigger('eventClick', { event: eventToOpen, el: eventToOpen.el, jsEvent: new MouseEvent('click'), view: calendar.view });
                 } else {
                     console.warn(`No se encontró el evento con ID ${eventIdFromUrl} en el calendario.`);
                 }
             }, 1000); 
         }
     }
-
     abrirEventoDesdeUrl();
-    // --- FIN DEL NUEVO CÓDIGO ---
-
-}); // <-- Esta es la última línea de tu archivo, el nuevo código va justo antes.
+});
