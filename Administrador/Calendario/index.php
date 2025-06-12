@@ -18,9 +18,26 @@ if (isset($_SESSION['rol'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <title>Calendario</title>
 
-    <!-- FullCalendar CSS -->
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
     <link rel="stylesheet" href="calendario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            /* Override style.css's full viewport height, flexbox centering, and hidden overflow */
+            /* These properties conflict with the calendar's main layout */
+            height: auto !important; /* Allow body height to be determined by content */
+            display: block !important; /* Revert to default block display for body */
+            align-items: initial !important; /* Clear flex alignment */
+            justify-content: initial !important; /* Clear flex justification */
+            overflow: visible !important; /* Allow content to overflow and scrolling to work */
+            
+            /* Ensure background color and font-family from calendario.css or theme are applied */
+            background-color: var(--bg-body, #f2f2f2) !important; /* Use calendar's background, fallback to a default */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; /* Ensure calendar's font */
+        }
+    </style>
 </head>
 
 <body>
@@ -78,7 +95,6 @@ if (isset($_SESSION['rol'])) {
         </div>
     </section>
 
-    <!-- Modal para eventos -->
     <div id="event-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -91,7 +107,6 @@ if (isset($_SESSION['rol'])) {
         </div>
     </div>
 
-    <!-- Modal para nuevo evento -->
     <div id="new-event-modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -140,10 +155,21 @@ if (isset($_SESSION['rol'])) {
         </div>
     </div>
 
-    <!-- FullCalendar JS -->
+    <div class="toast">
+        <div class="toast-content">
+            <i class="fas fa-solid fa-check check"></i>
+            <div class="message">
+                <span class="text text-1">Evento añadido</span>
+            </div>
+        </div>
+        <i class="fa-solid fa-xmark close"></i>
+        <div class="progress"></div>
+    </div>
+
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js'></script>
     <script src="calendario.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>

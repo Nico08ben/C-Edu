@@ -195,6 +195,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 calendar.refetchEvents();
                 document.getElementById('new-event-modal').style.display = 'none';
                 this.reset();
+                // Trigger the toast notification
+                if (window.showToastNotification) {
+                    window.showToastNotification();
+                }
             } else {
                 alert('Error al guardar: ' + (data.message || 'Error desconocido.'));
             }

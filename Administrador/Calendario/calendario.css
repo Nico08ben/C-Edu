@@ -312,7 +312,7 @@ body {
 
 .fc-event:hover {
     opacity: 0.9;
-    /* Considera usar filter: brightness(95%) si el color de fondo es una variable */
+    /* Considera usar filter: brightness(95%) if the background color is a variable */
 }
 
 .fc-daygrid-event-dot {

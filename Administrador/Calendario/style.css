@@ -7,34 +7,27 @@
     font-family: "Rubik", sans-serif;
 }
 
-/* CAMBIOS AQUI: 
-   Eliminamos el display: flex, align-items, justify-content y overflow: hidden del body.
-   Estos estilos son los que causaban que la página se centrara y la barra de desplazamiento desapareciera.
-   Tu layout principal (sidebar + home) debe manejar el 100vh y el overflow.
-*/
 body{
-    min-height: 100vh; /* Asegura que el body tenga al menos la altura de la ventana */
-    background-color: var(--role-primary-light-color);
-    /* overflow: hidden;  <-- ESTO ES LO QUE ESTABA CAUSANDO EL PROBLEMA DE DESPLAZAMIENTO Y CORRIMIENTO */
-    /* display: flex;
+    height: 100vh;
+    display: flex;
     align-items: center;
-    justify-content: center; */
+    justify-content: center;
+    background-color: #f2f2f2;
+    overflow: hidden;
 }
 
 .toast{
-    position: fixed; /* CAMBIO: usar fixed para que se posicione respecto a la ventana del navegador */
+    position: absolute;
     top: 25px;
-    right: 25px;
+    right: 15px;
     border-radius: 12px;
-    background-color: var(--role-primary-light-color);
+    background-color: #ffff;
     padding: 20px 35px 20px 25px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     border-left: 6px solid var(--role-primary-color);
     overflow: hidden;
-    /* Esto ya lo tenías, asegura que esté oculto por defecto */
     transform: translateX(calc(100% + 30px));
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
-    z-index: 10000; /* Asegurar que esté por encima de otros elementos */
 }
 
 .toast.active{
@@ -95,7 +88,7 @@ body{
     left: 0;
     height: 3px;
     width: 100%;
-    background: var(--role-primary-light-color);
+    background: #ddd;
 }
 
 .toast .progress:before{
@@ -105,8 +98,8 @@ body{
     right: 0;
     height: 100%;
     width: 100%;
-    background-color: var( --role-primary-color );
-    color: var(--role-primary-light-color);
+    background-color: var(--role-primary-color);
+    color: #fff;
 }
 
 .progress.active:before{

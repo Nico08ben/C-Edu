@@ -128,7 +128,8 @@
     --scrollbar-track: #f1f1f1;
     --select-arrow: '%23555555';    /* Flecha de select (codificada para URL, gris oscuro) */
 
-    --role-primary-color: #e7bb41;          /* Amarillo característico */
+    --role-primary-color: #e7bb41; 
+    --toast-color-background: #f8e1a1;         /* Amarillo característico */
     --role-primary-light-color: #fff3d2;    /* Amarillo claro */
     --role-primary-dark-color: #d4a738;     /* Amarillo más oscuro */
     --role-text-on-primary-color: #333333;  /* Texto oscuro sobre amarillo claro */
