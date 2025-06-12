@@ -1,8 +1,11 @@
+/* calendario.css - Adaptado para .theme-admin */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Rubik', sans-serif; /* Cambiado a Rubik para consistencia con otros archivos */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Considera usar una variable para la fuente si la defines en themes.css */
 }
 
 .fc .fc-button {
@@ -11,11 +14,30 @@
 }
 
 body {
-    background-color: var(--bg-body); /* Usar --bg-body para el fondo del cuerpo */
-    color: var(--text-primary); /* Usar --text-primary para el color de texto general */
+    /* Estos estilos serán aplicados si .theme-admin está en el body */
+    background-color: var(--bg-body);
+    color: var(--text-primary);
 }
 
+/* Contenedor principal de la página del calendario del administrador */
+.home {
+    position: relative;
+    min-height: 160vh;
+    left: 250px;  
+    width: calc(100% - 250px); 
+    background-color: var(--bg-body);  
+    transition: var(--trans-05);
+}
+
+/* Ajuste si la sidebar del admin se cierra */
+/* .sidebar.close ~ .home {
+    left: 88px;
+    width: calc(100% - 88px);
+} */
+
+
 .container {
+    /* Este es el contenedor dentro de la sección .home */
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
@@ -26,9 +48,11 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    background-color: var(--bg-content); /* Usar --bg-content para el fondo del header */
-    border-bottom: 1px solid var(--border-color); /* Usar --border-color */
-    box-shadow: 0 2px 5px var(--shadow-color); /* Usar --shadow-color */
+    background-color: var(--bg-content);
+    /* Anteriormente #fff o var(--sidebar-color) */
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px var(--shadow-color);
+    /* Anteriormente rgba(0,0,0,0.1) */
 }
 
 .header-left {
@@ -38,8 +62,10 @@ body {
 }
 
 .today-btn {
-    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
-    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
+    background-color: var(--role-primary-color);
+    /* Anteriormente var(--primary-color) */
+    color: var(--role-text-on-primary-color);
+    /* Anteriormente white */
     border: none;
     border-radius: 4px;
     padding: 10px 15px;
@@ -48,11 +74,13 @@ body {
     align-items: center;
     gap: 8px;
     font-weight: 500;
-    transition: var(--trans-03); /* Usar la variable de transición */
+    transition: background-color 0.3s;
+    /* Considera usar var(--trans-03) */
 }
 
 .today-btn:hover {
-    background-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
+    background-color: var(--role-primary-dark-color);
+    /* Anteriormente #d4a738 */
 }
 
 .navigation-buttons {
@@ -62,85 +90,36 @@ body {
 
 .nav-btn {
     background: none;
-    border: 1px solid var(--border-color); /* Usar --border-color */
-    color: var(--text-primary); /* Usar --text-primary para el texto de los botones de navegación */
+    border: 1px solid var(--border-color);
     font-size: 14px;
     cursor: pointer;
     padding: 8px 12px;
     border-radius: 4px;
-    transition: var(--trans-03); /* Usar la variable de transición */
+    transition: all 0.3s;
+    /* Considera usar var(--trans-03) */
+    color: var(--text-secondary);
+    /* Añadido para mejor legibilidad */
 }
 
 .nav-btn:hover {
-    background-color: var(--bg-disabled); /* Usar --bg-disabled para hover */
-    color: var(--text-primary); /* Mantener --text-primary */
+    background-color: var(--role-primary-light-color);
+    /* Anteriormente var(--hover-color), usando un amarillo pálido del admin */
+    color: var(--text-primary);
 }
 
 .month-year {
     font-size: 20px;
     font-weight: bold;
     margin-left: 10px;
-    color: var(--text-primary); /* Usar --text-primary */
+    color: var(--text-primary);
+    /* Anteriormente var(--dark-gray) */
 }
 
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.profile-info h3 {
-    font-weight: 600;
-    margin-bottom: 2px;
-    color: var(--text-primary); /* Usar --text-primary */
-}
-
-.profile-info p {
-    font-size: 13px;
-    color: var(--text-secondary); /* Usar --text-secondary */
-}
-
-.profile img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
-.profile .fa-regular.fa-bell {
-    background-color: var(--role-primary-color); /* Usar --role-primary-color */
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    text-align: center;
-    padding: 9px;
-    color: var(--role-text-on-primary-color); /* Usar --role-text-on-primary-color */
-    cursor: pointer;
-}
-
-.profile .fa-solid.fa-user {
-    font-size: 25px;
-    text-align: center;
-    padding: 4px;
-    border-radius: 50%;
-    height: 35px;
-    width: 35px;
-    color: var(--text-secondary); /* Usar --text-secondary */
-    background-color: var(--bg-sidebar); /* Usar --bg-sidebar */
-    cursor: pointer;
-}
-
-/* Añade esto debajo de los estilos existentes de .profile */
+/* Se asume que user_info.php y su CSS se encargan del estilo del perfil */
 .header-right {
     display: flex;
     align-items: center;
     gap: 20px;
-}
-
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px 30px;
 }
 
 .action-bar {
@@ -151,8 +130,10 @@ body {
 }
 
 .new-event-btn {
-    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
-    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
+    background-color: var(--role-primary-color);
+    /* Anteriormente var(--primary-color) */
+    color: var(--role-text-on-primary-color);
+    /* Anteriormente white */
     border: none;
     border-radius: 4px;
     padding: 10px 20px;
@@ -161,16 +142,19 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: var(--trans-03); /* Usar la variable de transición */
+    transition: background-color 0.3s;
+    /* Considera usar var(--trans-03) */
 }
 
 .new-event-btn:hover {
-    background-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
+    background-color: var(--role-primary-dark-color);
+    /* Anteriormente #d4a738 */
 }
 
 .view-options {
     display: flex;
-    background-color: var(--bg-disabled); /* Usar --bg-disabled */
+    background-color: var(--bg-disabled);
+    /* Anteriormente #eee */
     border-radius: 4px;
     overflow: hidden;
 }
@@ -181,17 +165,23 @@ body {
     background: none;
     cursor: pointer;
     font-size: 14px;
-    transition: var(--trans-03); /* Usar la variable de transición */
-    color: var(--text-primary); /* Color de texto normal */
+    transition: all 0.3s;
+    /* Considera usar var(--trans-03) */
+    color: var(--text-secondary);
+    /* Añadido para mejor legibilidad */
 }
 
 .view-btn.active {
-    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
-    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
+    background-color: var(--role-primary-color);
+    /* Anteriormente var(--primary-color) */
+    color: var(--role-text-on-primary-color);
+    /* Anteriormente white */
 }
 
 .view-btn:hover:not(.active) {
-    background-color: var(--border-color); /* Usar --border-color para hover */
+    background-color: var(--border-color);
+    /* Anteriormente #ddd, usando un color de borde que es un gris claro */
+    color: var(--text-primary);
 }
 
 .calendar-container {
@@ -201,19 +191,82 @@ body {
 }
 
 .mini-calendar {
-    background-color: var(--bg-content); /* Usar --bg-content */
+    background-color: var(--bg-content);
+    /* Anteriormente white o var(--sidebar-color) */
     border-radius: 8px;
     padding: 15px;
     width: 280px;
-    box-shadow: 0 2px 10px var(--shadow-color); /* Usar --shadow-color */
+    box-shadow: 0 2px 10px var(--shadow-color);
+    /* Anteriormente rgba(0,0,0,0.1) */
+    /* REGLAS ANTERIORES PARA EL MINI-CALENDARIO (mantenidas) */
+    overflow: hidden;
+    /* Asegura que el contenido interno no se desborde */
+    position: relative;
+    /* Para que los elementos internos se posicionen correctamente */
+    display: block;
+    /* Asegura que se comporte como un bloque */
+    height: fit-content;
+    /* Ajusta la altura al contenido */
 }
+
+/* *** NUEVAS REGLAS AQUI PARA ARREGLAR EL MINI-CALENDARIO ESPECÍFICO *** */
+/* Asegura que el contenedor principal de FullCalendar dentro del mini-calendario
+   también recorte su contenido y tenga el mismo background, si es necesario. */
+.mini-calendar .fc {
+    background-color: var(--bg-content);
+    /* Hereda el fondo del contenedor principal */
+    border-radius: 8px;
+    /* Aplica border-radius a la instancia de FC */
+    overflow: hidden;
+    /* Asegura que cualquier desbordamiento interno se recorte */
+}
+
+/* Asegura que los cuerpos de las tablas de día no se desborden de sus contenedores */
+.mini-calendar .fc-daygrid-body,
+.mini-calendar .fc-scrollgrid-sync-table {
+    overflow: hidden;
+    /* A veces, los bordes redondeados pueden causar líneas si el fondo es diferente. */
+    /* Asegúrate de que no haya bordes o fondos inesperados. */
+}
+
+/* El elemento fc-scrollgrid puede tener un fondo por defecto o desbordarse */
+.mini-calendar .fc-scrollgrid {
+    border-radius: 8px;
+    /* Aplicar también a este contenedor si es necesario */
+    overflow: hidden;
+    /* Asegura que el contenido se recorte */
+    background-color: var(--bg-content);
+    /* Asegura que el fondo sea el mismo */
+}
+
+/* En algunos casos, las celdas individuales pueden tener un fondo que se "escape" */
+.mini-calendar .fc-daygrid-day {
+    background-color: var(--bg-content);
+    /* Asegura el fondo de cada día */
+}
+
+/* Si el problema es que el header de FullCalendar se "sale" visualmente */
+.mini-calendar .fc-daygrid-body-unbalanced .fc-daygrid-day-frame {
+    height: auto !important;
+    /* Evita alturas fijas que puedan causar problemas */
+}
+
+/* Si hay un espacio extra debajo de los días en la última fila del mes incompleto */
+.mini-calendar .fc-daygrid-more-link {
+    display: none;
+    /* Oculta el enlace "más" si no se necesita y causa desajuste */
+}
+
+/* ************************************************************ */
 
 .main-calendar {
     flex: 1;
-    background-color: var(--bg-content); /* Usar --bg-content */
+    background-color: var(--bg-content);
+    /* Anteriormente white o var(--sidebar-color) */
     border-radius: 8px;
     padding: 15px;
-    box-shadow: 0 2px 10px var(--shadow-color); /* Usar --shadow-color */
+    box-shadow: 0 2px 10px var(--shadow-color);
+    /* Anteriormente rgba(0,0,0,0.1) */
 }
 
 /* FullCalendar Overrides */
@@ -223,32 +276,43 @@ body {
 }
 
 .fc {
-    background-color: var(--bg-content); /* Usar --bg-content */
+    /* Estilos base para el calendario */
+    background-color: var(--bg-content);
+    /* Anteriormente white o var(--sidebar-color) */
     border-radius: 8px;
 }
 
 .fc-toolbar-title {
     font-size: 1.2em;
-    color: var(--text-primary); /* Usar --text-primary */
+    color: var(--text-primary);
+    /* Anteriormente var(--dark-gray) */
 }
 
 .fc-daygrid-day-number {
-    color: var(--text-secondary); /* Usar --text-secondary */
+    color: var(--text-secondary);
+    /* Anteriormente #555 */
     font-weight: 500;
 }
 
 .fc-event {
     cursor: pointer;
     border: none;
-    color: var(--text-primary); /* Usar --text-primary */
     padding: 2px 4px;
     border-radius: 3px;
     font-size: 13px;
     margin-bottom: 2px;
+    background-color: var(--role-primary-color);
+    /* Anteriormente var(--primary-color) */
+    color: var(--role-text-on-primary-color);
+    /* Anteriormente white */
+    border-left: 4px solid var(--role-primary-dark-color) !important;
+    /* Usando un tono más oscuro del primario para el borde, o mantener var(--role-primary-color) */
 }
+
 
 .fc-event:hover {
     opacity: 0.9;
+    /* Considera usar filter: brightness(95%) si el color de fondo es una variable */
 }
 
 .fc-daygrid-event-dot {
@@ -264,55 +328,78 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.5); /* Se mantiene el rgba para la transparencia del overlay */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Este valor es común, podría convertirse en una variable si necesitas variarlo por tema. Ej: --overlay-bg */
     animation: fadeIn 0.3s;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-content {
-    background-color: var(--bg-content); /* Usar --bg-content */
+    background-color: var(--bg-content);
+    /* Anteriormente white o var(--sidebar-color) */
     margin: 10% auto;
     padding: 25px;
     border-radius: 8px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 5px 15px var(--shadow-color); /* Usar --shadow-color */
+    box-shadow: 0 5px 15px var(--shadow-color);
+    /* Alpha del shadow-color es más bajo, el efecto será más sutil que rgba(0,0,0,0.3) */
+    /* Si necesitas una sombra más fuerte para modales, considera una variable --shadow-modal-color */
     animation: slideDown 0.3s;
 }
 
 @keyframes slideDown {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .close {
-    color: var(--text-disabled); /* Usar --text-disabled */
+    color: var(--text-disabled);
+    /* Anteriormente #aaa */
     float: right;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-    transition: color var(--trans-03); /* Usar la variable de transición */
+    transition: color 0.3s;
+    /* Considera var(--trans-03) */
 }
 
 .close:hover {
-    color: var(--text-primary); /* Usar --text-primary */
+    color: var(--text-primary);
+    /* Anteriormente #333 */
 }
 
 #event-title {
-    color: var(--role-primary-color); /* Usar --role-primary-color */
+    /* Título dentro del modal de visualización */
+    color: var(--role-primary-color);
+    /* Anteriormente var(--primary-color) */
     margin-bottom: 15px;
 }
 
-#event-date, #event-description {
+#event-date,
+#event-description {
     margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--text-secondary); /* Usar --text-secondary */
+    color: var(--text-secondary);
+    /* Color de texto para estos detalles */
 }
 
 .form-group {
@@ -326,7 +413,8 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--text-primary); /* Usar --text-primary */
+    color: var(--text-primary);
+    /* Color para labels */
 }
 
 .form-group input,
@@ -334,21 +422,45 @@ body {
 .form-group select {
     width: 100%;
     padding: 10px;
-    border: 1px solid var(--border-input); /* Usar --border-input */
+    border: 1px solid var(--border-input);
+    /* Anteriormente #ddd */
     border-radius: 4px;
     font-size: 14px;
-    background-color: var(--bg-input); /* Usar --bg-input */
-    color: var(--text-primary); /* Usar --text-primary */
+    background-color: var(--bg-input);
+    /* Anteriormente var(--light-gray) */
+    color: var(--text-primary);
+    /* Anteriormente var(--dark-gray) */
 }
+
+/* body.dark se aplica si el body tiene la clase .dark Y .theme-admin */
+/* Las variables de .theme-admin.dark ya se encargarán de los colores */
+/* Por lo tanto, las siguientes reglas específicas de body.dark no son estrictamente necesarias si las variables base se redefinen correctamente en .theme-admin.dark */
+/* No obstante, las mantendré por si hay alguna sutileza o variable local que no esté en themes.css */
+
+body.dark .form-group input,
+body.dark .form-group textarea,
+body.dark .form-group select {
+    /* Estas variables ya deberían tomar los valores de .theme-admin.dark si está aplicado */
+    background-color: var(--bg-input);
+    /* Anteriormente var(--primary-color-light) que en admin dark es #3a3b3c, similar a --bg-input #33373A */
+    border-color: var(--border-input);
+    /* Anteriormente #555, --border-input en admin dark es #55595c */
+    color: var(--text-primary);
+    /* Anteriormente var(--text-color) */
+}
+
 
 .form-group textarea {
     min-height: 80px;
     resize: vertical;
 }
 
+/* Botón primario en modales (Guardar) */
 .btn-primary {
-    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
-    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
+    background-color: var(--role-button-primary-bg);
+    /* Ya definido en themes.css como var(--role-primary-color) */
+    color: var(--role-button-primary-text);
+    /* Ya definido en themes.css */
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
@@ -357,16 +469,21 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: var(--trans-03); /* Usar la variable de transición */
+    transition: background-color 0.3s;
+    /* Considera var(--trans-03) */
 }
 
 .btn-primary:hover {
-    background-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
+    background-color: var(--role-primary-dark-color);
+    /* Anteriormente #d4a738 */
 }
 
 .btn-danger {
-    background-color: var(--role-button-delete-bg); /* Usar --role-button-delete-bg */
-    color: var(--role-button-delete-text); /* Usar --role-button-delete-text */
+    /* Botón de eliminar */
+    background-color: var(--role-button-delete-bg);
+    /* Anteriormente #dc3545 */
+    color: var(--role-button-delete-text);
+    /* Anteriormente white */
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
@@ -375,19 +492,31 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: var(--trans-03); /* Usar la variable de transición */
+    transition: background-color 0.3s;
+    /* Considera var(--trans-03) */
 }
 
 .btn-danger:hover {
-    background-color: #bb2d3b; /* Un rojo más oscuro, si no tienes una variable específica para danger-dark */
+    background-color: #c82333;
+    /* themes.css no define un hover para delete. Este es un rojo más oscuro. */
+    /* Podrías añadir --role-button-delete-hover-bg a themes.css o usar filter: brightness(90%); */
 }
+
+#new-event-modal .modal-content h2,
+/* Título del modal de nuevo evento */
+#event-modal .modal-content h2 {
+    /* Título del modal de visualización de evento */
+    color: var(--role-primary-color);
+    /* Anteriormente var(--primary-color) */
+}
+
 
 /* Responsive styles */
 @media (max-width: 992px) {
     .calendar-container {
         flex-direction: column;
     }
-    
+
     .mini-calendar {
         width: 100%;
         margin-bottom: 20px;
@@ -401,21 +530,22 @@ body {
         gap: 15px;
         padding: 15px;
     }
-    
-    .header-left, .header-right {
+
+    .header-left,
+    .header-right {
         width: 100%;
         justify-content: space-between;
     }
-    
+
     .action-bar {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     .view-options {
         width: 100%;
     }
-    
+
     .view-btn {
         flex: 1;
         text-align: center;
@@ -427,13 +557,14 @@ body {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .fc-toolbar-chunk {
         display: flex;
         justify-content: center;
     }
 }
 
+/* Ajustes para modales */
 #new-event-modal,
 #event-modal {
     position: fixed;
@@ -442,21 +573,78 @@ body {
     width: 100vw;
     height: 100vh;
     overflow-y: auto;
-    background-color: rgba(0, 0, 0, 0.8); /* Se mantiene el rgba para la transparencia del overlay */
+    /* background-color: rgba(0, 0, 0, 0.8); Este valor es común, podría convertirse en una variable si necesitas variarlo por tema. Ej: --overlay-strong-bg */
+    /* Usando el mismo overlay que .modal para consistencia, but you might want a darker one */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Or define --overlay-strong-bg: rgba(0,0,0,0.8) in themes.css and use it here */
     display: none;
+    /* Hidden by default */
     z-index: 9999;
+    /* On top of everything */
 }
 
 #new-event-modal .modal-content,
 #event-modal .modal-content {
     margin: 50px auto;
-    background: var(--bg-content); /* Usar --bg-content */
-    padding: 20px;
+    /* Centered with top margin */
+    background: var(--bg-content);
+    /* Formerly white or var(--sidebar-color) */
+    padding: 25px;
+    /* Increase padding */
     width: 90%;
-    max-width: 800px;
+    max-width: 550px;
+    /* A bit wider if needed */
     border-radius: 8px;
-    box-shadow: 0 4px 10px var(--shadow-color); /* Usar --shadow-color */
+    box-shadow: 0 4px 15px var(--shadow-color);
+    /* Same note as .modal-content about shadow intensity */
 }
+
+/* Select de color en el modal de nuevo evento */
+/* These are specific event data colors, not necessarily general Admin theme colors. */
+/* However, the first color matches the Admin primary. */
+#event-color option[value="#e7bb41"] {
+    background-color: var(--role-primary-color);
+    color: var(--role-text-on-primary-color);
+}
+
+/* Amarillo Admin con su texto correspondiente */
+#event-color option[value="#2196F3"] {
+    background-color: #2196F3;
+    color: white;
+}
+
+/* Azul */
+#event-color option[value="#9C27B0"] {
+    background-color: #9C27B0;
+    color: white;
+}
+
+/* Púrpura */
+#event-color option[value="#FF9800"] {
+    background-color: #FF9800;
+    color: white;
+}
+
+/* Naranja */
+#event-color option[value="#F44336"] {
+    background-color: #F44336;
+    color: white;
+}
+
+/* Rojo */
+
+/* Asegurar que el color del texto en el select (el elemento select en sí) sea visible */
+#event-color {
+    color: var(--text-primary);
+    /* Anteriormente var(--dark-gray) */
+    background-color: var(--bg-input);
+    /* Fondo para el select */
+    border: 1px solid var(--border-input);
+    /* Borde para el select */
+}
+
+/* body.dark #event-color ya está cubierto por las variables de .theme-admin.dark que afectan a var(--text-primary), var(--bg-input), var(--border-input) */
+
 
 /* Estilos para el header del MINI-CALENDARIO */
 #mini-calendar .fc-header-toolbar {
@@ -467,14 +655,13 @@ body {
     margin-bottom: 10px;
 }
 
-/* Ajustar el título del mes en el mini-calendario si es necesario */
 #mini-calendar .fc-toolbar-title {
     font-size: 1em;
     white-space: nowrap;
-    color: var(--text-primary); /* Usar --text-primary */
+    color: var(--text-primary);
+    /* Color de texto primario */
 }
 
-/* Contenedor de los botones (Hoy, prev, next) en el mini-calendario */
 #mini-calendar .fc-toolbar-chunk:nth-child(3) {
     display: flex;
     align-items: center;
@@ -483,32 +670,37 @@ body {
 
 /* Estilos para TODOS los botones dentro del mini-calendario */
 #mini-calendar .fc-button {
-    background-color: var(--role-primary-light-color); /* Usar --role-primary-light-color */
-    color: var(--role-primary-color); /* Usar --role-primary-color */
-    border: 1px solid var(--role-primary-color); /* Usar --role-primary-color */
+    background-color: var(--role-primary-light-color);
+    /* Un color de fondo claro del rol (amarillo pálido para Admin) */
+    color: var(--text-primary);
+    /* Texto oscuro para contraste con fondo claro */
+    border: 1px solid var(--role-primary-dark-color);
+    /* Borde con el color oscuro del rol para dar definición */
     padding: 6px 10px;
     border-radius: 4px;
     font-size: 0.85em;
     line-height: 1.2;
     box-shadow: none;
-    transition: var(--trans-02); /* Usar la variable de transición */
+    transition: background-color var(--trans-02), border-color var(--trans-02), color var(--trans-02);
     height: auto;
 }
 
 /* Botón "Hoy" específico en el mini-calendario */
 #mini-calendar .fc-today-button {
-    background-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
-    color: var(--role-button-primary-text); /* Usar --role-button-primary-text */
-    border-color: var(--role-button-primary-bg); /* Usar --role-button-primary-bg */
+    background-color: var(--role-primary-color);
+    color: var(--role-text-on-primary-color);
+    border-color: var(--role-primary-color);
     order: 1;
     margin-right: 5px;
 }
 
 #mini-calendar .fc-today-button:hover {
-    background-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
-    border-color: var(--role-primary-dark-color); /* Usar --role-primary-dark-color para hover */
-    color: var(--role-text-on-primary-color); /* Usar --role-text-on-primary-color */
+    background-color: var(--role-primary-dark-color);
+    border-color: var(--role-primary-dark-color);
+    color: var(--role-text-on-primary-color);
+    /* Mantiene el color de texto original */
 }
+
 
 /* Botones de navegación (prev, next) en el mini-calendario */
 #mini-calendar .fc-prev-button,
@@ -516,23 +708,20 @@ body {
     padding: 6px 8px;
 }
 
-#mini-calendar .fc-button:hover {
-    background-color: var(--role-primary-color); /* Usar --role-primary-color */
-    color: var(--role-text-on-primary-color); /* Usar --role-text-on-primary-color */
-    border-color: var(--role-primary-color); /* Usar --role-primary-color */
+/* Hover general para botones del mini-calendario (excepto el "Hoy" que tiene su propio hover) */
+#mini-calendar .fc-button:not(.fc-today-button):hover {
+    background-color: var(--role-primary-color);
+    /* Cambia al color primario del rol */
+    color: var(--role-text-on-primary-color);
+    /* Texto correspondiente al primario */
+    border-color: var(--role-primary-color);
 }
 
 /* Iconos dentro de los botones de navegación del mini-calendario */
 #mini-calendar .fc-icon {
     font-size: 0.9em;
     vertical-align: middle;
-    color: var(--text-primary); /* Asegurar que los iconos tengan el color del texto primario */
 }
-
-#mini-calendar .fc-button:hover .fc-icon {
-    color: var(--role-text-on-primary-color); /* Color de texto sobre primario para iconos en hover */
-}
-
 
 /* Si los botones prev/next están agrupados por FullCalendar (fc-button-group) */
 #mini-calendar .fc-button-group {
@@ -541,9 +730,10 @@ body {
     order: 2;
 }
 
-#mini-calendar .fc-button-group > .fc-button {
+#mini-calendar .fc-button-group>.fc-button {
     margin: 0;
 }
+
 
 /* --- ESTILOS PARA EL INDICADOR DE EVENTO EN EL MINI-CALENDARIO --- */
 
